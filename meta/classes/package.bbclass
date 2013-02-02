@@ -1318,6 +1318,8 @@ python emit_pkgdata() {
 
     data_file = pkgdatadir + d.expand("/${PN}" )
     f = open(data_file, 'w')
+    f.write("S: %s\n" % d.expand("${S}"))
+    f.write("B: %s\n" % d.expand("${B}"))
     f.write("PACKAGES: %s\n" % packages)
     f.close()
 
