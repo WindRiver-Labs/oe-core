@@ -37,7 +37,7 @@ libc_baselibs = "${base_libdir}/libcrypt*.so.* ${base_libdir}/libcrypt-*.so ${ba
 libc_baselibs_append_aarch64 = " /lib/ld-linux-aarch64*.so.1"
 INSANE_SKIP_${PN}_append_aarch64 = " libdir"
 
-FILES_${PN} = "${libc_baselibs} ${libexecdir}/* ${@base_conditional('USE_LDCONFIG', '1', '${base_sbindir}/ldconfig ${sysconfdir}/ld.so.conf', '', d)}"
+FILES_${PN} = "${libc_baselibs} ${libexecdir}/* ${@base_conditional('USE_LDCONFIG', '1', '${base_sbindir}/ldconfig ${sysconfdir}/ld.so.conf ${sysconfdir}/ld.so.conf.d', '', d)}"
 FILES_ldd = "${bindir}/ldd"
 FILES_libsegfault = "${base_libdir}/libSegFault*"
 FILES_libcidn = "${base_libdir}/libcidn-*.so ${base_libdir}/libcidn.so.*"
@@ -104,6 +104,11 @@ do_install_append () {
 		# But check whether it exists first, since it won't for glibc-initial.
 		if [ -d ${D}${sysconfdir} ]; then
 			rmdir ${D}${sysconfdir}
+		fi
+	else
+		if [ -f ${D}${sysconfdir}/ld.so.conf ]; then
+		echo 'include ld.so.conf.d/*.conf' > ${D}${sysconfdir}/ld.so.conf
+			mkdir -p ${D}${sysconfdir}/ld.so.conf.d
 		fi
 	fi
 
