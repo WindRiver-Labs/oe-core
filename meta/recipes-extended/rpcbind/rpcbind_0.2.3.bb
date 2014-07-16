@@ -21,6 +21,7 @@ SRC_URI = "${SOURCEFORGE_MIRROR}/rpcbind/rpcbind-${PV}.tar.bz2 \
            file://rpcbind.socket \
            file://rpcbind.service \
            file://cve-2015-7236.patch \
+           file://rpcbind_add_option_to_fix_port_number.patch \
           "
 MUSLPATCHES_libc-musl = "file://musl-sunrpc.patch"
 
