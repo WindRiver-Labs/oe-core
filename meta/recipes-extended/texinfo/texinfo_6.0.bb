@@ -80,3 +80,64 @@ FILES_${PN}-doc = "${infodir}/texinfo* \
                    ${mandir}/man1 ${mandir}/man5"
 
 BBCLASSEXTEND = "native nativesdk"
+
+pkg_postinst_info () {
+if [ "x$D" != "x" ]; then
+    $INTERCEPT_DIR/postinst_intercept update_info_dir ${PKG} \
+        mlprefix=${MLPREFIX} infodir=${infodir} STAGING_BINDIR_NATIVE=${STAGING_BINDIR_NATIVE}
+else
+    if [ ! -d "${infodir}" ]; then
+        exit 0
+    fi
+
+    errors=0
+    find "${infodir}" -type f | while read file ; do
+        case $file in
+        */dir| */dir.old| \
+        *-[0-9]|*-[0-9].gz|*-[0-9].xz|*-[0-9].bz2| \
+        *-[1-9][0-9]|*-[1-9][0-9].gz|*-[1-9][0-9].xz|*-[1-9][0-9].bz2| \
+        *.png)
+            # these files are ignored
+            continue
+            ;;
+        *)
+            install-info "$file" "${infodir}/dir" || {
+                errors=`expr $errors + 1`
+            }
+            ;;
+        esac
+    done
+    if [ $errors -gt 0 ] ; then
+        echo "Updating the index of info documentation produced $errors errors."
+        exit 1
+    fi
+fi
+}
+
+pkg_prerm_info () {
+if [ ! -d "$D${infodir}" ]; then
+    exit 0
+fi
+
+errors=0
+find "$D${infodir}" -type f | while read file ; do
+    case $file in
+    */dir|*/dir.old| \
+    *-[0-9]|*-[0-9].gz|*-[0-9].xz|*-[0-9].bz2| \
+    *-[1-9][0-9]|*-[1-9][0-9].gz|*-[1-9][0-9].xz|*-[1-9][0-9].bz2| \
+    *.png)
+        # these files are ignored
+        continue
+        ;;
+    *)
+        install-info --delete "$file" "$D${infodir}/dir" || {
+            errors=`expr $errors + 1`
+        }
+        ;;
+    esac
+done
+
+if [ $errors -gt 0 ] ; then
+    echo "Cleaning the index of info documentation produced $errors errors."
+fi
+}
