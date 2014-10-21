@@ -56,6 +56,7 @@ do_install() {
 	ln -sf tclsh8.6 ${D}${bindir}/tclsh${VER}
 	sed -i "s+-L${B}+-L${STAGING_LIBDIR}+g" tclConfig.sh
 	sed -i "s+${WORKDIR}+${STAGING_INCDIR}+g" tclConfig.sh
+	sed -i "/TCL_CC/s,\(--sysroot=\).*,--sysroot= '," tclConfig.sh
 	install -d ${D}${bindir_crossscripts}
 	install -m 0755 tclConfig.sh ${D}${bindir_crossscripts}
 	install -m 0755 tclConfig.sh ${D}${libdir}
