@@ -4,7 +4,9 @@ Its name stands for LiSt Open Files, and it does just that."
 SECTION = "devel"
 LICENSE = "BSD"
 
-SRC_URI = "ftp://lsof.itap.purdue.edu/pub/tools/unix/lsof/lsof_${PV}.tar.bz2"
+SRC_URI = "ftp://lsof.itap.purdue.edu/pub/tools/unix/lsof/lsof_${PV}.tar.bz2 \
+           file://Configure-fix-LSOF_CCV-assignment.patch \
+          "
 
 SRC_URI[md5sum] = "1b9cd34f3fb86856a125abbf2be3a386"
 SRC_URI[sha256sum] = "81ac2fc5fdc944793baf41a14002b6deb5a29096b387744e28f8c30a360a3718"
@@ -34,6 +36,7 @@ python do_unpack () {
 export LSOF_INCLUDE = "${STAGING_INCDIR}"
 
 do_configure () {
+	export LSOF_CC="${CC}"
 	export LSOF_AR="${AR} cr"
 	export LSOF_RANLIB="${RANLIB}"
         if [ "x${GLIBCVERSION}" != "x" ];then
