@@ -13,7 +13,8 @@ LIC_FILES_CHKSUM = "file://00README;beginline=645;endline=679;md5=964df275d26429
 
 SRC_URI = "http://www.mirrorservice.org/sites/lsof.itap.purdue.edu/pub/tools/unix/lsof/OLD/lsof_${PV}.tar.gz \
            file://lsof-remove-host-information.patch \
-          "
+           file://Configure-fix-LSOF_CCV-assignment.patch \
+"
 
 SRC_URI[md5sum] = "8afbaff3ee308edc130bdc5df0801c8f"
 SRC_URI[sha256sum] = "5d08da7ebe049c9d9a6472d6afb81aa5af54c4733a3f8822cbc22b57867633c9"
@@ -40,6 +41,7 @@ python do_unpack () {
 export LSOF_INCLUDE = "${STAGING_INCDIR}"
 
 do_configure () {
+	export LSOF_CC="${CC}"
 	export LSOF_AR="${AR} cr"
 	export LSOF_RANLIB="${RANLIB}"
 	if [ "x${GLIBCVERSION}" != "x" ]; then
