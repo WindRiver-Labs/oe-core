@@ -36,6 +36,9 @@ do_install() {
     if ! ${@bb.utils.contains('PACKAGECONFIG', 'python', 'true', 'false', d)}; then
         grep -lZ "/usr/bin/env.*python" ${D}${bindir}/* | xargs -0 rm
     fi
+    if [ -e ${D}${bindir}/update-alternatives ]; then
+        sed -i s:/usr/lib/opkg:/var/lib/opkg: ${D}${bindir}/update-alternatives
+    fi
 }
 
 do_install_append_class-target() {
