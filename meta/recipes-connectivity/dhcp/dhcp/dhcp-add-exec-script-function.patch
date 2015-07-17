@@ -1,0 +1,101 @@
+[PATCH] dhcp: add exec script function
+
+Upstream-Statue: Backport[redhat]
+
+Make dhclient to run /etc/dhcp/dhclient.d/*.sh, and get the configuration
+for ntp, nis or other programes
+
+These codes are from redhat rpm packages.
+
+Signed-off-by: Li Wang <li.wang@windriver.com>
+Signed-off-by: Roy Li <rongqing.li@windriver.com>
+---
+ client/scripts/linux | 25 ++++++++++++++++++++++++-
+ 1 file changed, 24 insertions(+), 1 deletion(-)
+
+diff --git a/client/scripts/linux b/client/scripts/linux
+index 232a0aa..bdb5e22 100755
+--- a/client/scripts/linux
++++ b/client/scripts/linux
+@@ -24,6 +24,8 @@
+ 
+ # 'ip' just looks too weird.  /sbin/ip looks less weird.
+ ip=/sbin/ip
++ETCDIR="/etc/dhcp"
++export SAVEDIR=/var/lib/dhclient
+ 
+ make_resolv_conf() {
+   if [ x"$new_domain_name_servers" != x ]; then
+@@ -80,6 +82,20 @@ exit_with_hooks() {
+   exit $exit_status
+ }
+ 
++execute_client_side_configuration_scripts() {
++# execute any additional client side configuration scripts we have
++    if [ "${1}" == "config" ] || [ "${1}" == "restore" ]; then
++        for f in ${ETCDIR}/dhclient.d/*.sh ; do
++            if [ -x ${f} ]; then
++                subsystem="${f%.sh}"
++                subsystem="${subsystem##*/}"
++                . ${f}
++                "${subsystem}_${1}"
++            fi
++        done
++    fi
++}
++
+ # Invoke the local dhcp client enter hooks, if they exist.
+ if [ -f /etc/dhclient-enter-hooks ]; then
+   exit_status=0
+@@ -198,11 +214,14 @@ if [ x$reason = xBOUND ] || [ x$reason = xRENEW ] || \
+     ${ip} -4 route add ${alias_ip_address} dev ${interface} >/dev/null 2>&1
+   fi
+   make_resolv_conf
++  execute_client_side_configuration_scripts "config"
+   exit_with_hooks 0
+ fi
+ 
+ if [ x$reason = xEXPIRE ] || [ x$reason = xFAIL ] || [ x$reason = xRELEASE ] \
+    || [ x$reason = xSTOP ]; then
++  execute_client_side_configuration_scripts "restore"
++
+   if [ x$alias_ip_address != x ]; then
+     # Turn off alias interface.
+     ${ip} -4 addr flush dev ${interface} label ${interface}:0
+@@ -281,7 +300,7 @@ if [ x$reason = xBOUND6 ] ; then
+ 
+   # Check for nameserver options.
+   make_resolv_conf
+-
++  execute_client_side_configuration_scripts "config"
+   exit_with_hooks 0
+ fi
+ 
+@@ -299,6 +318,7 @@ if [ x$reason = xRENEW6 ] || [ x$reason = xREBIND6 ] ; then
+     make_resolv_conf
+   fi
+ 
++  execute_client_side_configuration_scripts "config"
+   exit_with_hooks 0
+ fi
+ 
+@@ -310,6 +330,7 @@ if [ x$reason = xDEPREF6 ] ; then
+   ${ip} -f inet6 addr change ${new_ip6_address}/${new_ip6_prefixlen} \
+        dev ${interface} scope global preferred_lft 0
+ 
++  execute_client_side_configuration_scripts "config"
+   exit_with_hooks 0
+ fi
+ 
+@@ -318,6 +339,8 @@ if [ x$reason = xEXPIRE6 -o x$reason = xRELEASE6 -o x$reason = xSTOP6 ] ; then
+     exit_with_hooks 2;
+   fi
+ 
++  execute_client_side_configuration_scripts "restore"
++
+   ${ip} -f inet6 addr del ${old_ip6_address}/${old_ip6_prefixlen} \
+ 	dev ${interface}
+ 
+-- 
+1.9.1
+
