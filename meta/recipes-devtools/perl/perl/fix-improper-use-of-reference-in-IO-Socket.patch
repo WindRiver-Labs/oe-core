@@ -1,0 +1,25 @@
+IO/Socket.pm: fix improper use of reference
+
+Upstream-Status: Submitted [https://rt.perl.org/Public/Bug/Display.html?id=125930]
+
+Signed-off-by: Kai Kang <kai.kang@windriver.com>
+---
+ dist/IO/lib/IO/Socket.pm | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/dist/IO/lib/IO/Socket.pm b/dist/IO/lib/IO/Socket.pm
+index c78aeec..6fbc94b 100644
+--- a/dist/IO/lib/IO/Socket.pm
++++ b/dist/IO/lib/IO/Socket.pm
+@@ -136,7 +136,7 @@ sub connect {
+ 	    }
+ 	    elsif (!connect($sock,$addr) &&
+                 not ($!{EISCONN} || ($^O eq 'MSWin32' &&
+-                ($! == (($] < 5.019004) ? 10022 : Errno::EINVAL))))
++                ($! == (($] < 5.019004) ? 10022 : &Errno::EINVAL))))
+             ) {
+ 		# Some systems refuse to re-connect() to
+ 		# an already open socket and set errno to EISCONN.
+-- 
+2.4.1
+
