@@ -221,7 +221,7 @@ do_install() {
 
 PACKAGES =+ "${PN}-ralink-license ${PN}-ralink \
              ${PN}-radeon-license ${PN}-radeon \
-             ${PN}-marvell-license ${PN}-sd8686 ${PN}-sd8688 ${PN}-sd8787 ${PN}-sd8797 \
+             ${PN}-marvell-license ${PN}-sd8686 ${PN}-sd8688 ${PN}-sd8787 ${PN}-sd8797 ${PN}-pcie8897 ${PN}-usb8897 \
              ${PN}-ti-connectivity-license ${PN}-wl12xx ${PN}-wl18xx \
              ${PN}-vt6656-license ${PN}-vt6656 \
              ${PN}-rtl-license ${PN}-rtl8192cu ${PN}-rtl8192ce ${PN}-rtl8192su \
@@ -348,6 +348,19 @@ LICENSE_${PN}-rtl8192cu = "Firmware-rtlwifi_firmware"
 LICENSE_${PN}-rtl8192ce = "Firmware-rtlwifi_firmware"
 LICENSE_${PN}-rtl8192su = "Firmware-rtlwifi_firmware"
 LICENSE_${PN}-rtl-license = "Firmware-rtlwifi_firmware"
+
+LICENSE_${PN}-pcie8897 = "Firmware-Marvell"
+FILES_${PN}-pcie8897 = " \
+  /lib/firmware/mrvl/pcie8897_uapsta.bin \
+"
+RDEPENDS_${PN}-pcie8897 += "${PN}-marvell-license"
+
+LICENSE_${PN}-usb8897 = "Firmware-Marvell"
+FILES_${PN}-usb8897 = " \
+  /lib/firmware/mrvl/usb8897_uapsta.bin \
+"
+RDEPENDS_${PN}-usb8897 += "${PN}-marvell-license"
+
 
 FILES_${PN}-rtl-license = " \
   /lib/firmware/LICENCE.rtlwifi_firmware.txt \
