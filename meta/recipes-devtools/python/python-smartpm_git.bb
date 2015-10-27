@@ -29,6 +29,9 @@ SRC_URI = "\
           file://channels-rpm_sys-use-md5sum-instead-of-mtime-as-the-.patch \
          "
 
+# Disabled as this causes different behavior than the community version
+#SRC_URI += "file://smart-prefer-same-arch.patch"
+
 SRCREV = "407a7eca766431257dcd1da15175cc36a1bb22d0"
 PV = "1.5+git${SRCPV}"
 
