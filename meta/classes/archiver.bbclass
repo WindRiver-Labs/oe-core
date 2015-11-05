@@ -94,6 +94,11 @@ python () {
             d.appendVarFlag('do_ar_configured', 'depends', ' %s:do_configure' % pn)
         d.appendVarFlag('do_deploy_archives', 'depends', ' %s:do_ar_configured' % pn)
 
+        #
+        # For some specific packages like gcc-source, do_configure may be deleted.
+        if 'do_configure' in (d.getVar('__BBTASKS', True) or []):
+            d.appendVarFlag('do_ar_configured', 'depends', ' %s:do_configure' % pn)
+            d.appendVarFlag('do_deploy_archives', 'depends', ' %s:do_ar_configured' % pn)
     elif ar_src:
         bb.fatal("Invalid ARCHIVER_MODE[src]: %s" % ar_src)
 
