@@ -13,6 +13,8 @@ SRC_URI = "${SOURCEFORGE_MIRROR}/watchdog/watchdog-${PV}.tar.gz \
            file://watchdog-init.patch \
            file://watchdog-conf.patch \
            file://wd_keepalive.init \
+           file://watchdog-ping.service \
+           file://watchdog.service \
 "
 
 SRC_URI[md5sum] = "678c32f6f35a0492c9c1b76b4aa88828"
@@ -22,7 +24,7 @@ UPSTREAM_CHECK_URI = "http://sourceforge.net/projects/watchdog/files/watchdog/"
 UPSTREAM_CHECK_REGEX = "/watchdog/(?P<pver>(\d+[\.\-_]*)+)/"
 
 inherit autotools
-inherit update-rc.d
+inherit update-rc.d systemd
 
 DEPENDS_append_libc-musl = " libtirpc "
 CFLAGS_append_libc-musl = " -I${STAGING_INCDIR}/tirpc "
@@ -37,13 +39,7 @@ INITSCRIPT_PARAMS_${PN} = "start 15 1 2 3 4 5 . stop 85 0 6 ."
 INITSCRIPT_NAME_${PN}-keepalive = "wd_keepalive"
 INITSCRIPT_PARAMS_${PN}-keepalive = "start 15 1 2 3 4 5 . stop 85 0 6 ."
 
-do_install_append() {
-	install -D ${S}/redhat/watchdog.init ${D}/${sysconfdir}/init.d/watchdog.sh
-    install -Dm 0755 ${WORKDIR}/wd_keepalive.init ${D}${sysconfdir}/init.d/wd_keepalive
-
-    # watchdog.conf is provided by the watchdog-config recipe
-    rm ${D}${sysconfdir}/watchdog.conf
-}
+SYSTEMD_SERVICE_${PN} = "watchdog.service"
 
 PACKAGES =+ "${PN}-keepalive"
 
@@ -57,3 +53,14 @@ RDEPENDS_${PN}-keepalive += "${PN}-config"
 
 RRECOMMENDS_${PN} = "kernel-module-softdog"
 
+do_install_append() {
+	install -d ${D}${systemd_unitdir}/system
+	install -m 0644 ${WORKDIR}/watchdog*.service ${D}${systemd_unitdir}/system
+
+	if ${@bb.utils.contains('DISTRO_FEATURES','systemd','true','false',d)}; then
+		install -d ${D}${sysconfdir}/modules-load.d
+		echo "softdog" > ${D}${sysconfdir}/modules-load.d/softdog.conf
+	fi
+}
+
+FILES_${PN} += "${systemd_unitdir}/system/*"
