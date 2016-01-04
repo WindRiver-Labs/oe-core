@@ -7,7 +7,7 @@ DEPENDS = "gnutls zlib libpcre"
 
 INC_PR = "r16"
 
-inherit autotools gettext texinfo update-alternatives pkgconfig
+inherit autotools gettext texinfo update-alternatives pkgconfig perlnative
 
 EXTRA_OECONF = "--with-ssl=gnutls --disable-rpath --disable-iri \
                 --without-libgnutls-prefix ac_cv_header_uuid_uuid_h=no"
