@@ -6,7 +6,6 @@ Description=watchdog daemon
 [Service]
 Type=forking
 ExecStart=/usr/sbin/watchdog
-ControlGroup=cpu:/
 
 [Install]
 WantedBy=multi-user.target
