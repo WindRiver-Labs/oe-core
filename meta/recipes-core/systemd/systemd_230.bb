@@ -37,6 +37,7 @@ SRC_URI += " \
            file://udev-re-enable-mount-propagation-for-udevd.patch \
            file://CVE-2016-7795.patch \
            file://validate-user.patch \
+           file://0001-tmpfiles.d-don-t-create-the-symbol-link.patch \
 "
 SRC_URI_append_libc-uclibc = "\
            file://0002-units-Prefer-getty-to-agetty-in-console-setup-system.patch \
