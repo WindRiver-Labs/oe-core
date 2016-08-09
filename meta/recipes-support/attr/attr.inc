@@ -13,8 +13,8 @@ LIC_FILES_CHKSUM = "file://doc/COPYING;md5=2d0aa14b3fce4694e4f615e30186335f \
 
 SRC_URI = "${SAVANNAH_GNU_MIRROR}/attr/${BP}.src.tar.gz \
            file://run-ptest \
+           file://filter-selinux-attr-from-output.patch \
 "
-
 require ea-acl.inc
 
 # libdir should point to .la
