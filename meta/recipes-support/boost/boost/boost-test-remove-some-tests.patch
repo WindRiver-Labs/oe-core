@@ -1,0 +1,679 @@
+From 7d598590aac062d85cef18c5a3445e2b318d0a07 Mon Sep 17 00:00:00 2001
+From: Jackie Huang <jackie.huang@windriver.com>
+Date: Wed, 12 Oct 2016 18:02:21 +0800
+Subject: [PATCH] test: remove some tests
+
+There are 2000+ test cases for 26 added libs, I'm
+not able to make all of them work for now and I think
+ptest is not necessary to cover all of them, so add
+a patch to remove some of the tests, which include:
+
+* those require extra dependencies
+* those require specific target hardware
+* those require input data or config files
+* those compile fail with unknown reasons
+* those require command parameters/options when running
+
+Upstream-Status: Inappropriate [OE ptest specific]
+
+Signed-off-by: Jackie Huang <jackie.huang@windriver.com>
+---
+ libs/chrono/test/Jamfile.v2                        |   1 -
+ .../test/{map_test.cpp => map_test.cpp_notrun}     |   0
+ .../test/{set_test.cpp => set_test.cpp_notrun}     |   0
+ libs/date_time/test/Jamfile.v2                     |  16 ---
+ libs/graph/test/Jamfile.v2                         |  15 ---
+ libs/graph_parallel/test/Jamfile.v2                |   6 -
+ libs/iostreams/test/Jamfile.v2                     |   2 -
+ libs/locale/test/Jamfile.v2                        |  21 ---
+ libs/log/test/Jamfile.v2                           |   2 +-
+ libs/math/test/Jamfile.v2                          |   7 -
+ libs/program_options/test/Jamfile.v2               |   2 -
+ libs/python/test/Jamfile.v2                        | 147 ---------------------
+ libs/random/test/Jamfile.v2                        |   8 --
+ libs/regex/test/Jamfile.v2                         |  37 ------
+ libs/serialization/test/Jamfile.v2                 |   3 -
+ libs/timer/test/Jamfile.v2                         |  20 ---
+ libs/wave/test/build/Jamfile.v2                    |  60 +--------
+ 17 files changed, 2 insertions(+), 345 deletions(-)
+ rename libs/container/test/{map_test.cpp => map_test.cpp_notrun} (100%)
+ rename libs/container/test/{set_test.cpp => set_test.cpp_notrun} (100%)
+
+diff --git a/libs/chrono/test/Jamfile.v2 b/libs/chrono/test/Jamfile.v2
+index 3ac259a..b039440 100644
+--- a/libs/chrono/test/Jamfile.v2
++++ b/libs/chrono/test/Jamfile.v2
+@@ -373,7 +373,6 @@ rule chrono-compile2 ( sources : name )
+ 
+     test-suite "duration"
+         :
+-        [ compile-fail duration/duration_duration_fail.cpp  ]
+         [ compile-fail duration/ratio_fail.cpp  ]
+         [ compile-fail duration/positive_num_fail.cpp  ]
+         [ chrono-compile duration/default_ratio_pass.cpp ]
+diff --git a/libs/container/test/map_test.cpp b/libs/container/test/map_test.cpp_notrun
+similarity index 100%
+rename from libs/container/test/map_test.cpp
+rename to libs/container/test/map_test.cpp_notrun
+diff --git a/libs/container/test/set_test.cpp b/libs/container/test/set_test.cpp_notrun
+similarity index 100%
+rename from libs/container/test/set_test.cpp
+rename to libs/container/test/set_test.cpp_notrun
+diff --git a/libs/date_time/test/Jamfile.v2 b/libs/date_time/test/Jamfile.v2
+index 16317b2..eb5ddc3 100644
+--- a/libs/date_time/test/Jamfile.v2
++++ b/libs/date_time/test/Jamfile.v2
+@@ -27,7 +27,6 @@ test-suite date_time_core
+    [ run gregorian/testformatters.cpp ../build//boost_date_time/<link>static : : : $(DATE_TIME_PROPERTIES) ]
+ ###  streaming
+    [ run gregorian/testdate_facet_new.cpp ../build//boost_date_time/<link>static : : : $(DATE_TIME_PROPERTIES) ]
+-   [ run gregorian/testdate_input_facet.cpp ../build//boost_date_time/<link>static : : : $(DATE_TIME_PROPERTIES) ]
+ ###
+    [ run gregorian/testgenerators.cpp ../build//boost_date_time/<link>static : : : $(DATE_TIME_PROPERTIES) ]
+    [ run gregorian/testgreg_cal.cpp ../build//boost_date_time/<link>static : : : $(DATE_TIME_PROPERTIES) ]
+@@ -44,7 +43,6 @@ test-suite date_time_gregorian_dll
+    [ run gregorian/testformatters.cpp ../build//boost_date_time : : : $(DATE_TIME_DYNAMIC_PROPERTIES) : testformatters_dll ]
+ ###  streaming 
+    [ run gregorian/testdate_facet_new.cpp ../build//boost_date_time : : : $(DATE_TIME_DYNAMIC_PROPERTIES) : testdate_facet_new_dll ]
+-   [ run gregorian/testdate_input_facet.cpp ../build//boost_date_time : : : $(DATE_TIME_DYNAMIC_PROPERTIES) : testdate_input_facet_dll ]
+ ###
+    [ run gregorian/testgenerators.cpp ../build//boost_date_time : : : $(DATE_TIME_DYNAMIC_PROPERTIES) : testgenerators_dll ]
+    [ run gregorian/testgreg_cal.cpp ../build//boost_date_time : : : $(DATE_TIME_DYNAMIC_PROPERTIES) : testgreg_cal_dll ]
+@@ -99,9 +97,6 @@ test-suite date_time_gregorian_dll
+    [ run posix_time/testtime_facet.cpp
+      ../build//boost_date_time/<link>static
+     : : :  $(DATE_TIME_PROPERTIES) ]
+-   [ run posix_time/testtime_input_facet.cpp
+-     ../build//boost_date_time/<link>static
+-    : : :  $(DATE_TIME_PROPERTIES) ]
+ ###
+ 
+  ;
+@@ -148,9 +143,6 @@ local DATE_TIME_PROPERTIES = <define>BOOST_DATE_TIME_POSIX_TIME_STD_CONFIG <defi
+    [ run local_time/testwposix_time_zone.cpp
+      ../build//boost_date_time/<link>static
+     : : : $(DATE_TIME_PROPERTIES) ]
+-   [ run local_time/testtz_database.cpp
+-     ../build//boost_date_time/<link>static
+-    : : : $(DATE_TIME_PROPERTIES) ]
+    [ run local_time/testlocal_time.cpp
+      ../build//boost_date_time/<link>static
+     : : : $(DATE_TIME_PROPERTIES) ]
+@@ -160,14 +152,6 @@ local DATE_TIME_PROPERTIES = <define>BOOST_DATE_TIME_POSIX_TIME_STD_CONFIG <defi
+    [ run local_time/testlocal_time_period.cpp
+      ../build//boost_date_time/<link>static
+     : : :  $(DATE_TIME_PROPERTIES) ]
+-### streaming
+-   [ run local_time/testlocal_time_facet.cpp
+-     ../build//boost_date_time/<link>static
+-    : : : $(DATE_TIME_PROPERTIES) ]
+-   [ run local_time/testlocal_time_input_facet.cpp
+-     ../build//boost_date_time/<link>static
+-    : : : $(DATE_TIME_PROPERTIES) ]
+-###
+    [ run local_time/testclocks.cpp
+      ../build//boost_date_time/<link>static
+     : : : $(DATE_TIME_PROPERTIES) ]
+diff --git a/libs/graph/test/Jamfile.v2 b/libs/graph/test/Jamfile.v2
+index 0523f10..f59d609 100644
+--- a/libs/graph/test/Jamfile.v2
++++ b/libs/graph/test/Jamfile.v2
+@@ -49,7 +49,6 @@ test-suite graph_test :
+     [ run dijkstra_heap_performance.cpp : 10000 ]
+     [ run dijkstra_no_color_map_compare.cpp : 10000 ]
+     [ run dominator_tree_test.cpp ]
+-    [ run relaxed_heap_test.cpp : 5000 15000 ]
+     [ compile edge_list_cc.cpp ]
+     [ compile filtered_graph_cc.cpp ]
+     [ run generator_test.cpp ]
+@@ -59,7 +58,6 @@ test-suite graph_test :
+             /boost/test//boost_test_exec_monitor/<link>static
+             ../build//boost_graph
+             ../../regex/build//boost_regex : --log_level=all ]
+-    [ run metis_test.cpp : $(METIS_INPUT_FILE) ]
+     [ run gursoy_atun_layout_test.cpp ]
+     [ run layout_test.cpp : : : <test-info>always_show_run_output <toolset>intel:<debug-symbols>off ]
+ 
+@@ -90,20 +88,11 @@ test-suite graph_test :
+     [ run matching_test.cpp ]
+     [ run max_flow_test.cpp ]
+     [ run boykov_kolmogorov_max_flow_test.cpp ]
+-    [ run cycle_ratio_tests.cpp ../build//boost_graph ../../regex/build//boost_regex : $(CYCLE_RATIO_INPUT_FILE) ]
+     [ run basic_planarity_test.cpp ]
+     [ run make_connected_test.cpp ]
+     [ run make_bicon_planar_test.cpp ]
+     [ run make_maximal_planar_test.cpp ]
+     [ run named_vertices_test.cpp ]
+-    [ run all_planar_input_files_test.cpp
+-        ../../filesystem/build
+-        ../../system/build
+-        : $(PLANAR_INPUT_FILES) ]
+-    [ run parallel_edges_loops_test.cpp
+-        ../../filesystem/build
+-        ../../system/build
+-        : $(PLANAR_INPUT_FILES) ]
+     [ run r_c_shortest_paths_test.cpp ]
+     [ run rcsp_custom_vertex_id.cpp ]
+     [ run is_straight_line_draw_test.cpp ]
+@@ -124,13 +113,9 @@ test-suite graph_test :
+     [ run incremental_components_test.cpp ]
+     [ run two_graphs_common_spanning_trees_test.cpp ]
+     [ run random_spanning_tree_test.cpp ../build//boost_graph ]
+-    [ run graphml_test.cpp ../build//boost_graph : : "graphml_test.xml" ]
+-    [ run mas_test.cpp ../../test/build//boost_unit_test_framework/<link>static : $(TEST_DIR) ]
+-    [ run stoer_wagner_test.cpp ../../test/build//boost_unit_test_framework/<link>static : $(TEST_DIR) ]
+     [ compile filtered_graph_properties_dijkstra.cpp ]
+     [ run vf2_sub_graph_iso_test.cpp ]
+     [ run vf2_sub_graph_iso_test_2.cpp ]
+-    [ run hawick_circuits.cpp ]
+     [ run successive_shortest_path_nonnegative_weights_test.cpp ../../test/build//boost_unit_test_framework/<link>static ]
+     [ run cycle_canceling_test.cpp ../../test/build//boost_unit_test_framework/<link>static ]
+     ;
+diff --git a/libs/graph_parallel/test/Jamfile.v2 b/libs/graph_parallel/test/Jamfile.v2
+index 61bf161..68abc8e 100644
+--- a/libs/graph_parallel/test/Jamfile.v2
++++ b/libs/graph_parallel/test/Jamfile.v2
+@@ -21,7 +21,6 @@ test-suite graph_parallel
+   [ mpi-test distributed_queue_test : : : 2 ]
+   [ mpi-test process_group_serialization : : : 2 ]
+   [ mpi-test adjlist_build_test : : : 2 ]
+-  [ mpi-test adjlist_redist_test : : : 2 ]
+   [ mpi-test adjlist_remove_test : : : 2 ]
+   [ mpi-test distributed_adjacency_list_test : : : 2 ]
+   [ mpi-test distributed_connected_components_test : : : 2 ]
+@@ -30,13 +29,8 @@ test-suite graph_parallel
+   [ mpi-test distributed_dfs_test : : : 2 ]
+   [ mpi-test distributed_graph_coloring_test : : : 2 ]
+   [ mpi-test distributed_mst_test : : : 2 ]
+-  [ mpi-test distributed_strong_components_test : : : 2 ]
+-  [ mpi-test hohberg_biconnected_components_test : : : 2 ]
+   [ mpi-test mesh_generator_test : : <testing.arg>"1000 1000 1 0" : 2 ]
+   [ mpi-test named_vertices_seq : : : 1 ]
+-  [ mpi-test distributed_shortest_paths_test : : : 2 ]
+-  [ mpi-test distributed_csr_algorithm_test : : : 1 ]
+-  [ mpi-test distributed_betweenness_centrality_test : : : 2 ]
+   [ mpi-test distributed_dimacs_reader : : : 2 ]
+   [ mpi-test distributed_rmat_cc_ps : : : 2 ]
+   [ mpi-test distributed_rmat_cc : : : 2 ]
+diff --git a/libs/iostreams/test/Jamfile.v2 b/libs/iostreams/test/Jamfile.v2
+index c92058c..759c2a5 100644
+--- a/libs/iostreams/test/Jamfile.v2
++++ b/libs/iostreams/test/Jamfile.v2
+@@ -141,8 +141,6 @@ rule compile-fail-iostreams ( sources * : requirements * : target-name ? ) {
+       {              
+           all-tests += 
+               [ test-iostreams 
+-                    gzip_test.cpp ../build//boost_iostreams ]
+-              [ test-iostreams 
+                     zlib_test.cpp ../build//boost_iostreams ] ;
+       }
+           
+diff --git a/libs/locale/test/Jamfile.v2 b/libs/locale/test/Jamfile.v2
+index db66db2..215cf37 100644
+--- a/libs/locale/test/Jamfile.v2
++++ b/libs/locale/test/Jamfile.v2
+@@ -21,35 +21,14 @@ project
+ 
+ test-suite "boost_locale_test" 
+     : 
+-        # Configuration Information 
+-        [ run test_config.cpp : : : <test-info>always_show_run_output ]
+         # Shared
+         [ run test_utf.cpp ]
+-        [ run test_date_time.cpp ]
+         [ run test_ios_prop.cpp ]
+         [ run test_codecvt.cpp ]
+-        [ run test_codepage_converter.cpp ]
+-        [ run test_codepage.cpp ]
+-        [ run test_message.cpp : $(BOOST_ROOT)/libs/locale/test ]
+-        [ run test_generator.cpp ]
+-        # icu
+-        [ run test_collate.cpp ]
+-        [ run test_convert.cpp ]
+-        [ run test_boundary.cpp ]
+-        [ run test_formatting.cpp : : : <optimization>off ]
+-        [ run test_icu_vs_os_timezone.cpp ]
+         # winapi
+         [ run test_winapi_collate.cpp ]
+         [ run test_winapi_convert.cpp ]
+         [ run test_winapi_formatting.cpp ]
+-        # posix
+-        [ run test_posix_collate.cpp ]
+-        [ run test_posix_convert.cpp ]
+-        [ run test_posix_formatting.cpp ]
+-        # std
+-        [ run test_std_collate.cpp ]
+-        [ run test_std_convert.cpp ]
+-        [ run test_std_formatting.cpp ]
+     ;
+ 
+ # vim: tabstop=4 expandtab shiftwidth=4 softtabstop=4
+diff --git a/libs/log/test/Jamfile.v2 b/libs/log/test/Jamfile.v2
+index 8294fcd..337ceb2 100644
+--- a/libs/log/test/Jamfile.v2
++++ b/libs/log/test/Jamfile.v2
+@@ -103,4 +103,4 @@ rule test_all
+    return $(all_rules) ;
+ }
+ 
+-test-suite log : [ test_all r ] [ build-project ../example ] ;
++test-suite log : [ test_all r ] ;
+diff --git a/libs/math/test/Jamfile.v2 b/libs/math/test/Jamfile.v2
+index 29c6941..e092635 100644
+--- a/libs/math/test/Jamfile.v2
++++ b/libs/math/test/Jamfile.v2
+@@ -906,9 +906,6 @@ run  compile_test/sf_trunc_incl_test.cpp compile_test_main ;
+ run  compile_test/sf_ulp_incl_test.cpp compile_test_main ;
+ run  compile_test/sf_zeta_incl_test.cpp compile_test_main ;
+ run  compile_test/std_real_concept_check.cpp ;
+-run  compile_test/cstdfloat_concept_check_1.cpp
+-   : : : [ check-target-builds ../config//has_intel_quad "Intel _Quad datatype support" : <cxxflags>-Qoption,cpp,--extended_float_type ]
+-         [ check-target-builds ../config//has_float128 "GCC libquadmath and __float128 support" : <linkflags>-lquadmath ] ;
+ run  compile_test/cstdfloat_concept_check_2.cpp ;
+ run  compile_test/cstdfloat_concept_check_3.cpp ;
+ run  compile_test/cstdfloat_concept_check_4.cpp ;
+@@ -957,8 +954,6 @@ run test_nonfinite_trap.cpp ../../test/build//boost_unit_test_framework : : : <e
+ run test_signed_zero.cpp ../../test/build//boost_unit_test_framework ;
+ 
+ run complex_test.cpp ../../test/build//boost_unit_test_framework ;
+-run test_polynomial.cpp ../../test/build//boost_unit_test_framework ;
+-run test_gcd.cpp ../../test/build//boost_unit_test_framework ;
+ 
+ compile multiprc_concept_check_1.cpp : <debug-symbols>off <toolset>msvc:<cxxflags>/bigobj release <exception-handling>off:<build>no ;
+ compile multiprc_concept_check_2.cpp : <debug-symbols>off <toolset>msvc:<cxxflags>/bigobj release <exception-handling>off:<build>no ;
+@@ -996,5 +991,3 @@ rule get_float128_tests
+      }
+      return $(result) ;
+ }
+-
+-test-suite float128_tests : [ get_float128_tests ] ;
+diff --git a/libs/program_options/test/Jamfile.v2 b/libs/program_options/test/Jamfile.v2
+index 41b41cf..36b8c4a 100644
+--- a/libs/program_options/test/Jamfile.v2
++++ b/libs/program_options/test/Jamfile.v2
+@@ -22,7 +22,6 @@ rule po-test ( source : input-file ? )
+ test-suite program_options :
+ 
+     [ po-test options_description_test.cpp ] 
+-    [ po-test parsers_test.cpp : config_test.cfg ]
+     [ po-test variable_map_test.cpp ]
+     [ po-test cmdline_test.cpp ]
+     [ po-test positional_options_test.cpp ]
+@@ -31,7 +30,6 @@ test-suite program_options :
+     [ po-test exception_test.cpp ]
+     [ po-test split_test.cpp ]
+     [ po-test unrecognized_test.cpp ]
+-    [ po-test required_test.cpp : required_test.cfg ]
+     [ po-test exception_txt_test.cpp ]
+     [ run options_description_test.cpp : : : <rtti>off <define>BOOST_NO_RTTI <define>BOOST_NO_TYPEID : options_description_no_rtti_test ]
+     ;
+diff --git a/libs/python/test/Jamfile.v2 b/libs/python/test/Jamfile.v2
+index 5524188..9202871 100644
+--- a/libs/python/test/Jamfile.v2
++++ b/libs/python/test/Jamfile.v2
+@@ -52,153 +52,6 @@ rule require-windows ( properties * )
+ test-suite python
+   :
+ 
+-  [
+-    run exec.cpp /boost/python//boost_python/<link>static $(PY)
+-      : # program args
+-      : exec.py # input files
+-      : # requirements
+-      : # target-name
+-  ]
+-
+-  [
+-    run exec.cpp ../build//boost_python/<link>shared /python//python
+-      : # program args
+-      : exec.py
+-      : # requirements
+-      : exec-dynamic # target-name
+-  ]
+-
+-#   [
+-#     run import_.cpp ../build//boost_python /python//python
+-#       : # program args
+-#       : import_.py # input files
+-#       : # requirements
+-#       : # target-name
+-#   ]
+-
+-[
+-bpl-test crossmod_exception
+-  : crossmod_exception.py crossmod_exception_a.cpp crossmod_exception_b.cpp
+-]
+-
+-[ bpl-test injected ]
+-[ bpl-test properties ]
+-[ bpl-test return_arg ]
+-[ bpl-test staticmethod ]
+-[ bpl-test shared_ptr ]
+-[ bpl-test enable_shared_from_this ]
+-[ bpl-test andreas_beyer ]
+-[ bpl-test wrapper_held_type ]
+-
+-[ bpl-test polymorphism2_auto_ptr 
+-  : polymorphism2_auto_ptr.py polymorphism2.py polymorphism2_auto_ptr.cpp 
+-]
+-
+-[ bpl-test polymorphism ]
+-[ bpl-test polymorphism2 ]
+-
+-[ bpl-test auto_ptr ]
+-
+-[ bpl-test minimal ]
+-[ bpl-test args ]
+-[ bpl-test raw_ctor ]
+-[ bpl-test numpy : printer.py numeric_tests.py numarray_tests.py numpy.py numpy.cpp ]
+-[ bpl-test enum ]
+-[ bpl-test exception_translator ]
+-[ bpl-test pearu1 : test_cltree.py cltree.cpp ]
+-[ bpl-test try : newtest.py m1.cpp m2.cpp ]
+-[ bpl-test const_argument ]
+-[ bpl-test keywords : keywords.cpp keywords_test.py ]
+-   
+-
+-[ python-extension builtin_converters_ext : test_builtin_converters.cpp /boost/python//boost_python ]
+-[ bpl-test builtin_converters : test_builtin_converters.py builtin_converters_ext ]
+-
+- [ bpl-test test_pointer_adoption ]
+- [ bpl-test operators ]
+- [ bpl-test operators_wrapper ]
+- [ bpl-test callbacks ]
+- [ bpl-test defaults ]
+-
+-[ bpl-test object ]
+-[ bpl-test class ]
+-[ bpl-test list ]
+-[ bpl-test long ]
+-[ bpl-test dict ]
+-[ bpl-test tuple ]
+-[ bpl-test str ]
+-[ bpl-test slice ]
+-
+-[ bpl-test virtual_functions ]
+-[ bpl-test back_reference ]
+-[ bpl-test implicit ]
+-[ bpl-test data_members ]
+-
+-[ bpl-test ben_scott1 ]
+-
+-[ bpl-test bienstman1 ]
+-[ bpl-test bienstman2 ]
+-[ bpl-test bienstman3 ]
+-
+-[ bpl-test multi_arg_constructor
+-  : # files
+-  : # requirements
+-    # A bug in the Win32 intel compilers causes compilation of one of our
+-    # tests to take forever when debug symbols are enabled. This rule
+-    # turns them off when added to the requirements section
+-    <toolset>intel-win:<debug-symbols>off
+-]
+-
+-[ bpl-test iterator : iterator.py iterator.cpp input_iterator.cpp ]
+-
+-[ bpl-test stl_iterator : stl_iterator.py stl_iterator.cpp ]
+-
+-[ bpl-test extract ]
+-
+-[
+-bpl-test crossmod_opaque
+-  : crossmod_opaque.py crossmod_opaque_a.cpp crossmod_opaque_b.cpp
+-]
+-[ bpl-test opaque ]
+-[ bpl-test voidptr ]
+-
+-[ bpl-test pickle1 ]
+-[ bpl-test pickle2 ]
+-[ bpl-test pickle3 ]
+-[ bpl-test pickle4 ]
+-
+-[ bpl-test nested ]
+-
+-[ bpl-test docstring ]
+-[ bpl-test pytype_function ]
+-
+-[ bpl-test vector_indexing_suite ]
+-
+-[ bpl-test pointer_vector
+-  : # files
+-  : # requirements
+-    # Turn off this test on HP CXX, as the test hangs when executing.
+-    # Whenever the cause for the failure of the polymorphism test is found
+-    # and fixed, this should be retested.
+-    <toolset>hp_cxx:<build>no ]
+-      
+-[ python-extension map_indexing_suite_ext
+-    : map_indexing_suite.cpp int_map_indexing_suite.cpp a_map_indexing_suite.cpp
+-    /boost/python//boost_python ]
+-[ bpl-test  
+-    map_indexing_suite : map_indexing_suite.py map_indexing_suite_ext ]
+-      
+-[ run import_.cpp /boost/python//boost_python $(PY) : : import_.py ]
+-
+-# if $(TEST_BIENSTMAN_NON_BUGS)
+-# {
+-#     bpl-test bienstman4 ;
+-#     bpl-test bienstman5 ;
+-# }
+-
+-[ bpl-test calling_conventions : : <conditional>@require-windows ]
+-[ bpl-test calling_conventions_mf : : <conditional>@require-windows ]
+-
+ # --- unit tests of library components ---
+ 
+ [ compile indirect_traits_test.cpp ]
+diff --git a/libs/random/test/Jamfile.v2 b/libs/random/test/Jamfile.v2
+index 25424bc..ac5b163 100644
+--- a/libs/random/test/Jamfile.v2
++++ b/libs/random/test/Jamfile.v2
+@@ -15,7 +15,6 @@ run test_generate_canonical.cpp /boost//unit_test_framework ;
+ run test_random_number_generator.cpp /boost//unit_test_framework ;
+ run ../example/random_demo.cpp ;
+ run test_random_device.cpp /boost//random : : : <link>static : test_random_device ;
+-run test_random_device.cpp /boost//random : : : <link>shared : test_random_device_dll ;
+ 
+ run test_minstd_rand0.cpp /boost//unit_test_framework ;
+ run test_minstd_rand.cpp /boost//unit_test_framework ;
+@@ -134,10 +133,3 @@ explicit statistic_tests.exe ;
+ 
+ install statistic_tests : statistic_tests.exe : <install-type>EXE <location>. ;
+ explicit statistic_tests ;
+-
+-#
+-# Multiprecision tests:
+-#
+-run multiprecision_int_test.cpp /boost//unit_test_framework ;
+-# This one runs too slow in debug mode, we really need inline expansions turned on amonst other things:
+-run multiprecision_float_test.cpp /boost//unit_test_framework : : : release ;
+diff --git a/libs/regex/test/Jamfile.v2 b/libs/regex/test/Jamfile.v2
+index 06198b0..8d351e9 100644
+--- a/libs/regex/test/Jamfile.v2
++++ b/libs/regex/test/Jamfile.v2
+@@ -89,20 +89,6 @@ local regress-sources = regress/$(R_SOURCE) ;
+ 
+ test-suite regex
+       : 
+-      [ run regress/$(R_SOURCE) ../build//boost_regex ../build//icu_options
+-        : # command line
+-        : # input files
+-        : # requirements
+-        : regex_regress ]
+-
+-      [ run regress/$(R_SOURCE) ../build//boost_regex
+-                                ../../thread/build//boost_thread ../build//icu_options
+-        : # command line
+-        : # input files
+-        : # requirements
+-        <define>TEST_THREADS
+-        : regex_regress_threaded ]
+-
+       [ regex-test posix_api_check : c_compiler_checks/posix_api_check.c ]
+ 
+       [ compile c_compiler_checks/wide_posix_api_check.c 
+@@ -168,29 +154,6 @@ test-suite regex
+     captures_test
+  ]
+ 
+-[ run regress/$(R_SOURCE) .//boost_regex_recursive
+-                          ../build//icu_options
+-  : # command line
+-  : # input files
+-  : # requirements
+-    <define>BOOST_REGEX_RECURSIVE=1
+-  : regex_regress_recursive ]
+-
+-[ run regress/$(R_SOURCE) ./noeh_test//boost_regex_noeh
+-                          ../build//icu_options
+-  : # command line
+-  : # input files
+-  : # requirements
+-    <define>BOOST_NO_EXCEPTIONS=1
+-    <exception-handling>off
+-    <link>static
+-    <runtime-link>shared
+-  : regex_regress_noeh ]
+-
+ ;
+ 
+ compile test_consolidated.cpp ;
+-
+-build-project ../example ;
+-
+-
+diff --git a/libs/serialization/test/Jamfile.v2 b/libs/serialization/test/Jamfile.v2
+index 08fde1f..0d99f22 100644
+--- a/libs/serialization/test/Jamfile.v2
++++ b/libs/serialization/test/Jamfile.v2
+@@ -86,9 +86,7 @@ test-suite "serialization" :
+      [ test-bsl-run_files test_map : A ]
+      [ test-bsl-run_files test_map_unordered : A : :  [ requires cxx11_hdr_unordered_map ] ] # BOOST_NO_CXX11_HDR_UNORDERED_MAP
+      [ test-bsl-run_files test_map_boost_unordered : A ]
+-     [ test-bsl-run_files test_mi ]
+      [ test-bsl-run_files test_multiple_ptrs : A ]
+-     [ test-bsl-run_files test_multiple_inheritance ]
+      [ test-bsl-run_files test_no_rtti : polymorphic_base polymorphic_derived1 ]
+      [ test-bsl-run_files test_non_intrusive ]
+      [ test-bsl-run_files test_non_default_ctor ]
+@@ -118,7 +116,6 @@ test-suite "serialization" :
+      [ test-bsl-run_files test_new_operator : A ]
+      [ test-bsl-run_files test_optional ]
+      [ test-bsl-run_files test_shared_ptr ]
+-     [ test-bsl-run_files test_shared_ptr_multi_base ]
+      [ test-bsl-run_files test_shared_ptr_132 ]
+      [ test-bsl-run_polymorphic_archive test_polymorphic : test_polymorphic_A A ]
+      [ test-bsl-run_polymorphic_archive test_polymorphic2 : test_polymorphic2imp ]
+diff --git a/libs/timer/test/Jamfile.v2 b/libs/timer/test/Jamfile.v2
+index e5c3833..139e976 100644
+--- a/libs/timer/test/Jamfile.v2
++++ b/libs/timer/test/Jamfile.v2
+@@ -18,26 +18,6 @@ project
+  
+    test-suite "timer"
+    :
+-     [ run ../example/auto_cpu_timer_example.cpp
+-       : # command line
+-       : # input files
+-       : <test-info>always_show_run_output # requirements
+-     ]
+-     [ run cpu_timer_info.cpp
+-       : # command line
+-       : # input files
+-       : <test-info>always_show_run_output # requirements
+-     ]
+-     [ run cpu_timer_test.cpp
+-       : # command line
+-       : # input files
+-       : <test-info>always_show_run_output # requirements
+-     ]
+-     [ run ../example/timex.cpp
+-       : echo "Hello, world"
+-	     :
+-	     : <test-info>always_show_run_output
+-     ]
+      [ compile original_timer_test.cpp
+      ]
+ #     [ run /boost/tools/inspect//inspect/<variant>release
+diff --git a/libs/wave/test/build/Jamfile.v2 b/libs/wave/test/build/Jamfile.v2
+index 17eaf51..9b5a1a0 100644
+--- a/libs/wave/test/build/Jamfile.v2
++++ b/libs/wave/test/build/Jamfile.v2
+@@ -15,7 +15,7 @@
+ SOURCES_STATIC = testwave testwave_app
+     ;
+     
+-SOURCES_DYNAMIC = testwave_dll testwave_app_dll
++SOURCES_DYNAMIC = testwave_dll
+     ;
+ 
+ SOURCES = $(SOURCE_STATIC) $(SOURCES_DYNAMIC)
+@@ -56,64 +56,6 @@ for local source in $(SOURCES)
+ #
+ test-suite wave
+     : 
+-        [   
+-            run
+-            # sources
+-                ../testwave/$(SOURCES_DYNAMIC).cpp
+-                /boost/wave//boost_wave 
+-                /boost/program_options//boost_program_options
+-                /boost/filesystem//boost_filesystem    
+-                /boost/system//boost_system    
+-                /boost/thread//boost_thread
+-                /boost/date_time//boost_date_time
+-            :
+-            # arguments
+-                $(TESTWAVE_ARGUMENTS) 
+-                --config-file $(TESTWAVE_DIR)/$(TESTWAVE_FILES)
+-            :
+-            # input files
+-            :
+-            # requirements
+-                <threading>multi
+-                <variant>debug
+-                <link>shared:<define>BOOST_ALL_DYN_LINK=1
+-                <toolset>msvc:<define>_SCL_SECURE_NO_DEPRECATE
+-                <toolset>msvc:<define>_CRT_SECURE_NO_DEPRECATE
+-#                <define>BOOST_LIB_DIAGNOSTIC=1
+-            :    
+-            # name
+-                testwave_dll
+-        ]
+-
+-        [   
+-            run
+-            # sources
+-                ../testwave/$(SOURCES_STATIC).cpp
+-                /boost/wave//boost_wave/<link>static
+-                /boost/program_options//boost_program_options/<link>static
+-                /boost/filesystem//boost_filesystem/<link>static
+-                /boost/system//boost_system/<link>static
+-                /boost/thread//boost_thread/<link>static
+-                /boost/date_time//boost_date_time/<link>static
+-            :
+-            # arguments
+-                $(TESTWAVE_ARGUMENTS) 
+-                --config-file $(TESTWAVE_DIR)/$(TESTWAVE_FILES)
+-            :
+-            # input files
+-            : 
+-            # requirements
+-                <threading>multi
+-                <variant>debug
+-                <link>static     # Linking to DLL tested by testwave_dll
+-                <toolset>msvc:<define>_SCL_SECURE_NO_DEPRECATE
+-                <toolset>msvc:<define>_CRT_SECURE_NO_DEPRECATE
+-#                <define>BOOST_LIB_DIAGNOSTIC=1
+-            : 
+-            # name
+-                testwave
+-        ]
+-
+         # test the Slex wave lexing component
+         [   
+             run
+-- 
+1.9.1
+

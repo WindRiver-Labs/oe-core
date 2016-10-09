@@ -1,0 +1,52 @@
+From 96d43186e1384ddb784c68e441f691196f3fc8d9 Mon Sep 17 00:00:00 2001
+From: Jackie Huang <jackie.huang@windriver.com>
+Date: Wed, 12 Oct 2016 16:11:45 +0800
+Subject: [PATCH] testing: hack the rules for ptest
+
+The rules for tests don't work in cross-compiling,
+they try to run the executable after compiling and
+linking the test program, so hack the rules here
+so they will be almost the same as the 'link' rule
+except that they accept more parameters.
+
+And the running logic will be added in run-ptest
+
+Upstream-Status: Inappropriate [OE ptest specific]
+
+Signed-off-by: Jackie Huang <jackie.huang@windriver.com>
+---
+ tools/build/src/tools/mpi.jam     | 2 +-
+ tools/build/src/tools/testing.jam | 4 +---
+ 2 files changed, 2 insertions(+), 4 deletions(-)
+
+diff --git a/tools/build/src/tools/mpi.jam b/tools/build/src/tools/mpi.jam
+index a161101..beffa5b 100644
+--- a/tools/build/src/tools/mpi.jam
++++ b/tools/build/src/tools/mpi.jam
+@@ -593,7 +593,7 @@ rule mpi-test ( name : sources * : requirements * : schedule * )
+     for processes in $(schedule)
+     {  
+       result += [ testing.make-test 
+-        run-mpi : $(sources) /boost/mpi//boost_mpi
++        link : $(sources) /boost/mpi//boost_mpi
+           : $(requirements) <toolset>msvc:<link>static <mpi:processes>$(processes) : $(name)-$(processes) ] ;
+     }
+     return $(result) ;
+diff --git a/tools/build/src/tools/testing.jam b/tools/build/src/tools/testing.jam
+index 7fbb692..d4e3d99 100644
+--- a/tools/build/src/tools/testing.jam
++++ b/tools/build/src/tools/testing.jam
+@@ -182,9 +182,7 @@ rule handle-input-files ( input-files * )
+ rule run ( sources + : args * : input-files * : requirements * : target-name ? :
+     default-build * )
+ {
+-    requirements += <testing.arg>$(args:J=" ") ;
+-    requirements += [ handle-input-files $(input-files) ] ;
+-    return [ make-test run : $(sources) : $(requirements) : $(target-name) ] ;
++    return [ make-test link : $(sources) : $(requirements) : $(target-name) ] ;
+ }
+ 
+ 
+-- 
+1.9.1
+
