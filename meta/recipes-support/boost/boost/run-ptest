@@ -1,0 +1,39 @@
+#!/bin/sh
+
+PTESTPATH="$(dirname $0)"
+LIBS="@BOOST_LIBS@"
+LOG="boost_ptest_$(date +%Y%m%d-%H%M%S).log"
+
+lib_num=1
+
+for lib in ${LIBS}; do
+
+    # ignore python3 since there is no such
+    # sub-dir in libs
+    [ ${lib} = "python3" ] && continue
+
+    test_num=1
+
+    for test in ${PTESTPATH}/${lib}/*; do
+        testname=`basename ${test}`
+        echo
+        echo "=== Test ${lib_num}-${test_num} ${lib}/${testname}: Start ==="
+        ./${test}
+        [ $? = 0 ] && echo "PASS: ${lib}/${testname}" || echo "FAIL: ${lib}/${testname}"
+        echo "=== Test ${lib_num}-${test_num} ${lib}/${testname}: Done ==="
+        echo
+        test_num=$((test_num + 1))
+    done 2>&1|tee -a ${PTESTPATH}/${LOG}
+
+    lib_num=$((lib_num+1))
+done
+
+passed=`grep PASS: ${PTESTPATH}/${LOG}|wc -l`
+failed=`grep FAIL: ${PTESTPATH}/${LOG}|wc -l`
+all=$((passed + failed))
+
+( echo "=== Test Summary ==="
+  echo "TOTAL: ${all}"
+  echo "PASSED: ${passed}"
+  echo "FAILED: ${failed}"
+) | tee -a ${PTESTPATH}/${LOG}

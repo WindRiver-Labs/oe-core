@@ -76,6 +76,23 @@ python __anonymous () {
     d.setVar("BJAM_EXTRA", " ".join(extras))
 }
 
+inherit ptest
+
+SRC_URI_append = " \
+    file://run-ptest \
+    file://boost-remove-rpath.patch \
+    file://boost-testing-hack-the-rules-for-ptest.patch \
+    file://boost-test-remove-some-tests.patch \
+"
+
+# Required by some of the tests
+FILES_${PN}-ptest += " \
+	${libdir}/libboost_regex_extra.so.* \
+	${libdir}/libdll_*.so.* \
+	${libdir}/libthrow_test.so.* \
+"
+RDEPENDS_${PN}-ptest = "coreutils"
+
 # Override the contents of specific packages
 FILES_${PN}-graph = "${libdir}/libboost_graph.so.*"
 FILES_${PN}-graph_parallel = "${libdir}/libboost_graph_parallel.so.*"
@@ -201,6 +218,51 @@ do_compile() {
 		--exec-prefix=${exec_prefix} \
 		--libdir=${libdir} \
 		--includedir=${includedir}
+}
+
+do_compile_ptest() {
+	for lib in ${BOOST_LIBS}; do
+		# ignore python3 since there is no such
+		# sub-dir in libs
+		[ ${lib} = "python3" ] && continue
+
+		cd ${S}/libs/${lib}/test
+		[ -f build/Jamfile.v2 ] && cd build
+		bjam ${BJAM_OPTS} --prefix=${prefix} \
+			--exec-prefix=${exec_prefix} \
+			--libdir=${libdir} \
+			--includedir=${includedir}
+	done
+}
+
+do_install_ptest() {
+	build_bin="${S}/${TARGET_SYS}/boost/bin.v2"
+
+	for lib in ${BOOST_LIBS}; do
+		# ignore python3 since there is no such
+		# sub-dir in libs
+		[ "${lib}" = "python3" ] && continue
+
+		install -d ${D}/${PTEST_PATH}/${lib}
+		lib_test_dir="${build_bin}/libs/${lib}/test"
+		for testdir in `ls -d ${lib_test_dir}/*.test ${lib_test_dir}/build/*.test 2>/dev/null`; do
+			testname=`basename ${testdir%.test}`
+			testfile=`find ${testdir} -name ${testname}`
+			if [ -n "${testfile}" -a -f "${testfile}" ]; then
+				install -m 0755 ${testfile} ${D}${PTEST_PATH}/${lib}
+			fi
+		done
+	done
+
+	extra_ptest_libs="libboost_regex_extra.so* libdll_*.so* libthrow_test.so*"
+	for lib in ${extra_ptest_libs}; do
+		f=`find ${build_bin}/libs -name ${lib}`
+		if [ -n "${f}" ]; then
+			install -m 0755 ${f} ${D}${libdir}
+		fi
+	done
+
+	sed -i 's/@BOOST_LIBS@/${BOOST_LIBS}/' ${D}${PTEST_PATH}/run-ptest
 }
 
 do_install() {
