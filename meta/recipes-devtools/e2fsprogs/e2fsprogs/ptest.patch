@@ -7,7 +7,7 @@ index 60cf655..ce220f1 100644
  	@echo "HTREE=y" >> test_one
  	@echo "QUOTA=y" >> test_one
 -	@echo "SRCDIR=@srcdir@" >> test_one
-+	@echo "SRCDIR=/usr/lib/e2fsprogs/ptest/test" >> test_one
++	@echo "SRCDIR=${prefix}${libdir}/e2fsprogs/ptest/test" >> test_one
  	@echo "DIFF_OPTS=@UNI_DIFF_OPTS@" >> test_one
  	@cat $(srcdir)/test_one.in >> test_one
  	@chmod +x test_one
@@ -16,7 +16,7 @@ index 60cf655..ce220f1 100644
  	@echo "Creating test_script..."
  	@echo "#!/bin/sh" > test_script
 -	@echo "SRCDIR=@srcdir@" >> test_script
-+	@echo "SRCDIR=/usr/lib/e2fsprogs/ptest/test" >> test_script
++	@echo "SRCDIR=${prefix}${libdir}/e2fsprogs/ptest/test" >> test_script
  	@cat $(srcdir)/test_script.in >> test_script
  	@chmod +x test_script
  
