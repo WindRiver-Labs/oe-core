@@ -36,5 +36,5 @@ def is_target(d):
 
 PERLLIBDIRS = "${libdir}/perl"
 PERLLIBDIRS_class-native = "${libdir}/perl-native"
-PERLVERSION := "${@get_perl_version(d)}"
+PERLVERSION = "${@get_perl_version(d)}"
 PERLVERSION[vardepvalue] = ""
