@@ -2,13 +2,14 @@ import os
 import shutil
 import subprocess
 
-from oeqa.oetest import oeSDKExtTest
+from oeqa.oetest import oeSDKExtTest, skipModule
 from oeqa.utils.httpserver import HTTPService
 
 class SdkUpdateTest(oeSDKExtTest):
 
     @classmethod
     def setUpClass(self):
+        skipModule("oe-publish-sdk doesn't support publish subgits")
         self.publish_dir = os.path.join(self.tc.sdktestdir, 'esdk_publish')
         if os.path.exists(self.publish_dir):
             shutil.rmtree(self.publish_dir)
