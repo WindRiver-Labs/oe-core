@@ -24,7 +24,6 @@ class DevtoolTest(oeSDKExtTest):
             self._run('devtool build myapp')
         except Exception as e:
             print(e.output)
-            self._run('devtool reset myapp')
             raise e
         self._run('devtool reset myapp')
 
@@ -34,7 +33,6 @@ class DevtoolTest(oeSDKExtTest):
             self._run('devtool package myapp')
         except Exception as e:
             print(e.output)
-            self._run('devtool reset myapp')
             raise e
         self._run('devtool reset myapp')
 
@@ -73,7 +71,6 @@ class DevtoolTest(oeSDKExtTest):
             self._run('devtool build %s' % recipe)
         except Exception as e:
             print(e.output)
-            self._run('devtool reset %s' % recipe)
             raise e
         self._run('devtool reset %s' % recipe)
 
@@ -87,7 +84,6 @@ class DevtoolTest(oeSDKExtTest):
             self._run('devtool build %s' % recipe)
         except Exception as e:
             print(e.output)
-            self._run('devtool reset %s' % recipe)
             raise e
         self._run('devtool reset %s' % recipe)
 
@@ -100,7 +96,6 @@ class DevtoolTest(oeSDKExtTest):
             self._run('devtool build %s ' % package_nodejs)
         except Exception as e:
             print(e.output)
-            self._run('devtool reset %s' % package_nodejs)
             raise e
         self._run('devtool reset %s '% package_nodejs)
 
