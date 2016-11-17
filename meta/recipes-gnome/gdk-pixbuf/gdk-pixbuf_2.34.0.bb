@@ -17,6 +17,7 @@ SRC_URI = "${GNOME_MIRROR}/${BPN}/${MAJ_VER}/${BPN}-${PV}.tar.xz \
            file://extending-libinstall-dependencies.patch \
            file://run-ptest \
            file://fatal-loader.patch \
+           file://gdk-pixbuf-CVE-2016-6352.patch \
            "
 
 SRC_URI[md5sum] = "63cb19f92cf7709ccf44bbb6fe1ff70c"
