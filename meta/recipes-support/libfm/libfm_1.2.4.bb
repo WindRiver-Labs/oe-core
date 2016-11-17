@@ -19,7 +19,7 @@ SRC_URI[sha256sum] = "7804f6f28cb3d1bc8ffb3151ab7ff0c063b27c5f9b06c682eb903e01cf
 inherit autotools pkgconfig gtk-doc distro_features_check
 ANY_OF_DISTRO_FEATURES = "${GTK3DISTROFEATURES}"
 
-EXTRA_OECONF = "--with-gtk=3"
+EXTRA_OECONF = "--with-gtk=3 --disable-static"
 
 do_configure[dirs] =+ "${S}/m4"
 
