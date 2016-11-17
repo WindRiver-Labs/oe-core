@@ -16,7 +16,7 @@ SRC_URI[sha256sum] = "7804f6f28cb3d1bc8ffb3151ab7ff0c063b27c5f9b06c682eb903e01cf
 
 S = "${WORKDIR}/libfm-${PV}"
 
-EXTRA_OECONF = "--with-extra-only --with-gtk=no"
+EXTRA_OECONF = "--with-extra-only --with-gtk=no --disable-static"
 
 inherit autotools pkgconfig gtk-doc
 
