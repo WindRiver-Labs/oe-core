@@ -1,6 +1,8 @@
 require grub2.inc
 
-RDEPENDS_${PN} = "diffutils freetype grub-editenv"
+RDEPENDS_${PN} = "diffutils freetype ${PN}-common"
+RDEPENDS_${PN}-common = "${PN}-editenv"
+
 PR = "r1"
 
 EXTRA_OECONF = "--with-platform=pc --disable-grub-mkfont --program-prefix="" \
@@ -8,13 +10,15 @@ EXTRA_OECONF = "--with-platform=pc --disable-grub-mkfont --program-prefix="" \
 
 EXTRA_OECONF += "${@bb.utils.contains('DISTRO_FEATURES', 'largefile', '--enable-largefile', '--disable-largefile', d)}"
 
-PACKAGES =+ "grub-editenv"
+PACKAGES =+ "${PN}-editenv ${PN}-common"
 
-FILES_grub-editenv = "${bindir}/grub-editenv"
-
-do_install_append () {
-    install -d ${D}${sysconfdir}/grub.d
-}
+FILES_${PN}-editenv = "${bindir}/grub-editenv"
+FILES_${PN}-common = " \
+    ${bindir} \
+    ${sysconfdir} \
+    ${sbindir} \
+    ${datadir}/grub \
+"
 
 INSANE_SKIP_${PN} = "arch"
 INSANE_SKIP_${PN}-dbg = "arch"
