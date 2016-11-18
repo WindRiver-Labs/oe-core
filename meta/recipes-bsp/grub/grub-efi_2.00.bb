@@ -1,7 +1,7 @@
 require grub2.inc
 
 DEPENDS_class-target = "grub-efi-native"
-RDEPENDS_${PN}_class-target = "diffutils freetype"
+RDEPENDS_${PN}_class-target = "diffutils freetype grub-common"
 PR = "r3"
 
 SRC_URI += " \
@@ -40,6 +40,13 @@ do_install_class-native() {
 	install -m 755 grub-mkimage ${D}${bindir}
 }
 
+do_install_append_class-target(){
+	# Remove duplicated
+	for dir in ${sysconfdir} ${datadir} ${bindir} ${sbindir}; do
+		rm -rf ${D}$dir
+	done
+}
+
 GRUB_BUILDIN ?= "boot linux ext2 fat serial part_msdos part_gpt normal efi_gop iso9660 search"
 
 do_deploy() {
@@ -57,8 +64,7 @@ do_deploy_class-native() {
 
 addtask deploy after do_install before do_build
 
-FILES_${PN} += "${libdir}/grub/${GRUB_TARGET}-efi \
-                ${datadir}/grub \
+FILES_${PN} = "${libdir}/grub/${GRUB_TARGET}-efi \
                 "
 
 BBCLASSEXTEND = "native"
