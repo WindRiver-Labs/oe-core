@@ -9,6 +9,7 @@ SRC_URI = "http://curl.haxx.se/download/curl-${PV}.tar.bz2 \
            file://0001-replace-krb5-config-with-pkg-config.patch \
            file://CVE-2016-7141.patch \
            file://CVE-2016-7167.patch \
+           file://CVE-2016-8615.patch \
 "
 
 # curl likes to set -g0 in CFLAGS, so we stop it
