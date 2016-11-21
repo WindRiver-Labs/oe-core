@@ -1,0 +1,25 @@
+icu provides cross script icu-config. When compile package which calls
+'icu-config --cppflags', it returns '-I/usr/include' which causes host
+contamination.
+
+The root cause is when install cross script by binconfig.bbclass, the pure
+prefix(/usr) is not replaced. Then the value of $(prefix)/include points to the
+host directory. Fix by replace it with $(includedir).
+
+Upstream-Status: Pending
+
+Signed-off-by: Kai Kang <kai.kang@windriver.com>
+---
+diff --git a/source/config/Makefile.inc.in b/source/config/Makefile.inc.in
+index 9ee94dd..19913ff 100644
+--- a/config/Makefile.inc.in
++++ b/config/Makefile.inc.in
+@@ -188,7 +188,7 @@ AR = @AR@
+ CC = @CC@
+ CPP = @CPP@
+ CFLAGS = @UCONFIG_CFLAGS@ 
+-CPPFLAGS = @UCONFIG_CPPFLAGS@ -I$(prefix)/include
++CPPFLAGS = @UCONFIG_CPPFLAGS@ -I$(includedir)
+ CXXFLAGS = @UCONFIG_CXXFLAGS@
+ CXX = @CXX@
+ DEFAULT_MODE = @DATA_PACKAGING_MODE@
