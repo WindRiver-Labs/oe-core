@@ -43,6 +43,7 @@ QB_OPT_APPEND ?= "-show-cursor"
 
 # Create qemuboot.conf
 ROOTFS_POSTPROCESS_COMMAND += "write_qemuboot_conf; "
+IMGDEPLOYDIR ?= "${WORKDIR}/deploy-${PN}-image-complete"
 
 python write_qemuboot_conf() {
     import configparser
@@ -58,8 +59,8 @@ python write_qemuboot_conf() {
         if k.startswith('QB_'):
             qb_vars.append(k)
 
-    qemuboot = "%s/%s.qemuboot.conf" % (d.getVar('DEPLOY_DIR_IMAGE', True), d.getVar('IMAGE_NAME', True))
-    qemuboot_link = "%s/%s.qemuboot.conf" % (d.getVar('DEPLOY_DIR_IMAGE', True), d.getVar('IMAGE_LINK_NAME', True))
+    qemuboot = "%s/%s.qemuboot.conf" % (d.getVar('IMGDEPLOYDIR', True), d.getVar('IMAGE_NAME', True))
+    qemuboot_link = "%s/%s.qemuboot.conf" % (d.getVar('IMGDEPLOYDIR', True), d.getVar('IMAGE_LINK_NAME', True))
     cf = configparser.ConfigParser()
     cf.add_section('config_bsp')
     for k in build_vars + qb_vars:
