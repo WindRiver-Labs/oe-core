@@ -30,6 +30,7 @@ SRC_URI = "${SRC_URI_BASE} \
            file://ghostscript-9.02-genarch.patch \
            file://objarch.h \
            file://cups-no-gcrypt.patch \
+           file://avoid-host-contamination.patch \
            "
 
 SRC_URI_class-native = "${SRC_URI_BASE} \
@@ -40,7 +41,15 @@ SRC_URI_class-native = "${SRC_URI_BASE} \
 SRC_URI[md5sum] = "c9682ce6b852f9197c69905a43928907"
 SRC_URI[sha256sum] = "cf3c0dce67db1557a87366969945f9c5235887989c0b585e037af366dc035989"
 
-EXTRA_OECONF = "--without-x --with-system-libtiff --without-jbig2dec \
+PACKAGECONFIG ??= "${@bb.utils.contains('DISTRO_FEATURES', 'x11', 'x11', '', d)}"
+PACKAGECONFIG_class-native = ""
+
+PACKAGECONFIG[x11] = "--with-x --x-includes=${STAGING_INCDIR} --x-libraries=${STAGING_LIBDIR}, \
+                      --without-x, virtual/libx11 libxext libxt gtk+3\
+                      "
+
+EXTRA_OECONF = "--enable-dynamic --with-drivers=ALL \
+                --with-system-libtiff --without-jbig2dec \
                 --with-fontpath=${datadir}/fonts \
                 --without-libidn --with-cups-serverbin=${exec_prefix}/lib/cups \
                 --with-cups-datadir=${datadir}/cups \
@@ -66,24 +75,28 @@ BUILD_CFLAGS += "-DHAVE_SYS_TIME_H=1"
 inherit autotools
 
 do_configure_prepend () {
-	mkdir -p obj
-	mkdir -p soobj
+	mkdir -p ${B}/obj
+	mkdir -p ${B}/soobj
 	if [ -e ${WORKDIR}/objarch.h ]; then
-		cp ${WORKDIR}/objarch.h obj/arch.h
+		cp ${WORKDIR}/objarch.h ${B}/obj/arch.h
+		cp ${WORKDIR}/objarch.h ${B}/soobj/arch.h
 	fi
 }
 
-do_configure_append () {
+do_configure_append_class-target () {
 	# copy tools from the native ghostscript build
-	if [ "${PN}" != "ghostscript-native" ]; then
-		mkdir -p obj/aux soobj
-		for i in genarch genconf mkromfs echogs gendev genht; do
-			cp ${STAGING_BINDIR_NATIVE}/ghostscript-${PV}/$i obj/aux/$i
-		done
-	fi
+	mkdir -p ${B}/obj/aux ${B}/soobj/aux
+	for i in genarch genconf mkromfs echogs gendev genht; do
+		cp ${STAGING_BINDIR_NATIVE}/${BP}/$i ${B}/obj/aux/
+		cp ${STAGING_BINDIR_NATIVE}/${BP}/$i ${B}/soobj/aux/
+	done
 }
 
-do_install_append () {
+do_install_append_class-target () {
+    # GLF_ should be passed to 'make so' in do_compile
+    # but don't know why 'make soinstall' rebuild the so target
+    oe_runmake DESTDIR=${D} 'GLF_=${LDFLAGS}' soinstall
+
     mkdir -p ${D}${datadir}/ghostscript/${PV}/
     cp -r ${S}/Resource ${D}${datadir}/ghostscript/${PV}/
     cp -r ${S}/iccprofiles ${D}${datadir}/ghostscript/${PV}/
