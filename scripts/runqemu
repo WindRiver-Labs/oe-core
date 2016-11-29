@@ -147,6 +147,19 @@ def get_first_file(cmds):
                     return f
     return ''
 
+def check_free_port(host, port):
+    """ Check whether the port is free or not """
+    import socket
+    from contextlib import closing
+
+    with closing(socket.socket(socket.AF_INET, socket.SOCK_STREAM)) as sock:
+        if sock.connect_ex((host, port)) == 0:
+            # Port is open, so not free
+            return False
+        else:
+            # Port is not open, so free
+            return True
+
 class BaseConfig(object):
     def __init__(self):
         # Vars can be merged with .qemuboot.conf, use a dict to manage them.
@@ -751,14 +764,31 @@ class BaseConfig(object):
 
         self.nfs_running = True
 
-
     def setup_slirp(self):
         """Setup user networking"""
 
         if self.fstype == 'nfs':
             self.setup_nfs()
         self.kernel_cmdline_script += ' ip=dhcp'
-        self.set('NETWORK_CMD', self.get('QB_SLIRP_OPT'))
+        # Port mapping
+        hostfwd = ",hostfwd=tcp::2222-:22,hostfwd=tcp::2323-:23"
+        qb_slirp_opt_default = "-netdev user,id=net0%s -device virtio-net-pci,netdev=net0" % hostfwd
+        qb_slirp_opt = self.get('QB_SLIRP_OPT') or qb_slirp_opt_default
+        # Figure out the port
+        ports = re.findall('hostfwd=[^-]*:([0-9]+)-[^,-]*', qb_slirp_opt)
+        ports = [int(i) for i in ports]
+        # Find a free port to avoid conflicts
+        for p in ports[:]:
+            p_new = p
+            while not check_free_port('localhost', p_new):
+                p_new += 1
+                while p_new in ports:
+                        p_new += 1
+            if p != p_new:
+                ports.append(p_new)
+                qb_slirp_opt = re.sub(':%s-' % p, ':%s-' % p_new, qb_slirp_opt)
+                logger.info("Port forward changed: %s -> %s" % (p, p_new))
+        self.set('NETWORK_CMD', qb_slirp_opt)
 
     def setup_tap(self):
         """Setup tap"""
