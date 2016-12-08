@@ -79,6 +79,12 @@ do_configure_prepend() {
 
 GLIBC_ADDONS ?= "nptl,libidn"
 
+# Enable backtrace from abort()
+do_configure_append_arm () {
+	echo "CFLAGS-abort.c = -funwind-tables" >> ${B}/configparms
+	echo "CFLAGS-raise.c = -funwind-tables" >> ${B}/configparms
+}
+
 # Ensure that plural.c is newer than its Bison source plural.y,
 # unless the latter is patched.
 do_unpack_workaround() {
