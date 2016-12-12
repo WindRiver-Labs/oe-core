@@ -1,0 +1,19 @@
+guile: modify default .scm.go rule
+
+Do not search build/modules directory when compiling modules.
+When building with parallel make jobs, modules can be used by
+guild before they are completed.
+
+Signed-off-by: Joe Slater <joe.slater@windriver.com>
+
+
+--- a/am/guilec~	2016-07-10 04:03:09.000000000 -0700
++++ b/am/guilec	2016-12-12 14:13:59.000000000 -0800
+@@ -29,6 +29,6 @@
+ 	$(AM_V_GUILEC)GUILE_INSTALL_LOCALE=1 GUILE_AUTO_COMPILE=0 \
+ 	$(top_builddir)/meta/build-env				\
+ 	guild compile --target="$(host)" $(GUILE_WARNINGS)	\
+-	  -L "$(abs_srcdir)" -L "$(abs_builddir)"		\
++	  -L "$(abs_srcdir)"		\
+ 	  -L "$(abs_top_srcdir)/guile-readline"			\
+ 	  -o "$@" "$<"
