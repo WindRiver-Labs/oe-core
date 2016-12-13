@@ -1,0 +1,18 @@
+guile: .x files depend on .i files
+
+Without this dependency, when we have parallel make jobs, we might
+try to use a .i file before it is completely built.
+
+Signed-off-by: Joe Slater <joe.slater@windriver.com>
+
+--- a/libguile/Makefile.am~	2016-12-12 15:55:01.000000000 -0800
++++ b/libguile/Makefile.am	2016-12-12 15:55:13.000000000 -0800
+@@ -434,6 +434,8 @@
+     scmconfig.h \
+     $(DOT_I_FILES) $(DOT_X_FILES) $(EXTRA_DOT_X_FILES)
+ 
++$(DOT_X_FILES) $(EXTRA_DOT_X_FILES): $(DOT_I_FILES)
++
+ # Force the generation of `guile-procedures.texi' because the top-level
+ # Makefile expects it to be built.
+ all-local: guile-procedures.texi
