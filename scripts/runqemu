@@ -704,7 +704,9 @@ class BaseConfig(object):
                 self.nfs_server = '192.168.7.1'
 
         # Figure out a new nfs_instance to allow multiple qemus running.
-        cmd = "ps aux"
+        # CentOS 7.1's ps doesn't print full command line without "ww"
+        # when invoke by subprocess.Popen().
+        cmd = "ps auxww"
         ps = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE).stdout.read().decode('utf-8')
         pattern = '/bin/unfsd .* -i .*\.pid -e .*/exports([0-9]+) '
         all_instances = re.findall(pattern, ps, re.M)
