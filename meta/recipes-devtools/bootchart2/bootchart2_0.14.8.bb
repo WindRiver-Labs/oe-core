@@ -137,6 +137,10 @@ do_install () {
    sed -i -e '1s,#!.*python.*,#!${bindir}/python3,' ${D}${bindir}/pybootchartgui
 }
 
+do_install_append_class-native () {
+    sed -i '1s,#!.*,#!${PYTHON},' ${D}${bindir}/pybootchartgui
+}
+
 PACKAGES =+ "pybootchartgui"
 FILES_pybootchartgui += "${PYTHON_SITEPACKAGES_DIR}/pybootchartgui ${bindir}/pybootchartgui"
 RDEPENDS_pybootchartgui = "python3-pycairo python3-compression python3-image python3-textutils python3-shell python3-compression python3-codecs"
