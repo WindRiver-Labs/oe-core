@@ -13,6 +13,7 @@ UPSTREAM_CHECK_URI = "https://gnupg.org/download/index.html"
 SRC_URI = "${GNUPG_MIRROR}/gpgme/${BP}.tar.bz2 \
            file://gpgme.pc \
            file://pkgconfig.patch \
+           file://0001-gpgme-add-GPGME_STATUS_KEY_CONSIDERED.patch \
           "
 
 SRC_URI[md5sum] = "60d730d22e8065fd5de309e8b98e304b"
