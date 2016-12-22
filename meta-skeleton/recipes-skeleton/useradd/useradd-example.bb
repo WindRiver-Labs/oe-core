@@ -15,6 +15,8 @@ S = "${WORKDIR}"
 
 PACKAGES =+ "${PN}-user3"
 
+EXCLUDE_FROM_WORLD = "1"
+
 inherit useradd
 
 # You must set USERADD_PACKAGES when you inherit useradd. This
