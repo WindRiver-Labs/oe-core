@@ -75,7 +75,7 @@ inherit autotools
 
 do_configure_prepend () {
 	mkdir -p ${B}/obj
-	mkdir -p ${B}/soobj
+	mkdir -p ${B}/soobj/cups
 	if [ -e ${WORKDIR}/objarch.h ]; then
 		cp ${WORKDIR}/objarch.h ${B}/obj/arch.h
 		cp ${WORKDIR}/objarch.h ${B}/soobj/arch.h
