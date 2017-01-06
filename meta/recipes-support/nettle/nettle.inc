@@ -13,7 +13,8 @@ UPSTREAM_CHECK_REGEX = "nettle-(?P<pver>\d+(\.\d+)+)\.tar"
 
 inherit autotools ptest
 
-EXTRA_OECONF = "--disable-openssl"
+PACKAGECONFIG ??= ""
+PACKAGECONFIG[openssl] = "--enable-openssl,--disable-openssl,openssl"
 
 do_configure_prepend() {
        if [ ! -e ${S}/acinclude.m4 -a -e ${S}/aclocal.m4 ]; then
