@@ -20,3 +20,7 @@ BBCLASSEXTEND = "native nativesdk"
 
 SRC_URI[md5sum] = "544d73df94e638ba7b64147be416e576"
 SRC_URI[sha256sum] = "9bd20edfec084a1bed481d48dd4815dee88139fffad091418cdda081129a9aea"
+
+SRC_URI += "\
+            file://libxfixes-CVE-2016-7944.patch \
+"
