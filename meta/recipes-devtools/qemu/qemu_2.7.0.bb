@@ -14,6 +14,27 @@ SRC_URI += "file://configure-fix-Darwin-target-detection.patch \
             file://0003-fix-CVE-2016-7908.patch \
             file://0004-fix-CVE-2016-7909.patch \
             file://0001-pci-assign-sync-MSI-MSI-X-cap-and-table-with-PCIDevi.patch \
+            file://qemu-CVE-2016-6836.patch \
+            file://qemu-CVE-2016-7155.patch \
+            file://qemu-CVE-2016-7156.patch \
+            file://qemu-CVE-2016-7157.patch \
+            file://qemu-CVE-2016-7170.patch \
+            file://qemu-CVE-2016-7421.patch \
+            file://qemu-CVE-2016-7422.patch \
+            file://qemu-CVE-2016-7466.patch \
+            file://qemu-CVE-2016-7994.patch \
+            file://qemu-CVE-2016-7995.patch \
+            file://qemu-CVE-2016-9101.patch \
+            file://qemu-CVE-2016-9102.patch \
+            file://qemu-CVE-2016-9103.patch \
+            file://qemu-CVE-2016-9104.patch \
+            file://qemu-CVE-2016-9105.patch \
+            file://qemu-CVE-2016-9106.patch \
+            file://qemu-CVE-2016-9907.patch \
+            file://qemu-CVE-2016-9908.patch \
+            file://qemu-CVE-2016-9912.patch \
+            file://qemu-CVE-2016-9911.patch \
+            file://qemu-CVE-2016-9921.patch \
 "
 
 SRC_URI_prepend = "http://wiki.qemu-project.org/download/${BP}.tar.bz2"
