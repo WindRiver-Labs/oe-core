@@ -124,5 +124,17 @@ EOF
 	cat ${SYSROOT_DESTDIR}${bindir}/../nativeperl
 }
 
+SSTATEPOSTUNPACKFUNCS += "perl_sstate_postunpack"
+perl_sstate_postunpack() {
+        if [ "${BB_CURRENTTASK}" = "populate_sysroot" -o "${BB_CURRENTTASK}" = "populate_sysroot_setscene" ]
+        then
+                tmpdir=`mktemp -d`
+                echo "int main(void) { return 0; }" > $tmpdir/gcctest.c
+                if ! ${CC} -fstack-protector-strong -o $tmpdir/gcctest $tmpdir/gcctest.c > /dev/null 2>&1; then
+                        sed -i -e 's/fstack-protector-strong/fstack-protector/g' ${BUILD_SYS}${libdir_native}/perl-native/perl/${PV}/Config_heavy.pl
+                fi
+        fi
+}
+
 # Fix the path in sstate
 SSTATE_SCAN_FILES += "*.pm *.pod *.h *.pl *.sh"
