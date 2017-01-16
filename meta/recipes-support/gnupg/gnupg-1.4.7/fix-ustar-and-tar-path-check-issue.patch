@@ -1,0 +1,48 @@
+Remove automatic detection of tar path and ustar format
+
+Remove automatic detection of tar path and ustar format, because they 
+are unreliable and inappropriate for cross-compile platform.
+
+Upstream status: Inappropriate [cross-compile platform specific]
+
+Signed-off-by: Wenlin Kang <wenlin.kang@windriver.com>
+
+diff -uarN gnupg-1.4.7-org/m4/tar-ustar.m4 gnupg-1.4.7/m4/tar-ustar.m4
+--- gnupg-1.4.7-org/m4/tar-ustar.m4	2016-12-15 12:14:47.042533985 +0800
++++ gnupg-1.4.7/m4/tar-ustar.m4	2016-12-15 12:17:27.555254342 +0800
+@@ -14,23 +14,22 @@
+      [_do_tar=$withval])
+ 
+   if test x$_do_tar != xno ; then
+-
+-     if test x$_do_tar = x ; then
+-        AC_PATH_PROG(TAR,"tar")
+-        _mytar=$ac_cv_path_TAR
+-     fi
+-
+      # Check if our tar is ustar format.  If so, it's good.  TODO: Add some
+      # code to check various options, etc, to try and create ustar
+      # format.
++     
++     if test x$_do_tar != x ; then 
++        AC_SUBST(TAR,$_do_tar)
++        AC_MSG_CHECKING([whether $_do_tar speaks USTAR])
++
++        # Here, we ignore the check code, because it isn't indeed applicable for
++        # cross-compile platform.
++        # Now our tar support ustar, so we say directly yes, but once the tar is changed, 
++        # you should check whether it suppport ustar, and please reference the follow command:
++        # echo hithere > conftest.txt
++        # tar -cf - conftest.txt | (dd skip=257 bs=1 count=5 2>/dev/null || cat) | grep ustar > /dev/null
+ 
+-     if test x$_mytar != x ; then
+-        AC_MSG_CHECKING([whether $_mytar speaks USTAR])
+-        echo hithere > conftest.txt
+-        $_mytar -cf - conftest.txt | (dd skip=257 bs=1 count=5 2>/dev/null || cat) | grep ustar > /dev/null
+-        _tar_bad=$?
+-        rm conftest.txt
+-
++        _tar_bad=0
+ 	if test x$_tar_bad = x0 ; then
+ 	   AC_MSG_RESULT([yes])
+ 	else

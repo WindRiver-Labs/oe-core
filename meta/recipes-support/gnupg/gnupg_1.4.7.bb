@@ -18,6 +18,7 @@ SRC_URI = "${GNUPG_MIRROR}/gnupg/gnupg-${PV}.tar.bz2 \
            file://CVE-2013-4351.patch \
            file://CVE-2013-4576.patch \
            file://CVE-2013-4242.patch \
+           file://fix-ustar-and-tar-path-check-issue.patch \
 	  "
 
 SRC_URI[md5sum] = "b06a141cca5cd1a55bbdd25ab833303c"
@@ -79,6 +80,7 @@ EXTRA_OECONF = "--disable-ldap \
 		--disable-selinux-support \
                 --with-readline=${STAGING_LIBDIR}/.. \
                 ac_cv_sys_symbol_underscore=no \
+                --with-tar=${base_bindir}/tar \
 		"
 
 # Force gcc's traditional handling of inline to avoid issues with gcc 5
