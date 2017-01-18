@@ -27,6 +27,7 @@ SRC_URI = "http://ftp.openbsd.org/pub/OpenBSD/OpenSSH/portable/openssh-${PV}.tar
            file://fix-potential-signed-overflow-in-pointer-arithmatic.patch \
            file://fix-CVE-2016-8858.patch \
            file://restore-tcp-wrappers.patch \
+           file://openssh-CVE-2016-10009.patch \
            "
 
 PAM_SRC_URI = "file://sshd"
