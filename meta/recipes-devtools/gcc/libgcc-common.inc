@@ -106,20 +106,19 @@ fakeroot python do_multilib_install() {
             bb.warn("Tune %s doesn't have a baselib set. Skipping..." % tune)
             continue
 
-        tune_arch = tune_parameters['arch']
         tune_bitness = tune_baselib.replace('lib', '')
         if not tune_bitness:
             tune_bitness = '32' # /lib => 32bit lib
 
-        tune_abiextension = tune_parameters['abiextension']
-        if tune_abiextension:
-            libcextension = '-gnu' + tune_abiextension
-        else:
-            libcextension = ''
+        localdata = bb.data.createCopy(d)
+        overrides = localdata.getVar("OVERRIDES", False) + ":virtclass-multilib-" + ml
+        localdata.setVar("OVERRIDES", overrides)
+        localdata.setVar("MLPREFIX", ml + "-")
+        bb.data.update_data(localdata)
+        ml_target_sys = localdata.getVar('TARGET_SYS', True) or ''
 
         src = '../../../' + tune_baselib + '/' + \
-            tune_arch + d.getVar('TARGET_VENDOR', True) + 'ml' + ml + \
-            '-' + d.getVar('TARGET_OS', True) + libcextension +  '/' + binv + '/'
+            ml_target_sys + '/' + binv + '/'
 
         dest = d.getVar('D', True) + d.getVar('libdir', True) + '/' + \
             d.getVar('TARGET_SYS', True) + '/' + binv + '/' + tune_bitness
