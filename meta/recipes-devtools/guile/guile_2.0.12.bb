@@ -25,6 +25,7 @@ SRC_URI = "${GNU_MIRROR}/guile/guile-${PV}.tar.xz \
            file://0002-Recognize-nios2-as-compilation-target.patch \
            file://guilec.patch \
            file://libguile_makefile_am.patch \
+           file://guile-CVE-2016-8606.patch \
            "
 
 SRC_URI[md5sum] = "081fdf80cd3a76f260a2a0d87f773d6b"
