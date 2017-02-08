@@ -1,0 +1,28 @@
+From 1d804738080d52c0977947c7271d2db49bd6f90d Mon Sep 17 00:00:00 2001
+From: Li Zhou <li.zhou@windriver.com>
+Date: Wed, 8 Feb 2017 10:02:59 +0800
+Subject: [PATCH] DDNS: disable DNS update functionality
+
+Upstream-Status: Inappropriate [configuration]
+
+Signed-off-by: Li Zhou <li.zhou@windriver.com>
+---
+ includes/site.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/includes/site.h b/includes/site.h
+index abb66e4..cefc12e 100644
+--- a/includes/site.h
++++ b/includes/site.h
+@@ -121,7 +121,7 @@
+ 
+ /* Define this if you want DNS update functionality to be available. */
+ 
+-#define NSUPDATE
++/* #define NSUPDATE */
+ 
+ /* Define this if you want to enable the DHCP server attempting to
+    find a nameserver to use for DDNS updates. */
+-- 
+1.9.1
+
