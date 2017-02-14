@@ -66,6 +66,7 @@ SRC_URI = "git://github.com/linux-test-project/ltp.git \
            file://0037-containers-netns_netlink-Avoid-segmentation-fault.patch \
            file://0038-run-posix-option-group-test-replace-CWD-qith-PWD.patch \
            file://0039-containers-userns05-use-unsigned-int-for-ns-id.patch \
+           file://0040-ltp-Init-the-array-str-for-testcase-renameat202.patch \
            "
 
 S = "${WORKDIR}/git"
