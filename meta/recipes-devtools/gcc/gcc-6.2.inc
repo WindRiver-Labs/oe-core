@@ -81,8 +81,14 @@ SRC_URI = "\
            ${BACKPORTS} \
 "
 BACKPORTS = "\
+<<<<<<< HEAD
            file://ubsan-fix-check-empty-string.patch \
 "
+=======
+           file://CVE-2016-6131.patch \
+"
+
+>>>>>>> gcc: CVE-2016-6131 in libiberty
 SRC_URI[md5sum] = "9768625159663b300ae4de2f4745fcc4"
 SRC_URI[sha256sum] = "9944589fc722d3e66308c0ce5257788ebd7872982a718aa2516123940671b7c5"
 
