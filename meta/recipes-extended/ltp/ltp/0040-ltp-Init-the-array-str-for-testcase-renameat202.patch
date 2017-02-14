@@ -1,0 +1,28 @@
+From 08962086e1d0d6f8f7b172b2ec8671751adffd59 Mon Sep 17 00:00:00 2001
+From: Jianchuan Wang <jianchuan.wang@windriver.com>
+Date: Tue, 14 Feb 2017 09:44:59 +0800
+Subject: [PATCH] ltp: Init the array str for testcase renameat202
+
+Upstream-Status: Pending
+
+Signed-off-by: Jianchuan Wang <jianchuan.wang@windriver.com>
+---
+ testcases/kernel/syscalls/renameat2/renameat202.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/testcases/kernel/syscalls/renameat2/renameat202.c b/testcases/kernel/syscalls/renameat2/renameat202.c
+index 3761391..55bddc6 100644
+--- a/testcases/kernel/syscalls/renameat2/renameat202.c
++++ b/testcases/kernel/syscalls/renameat2/renameat202.c
+@@ -118,7 +118,7 @@ static void cleanup(void)
+ 
+ static void renameat2_verify(void)
+ {
+-	char str[sizeof(content)];
++	char str[sizeof(content)] = {0};
+ 	struct stat st;
+ 	char *emptyfile;
+ 	char *contentfile;
+-- 
+2.8.3
+
