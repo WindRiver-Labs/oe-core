@@ -23,6 +23,8 @@ SRC_URI = "http://cache.ruby-lang.org/pub/ruby/${SHRT_VER}/ruby-${PV}.tar.gz \
            file://0002-Obey-LDFLAGS-for-the-link-of-libruby.patch \
            file://ruby-CVE-2016-7798.patch \
            file://ruby-CVE-2016-2339.patch \
+           file://ruby-tk-CVE-2016-2337.patch \
+           file://ruby-tk-CVE-2016-2337-2.patch \
            "
 
 inherit autotools
