@@ -20,6 +20,7 @@ SRC_URI = " \
     file://0008-gl-implement-GstGLMemoryEGL.patch \
     file://0009-glimagesink-Downrank-to-marginal.patch \
     file://gst-plugins-bad-CVE-2016-9812.patch \
+    file://CVE-2016-9813.patch \
 "
 SRC_URI[md5sum] = "955281a43e98c5464563fa049e0a0911"
 SRC_URI[sha256sum] = "7899fcb18e6a1af2888b19c90213af018a57d741c6e72ec56b133bc73ec8509b"
