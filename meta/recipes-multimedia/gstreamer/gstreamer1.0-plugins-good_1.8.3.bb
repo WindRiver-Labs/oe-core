@@ -10,6 +10,8 @@ SRC_URI = " \
     file://avoid-including-sys-poll.h-directly.patch \
     file://ensure-valid-sentinel-for-gst_structure_get.patch \
     file://CVE-2016-9810.patch \
+    file://CVE-2016-9808.patch \
+    file://CVE-2016-9808-2.patch \
 "
 
 SRC_URI[md5sum] = "473ebb1f15c67de99ddb6e4d027c0876"
