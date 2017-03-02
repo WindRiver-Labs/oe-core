@@ -90,9 +90,11 @@ do_install_append(){
        install -m 0755 ${WORKDIR}/init-functions ${D}/lib/lsb
 
        # creat links for LSB test
-       install -d ${D}/usr/lib/lsb
-       ln -sf ${sbindir}/chkconfig ${D}/usr/lib/lsb/install_initd
-       ln -sf ${sbindir}/chkconfig ${D}/usr/lib/lsb/remove_initd
+       if [ -f ${sbindir}/chkconfig ];then
+	       install -d ${D}/usr/lib/lsb
+	       ln -sf ${sbindir}/chkconfig ${D}/usr/lib/lsb/install_initd
+	       ln -sf ${sbindir}/chkconfig ${D}/usr/lib/lsb/remove_initd
+       fi
 
        if [ "${TARGET_ARCH}" = "x86_64" ];then
 	       cd ${D}
