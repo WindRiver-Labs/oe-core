@@ -19,7 +19,7 @@ SRC_URI = "git://github.com/file/file.git \
         file://0001-Add-P-prompt-into-Usage-info.patch \
         "
 
-SRCREV = "3c521817322a6bf5160cfeb09b9145ccde587b2a"
+SRCREV = "39c10d720727126d05a6abf4fba0d54c1d5fbe2e"
 S = "${WORKDIR}/git"
 
 inherit autotools
