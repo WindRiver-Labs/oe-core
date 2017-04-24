@@ -18,3 +18,6 @@ FILES_${PN} += "${datadir}/aclocal"
 FILES_${PN}-dev = ""
 
 BBCLASSEXTEND = "native"
+
+PACKAGECONFIG ??= ""
+PACKAGECONFIG[autoconf-archive] = "--with-autoconf-archive, --without-autoconf-archive, autoconf-archive"
