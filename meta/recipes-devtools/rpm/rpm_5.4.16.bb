@@ -120,6 +120,7 @@ SRC_URI += " \
 	   file://0001-system.h-query.c-support-nosignature.patch \
 	   file://rpm-ensure-rpm2cpio-call-rpm-relocation-code.patch \
 	   file://0001-macros-add-_gpg_sign_cmd_extra_args.patch \
+	   file://0074-fix-rpm-error-after-openssl-disabled-weak-cipher.patch \
 "
 
 # OE specific changes
