@@ -329,8 +329,14 @@ python toaster_artifacts() {
     if e.taskname in ["do_deploy", "do_image_complete", "do_populate_sdk", "do_populate_sdk_ext"]:
         d2 = d.createCopy()
         d2.setVar('FILE', e.taskfile)
-        d2.setVar('SSTATE_MANMACH', d2.expand("${MACHINE}"))
+        # Since 'stamp-extra-info' will no longer be available at this phase, use workaround
+        # to determine 'SSTATE_MANMACH'
+        if "do_populate_sdk" == e.taskname:
+            d2.setVar('SSTATE_MANMACH', d2.expand("${MACHINE}${SDKMACHINE}"))
+        else:
+            d2.setVar('SSTATE_MANMACH', d2.expand("${MACHINE}"))
         manifest = oe.sstatesig.sstate_get_manifest_filename(e.taskname[3:], d2)[0]
+
         if os.access(manifest, os.R_OK):
             with open(manifest) as fmanifest:
                 artifacts = [fname.strip() for fname in fmanifest]
@@ -357,8 +363,9 @@ do_packagedata_setscene[vardepsexclude] += "toaster_package_dumpdata "
 do_package[postfuncs] += "toaster_package_dumpdata "
 do_package[vardepsexclude] += "toaster_package_dumpdata "
 
-do_populate_sdk[postfuncs] += "toaster_artifact_dumpdata "
-do_populate_sdk[vardepsexclude] += "toaster_artifact_dumpdata "
+#do_populate_sdk[postfuncs] += "toaster_artifact_dumpdata "
+#do_populate_sdk[vardepsexclude] += "toaster_artifact_dumpdata "
 
-do_populate_sdk_ext[postfuncs] += "toaster_artifact_dumpdata "
-do_populate_sdk_ext[vardepsexclude] += "toaster_artifact_dumpdata "
+#do_populate_sdk_ext[postfuncs] += "toaster_artifact_dumpdata "
+#do_populate_sdk_ext[vardepsexclude] += "toaster_artifact_dumpdata "
+
