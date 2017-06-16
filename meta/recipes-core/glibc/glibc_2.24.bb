@@ -39,6 +39,11 @@ SRC_URI = "${GLIBC_GIT_URI};branch=${SRCBRANCH};name=glibc \
            file://0026-build_local_scope.patch \
            file://0027-arm-mark-__startcontext-as-.cantunwind-bug-20435.patch \
            file://0028-Bug-20116-Fix-use-after-free-in-pthread_create.patch \
+           file://CVE-2017-100366.patch \
+           file://CVE-2017-100366_2.patch \
+           file://CVE-2017-100366_3.patch \
+           file://CVE-2017-100366_4.patch \
+           file://CVE-2017-100366_5.patch \
 "
 
 SRC_URI += "\
