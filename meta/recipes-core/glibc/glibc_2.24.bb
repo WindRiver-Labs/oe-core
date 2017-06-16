@@ -45,6 +45,11 @@ SRC_URI = "${GLIBC_GIT_URI};branch=${SRCBRANCH};name=glibc \
            file://0004-New-condvar-implementation-that-provides-stronger-or.patch \
            file://0005-Remove-__ASSUME_REQUEUE_PI.patch \
            file://0006-Fix-atomic_fetch_xor_release.patch \
+           file://CVE-2017-100366.patch \
+           file://CVE-2017-100366_2.patch \
+           file://CVE-2017-100366_3.patch \
+           file://CVE-2017-100366_4.patch \
+           file://CVE-2017-100366_5.patch \
 "
 
 SRC_URI += "\
