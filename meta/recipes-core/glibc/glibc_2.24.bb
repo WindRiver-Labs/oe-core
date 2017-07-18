@@ -50,6 +50,7 @@ SRC_URI = "${GLIBC_GIT_URI};branch=${SRCBRANCH};name=glibc \
            file://CVE-2017-100366_3.patch \
            file://CVE-2017-100366_4.patch \
            file://CVE-2017-100366_5.patch \
+           file://CVE-2015-5180.patch \
 "
 
 SRC_URI += "\
