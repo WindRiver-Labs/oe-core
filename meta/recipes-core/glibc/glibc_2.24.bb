@@ -51,6 +51,8 @@ SRC_URI = "${GLIBC_GIT_URI};branch=${SRCBRANCH};name=glibc \
            file://0005-Remove-__ASSUME_REQUEUE_PI.patch \
            file://0006-Fix-atomic_fetch_xor_release.patch \
            file://CVE-2015-5180.patch \
+           file://0001-glibc-reset-dl-load-write-lock-after-forking.patch \
+           file://0001-Bug-4578-add-ld.so-lock-while-fork.patch \
 "
 
 SRC_URI += "\
