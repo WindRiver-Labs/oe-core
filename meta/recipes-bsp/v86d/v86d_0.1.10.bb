@@ -9,7 +9,7 @@ DEPENDS = "virtual/kernel"
 RRECOMMENDS_${PN} = "kernel-module-uvesafb"
 PR = "r2"
 
-SRC_URI = "http://distfiles.gentoo.org/distfiles/${BP}.tar.bz2 \
+SRC_URI = "http://sources.openelec.tv/mirror/v86d/${BP}.tar.bz2 \
            file://Update-x86emu-from-X.org.patch \
            file://fbsetup \
            file://uvesafb.conf \
