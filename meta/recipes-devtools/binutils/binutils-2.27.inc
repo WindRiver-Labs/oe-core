@@ -68,6 +68,40 @@ SRC_URI = "\
      file://CVE-2017-9039.patch \
      file://CVE-2017-9040_CVE-2017-9042.patch \
      file://CVE-2017-9041.patch \
+     file://CVE-2017-12451.patch \
+     file://CVE-2017-12799.patch \
+     file://CVE-2017-12448.patch \
+     file://CVE-2017-9954.patch \
+     file://CVE-2017-9748.patch \
+     file://CVE-2017-9749.patch \
+     file://CVE-2017-9742.patch \
+     file://CVE-2017-9744.patch \
+     file://CVE-2017-9747.patch \
+     file://CVE-2017-9746.patch \
+     file://CVE-2017-9750.patch \
+     file://CVE-2017-9751.patch \
+     file://CVE-2017-9756.patch \
+     file://CVE-2017-9753-CVE-2017-9754.patch \
+     file://CVE-2017-9755.patch \
+     file://CVE-2017-9755-2.patch \
+     file://CVE-2017-9752.patch \
+     file://CVE-2017-9745.patch \
+     file://0001-Fix-address-violation-parsing-a-corrupt-Alpha-VMS-bi.patch \
+     file://CVE-2017-12449-CVE-2017-12455-CVE-2017-12457-CVE-2017-12458-CVE-2017-12459.patch \
+     file://0001-Fix-address-violation-parsing-a-corrupt-IEEE-Alpha-b.patch \
+     file://CVE-2017-12450-CVE-2017-12452-CVE-2017-12453-CVE-2017-12454-CVE-2017-12456.patch \
+     file://0001-Add-bfd_get_file_size-to-get-archive-element-size.patch \
+     file://0001-Change-bfd_get_size-bfd_get_file_size-to-ufile_ptr.patch \
+     file://CVE-2017-9955.patch \
+     file://CVE-2017-9955-2.patch \
+     file://CVE-2017-9955-3.patch \
+     file://CVE-2017-9955-4.patch \
+     file://CVE-2017-9955-5.patch \
+     file://CVE-2017-9955-6.patch \
+     file://CVE-2017-9955-7.patch \
+     file://CVE-2017-12967.patch \
+     file://0001-Fix-seg-fault-reading-a-corrupt-ELF-binary.patch \
+     file://CVE-2017-13710.patch \
 "
 S  = "${WORKDIR}/git"
 

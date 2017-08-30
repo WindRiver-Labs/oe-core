@@ -1,0 +1,132 @@
+From 47fdcf63c04b5c220974affc8ff1d9ef8a041919 Mon Sep 17 00:00:00 2001
+From: "H.J. Lu" <hjl.tools@gmail.com>
+Date: Wed, 28 Jun 2017 11:00:13 -0700
+Subject: [PATCH] Change bfd_get_size/bfd_get_file_size to ufile_ptr
+
+bfd_get_size and bfd_get_file_size should return the unsigned file
+size.  Otherwise they return negative values for file >= 2GB with
+32-bit ufile_ptr.
+
+bfd/
+
+	* bfd-in2.h: Regenerated.
+	* bfdio.c (bfd_get_size): Change return type to ufile_ptr.
+	(bfd_get_file_size): Likewise.
+
+binutils/
+
+	* objdump.c (dump_relocs_in_section): Cast to ufile_ptr when
+	comparing against bfd_get_file_size return.
+---
+ bfd/ChangeLog      |    6 ++++++
+ bfd/bfd-in2.h      |    4 ++--
+ bfd/bfdio.c        |    8 ++++----
+ binutils/ChangeLog |    5 +++++
+ binutils/objdump.c |    2 +-
+ 5 files changed, 18 insertions(+), 7 deletions(-)
+
+diff --git a/bfd/ChangeLog b/bfd/ChangeLog
+index 3f81ea4..561ac1b 100644
+--- a/bfd/ChangeLog
++++ b/bfd/ChangeLog
+@@ -55,6 +55,12 @@
+ 	(_bfd_xcoff_openr_next_archived_file): Likewise.
+ 	(_bfd_xcoff_stat_arch_elt): Likewise.
+ 
++2017-06-28  H.J. Lu  <hongjiu.lu@intel.com>
++
++	* bfd-in2.h: Regenerated.
++	* bfdio.c (bfd_get_size): Change return type to ufile_ptr.
++	(bfd_get_file_size): Likewise.
++
+ 2017-06-26  Nick Clifton  <nickc@redhat.com>
+ 
+ 	PR binutils/21670
+diff --git a/bfd/bfd-in2.h b/bfd/bfd-in2.h
+index 971acb8..1343780 100644
+--- a/bfd/bfd-in2.h
++++ b/bfd/bfd-in2.h
+@@ -1206,9 +1206,9 @@ bfd_boolean bfd_fill_in_gnu_debuglink_se
+ /* Extracted from bfdio.c.  */
+ long bfd_get_mtime (bfd *abfd);
+ 
+-file_ptr bfd_get_size (bfd *abfd);
++ufile_ptr bfd_get_size (bfd *abfd);
+ 
+-file_ptr bfd_get_file_size (bfd *abfd);
++ufile_ptr bfd_get_file_size (bfd *abfd);
+ 
+ void *bfd_mmap (bfd *abfd, void *addr, bfd_size_type len,
+     int prot, int flags, file_ptr offset,
+diff --git a/bfd/bfdio.c b/bfd/bfdio.c
+index e301570..fa7fb21 100644
+--- a/bfd/bfdio.c
++++ b/bfd/bfdio.c
+@@ -392,7 +392,7 @@ FUNCTION
+ 	bfd_get_size
+ 
+ SYNOPSIS
+-	file_ptr bfd_get_size (bfd *abfd);
++	ufile_ptr bfd_get_size (bfd *abfd);
+ 
+ DESCRIPTION
+ 	Return the file size (as read from file system) for the file
+@@ -420,7 +420,7 @@ DESCRIPTION
+ 	size reasonable?".
+ */
+ 
+-file_ptr
++ufile_ptr
+ bfd_get_size (bfd *abfd)
+ {
+   struct stat buf;
+@@ -439,7 +439,7 @@ FUNCTION
+ 	bfd_get_file_size
+ 
+ SYNOPSIS
+-	file_ptr bfd_get_file_size (bfd *abfd);
++	ufile_ptr bfd_get_file_size (bfd *abfd);
+ 
+ DESCRIPTION
+ 	Return the file size (as read from file system) for the file
+@@ -448,7 +448,7 @@ DESCRIPTION
+ 
+ */
+ 
+-file_ptr
++ufile_ptr
+ bfd_get_file_size (bfd *abfd)
+ {
+   if (abfd->my_archive != NULL
+diff --git a/binutils/ChangeLog b/binutils/ChangeLog
+index c5b8f19..f0ecdc6 100644
+--- a/binutils/ChangeLog
++++ b/binutils/ChangeLog
+@@ -4,6 +4,11 @@
+ 	* rddbg.c (read_symbol_stabs_debugging_info): Check for an empty
+ 	string whilst concatenating symbol names.
+ 
++2017-06-28  H.J. Lu  <hongjiu.lu@intel.com>
++
++	* objdump.c (dump_relocs_in_section): Cast to ufile_ptr when
++	comparing against bfd_get_file_size return.
++
+ 2017-05-30  H.J. Lu  <hongjiu.lu@intel.com>
+ 
+ 	PR binutils/21519
+diff --git a/binutils/objdump.c b/binutils/objdump.c
+index ed8c645..0b72818 100644
+--- a/binutils/objdump.c
++++ b/binutils/objdump.c
+@@ -3242,7 +3242,7 @@ dump_relocs_in_section (bfd *abfd,
+     }
+ 
+   if ((bfd_get_file_flags (abfd) & (BFD_IN_MEMORY | BFD_LINKER_CREATED)) == 0
+-      && relsize > bfd_get_file_size (abfd))
++      && (ufile_ptr) relsize > bfd_get_file_size (abfd))
+     {
+       printf (" (too many: 0x%x)\n", section->reloc_count);
+       bfd_set_error (bfd_error_file_truncated);
+-- 
+1.7.9.5
+
