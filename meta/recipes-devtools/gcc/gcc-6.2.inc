@@ -78,17 +78,14 @@ SRC_URI = "\
            file://0045-libgcc-Add-knob-to-use-ldbl-128-on-ppc.patch \
            file://0046-Link-libgcc-using-LDFLAGS-not-just-SHLIB_LDFLAGS.patch \
            file://0047-libgcc_s-Use-alias-for-__cpu_indicator_init-instead-.patch \
+           file://CVE-2016-6131.patch \
+           file://gcc-CVE-2017-11671.patch \
            ${BACKPORTS} \
 "
 BACKPORTS = "\
-<<<<<<< HEAD
            file://ubsan-fix-check-empty-string.patch \
 "
-=======
-           file://CVE-2016-6131.patch \
-"
 
->>>>>>> gcc: CVE-2016-6131 in libiberty
 SRC_URI[md5sum] = "9768625159663b300ae4de2f4745fcc4"
 SRC_URI[sha256sum] = "9944589fc722d3e66308c0ce5257788ebd7872982a718aa2516123940671b7c5"
 
