@@ -87,6 +87,8 @@ BACKPORTS = "\
            file://TCWRLGCC-281.patch \
            file://TCWRLGCC-298.patch \
            file://0001-libstdc-77686-use-may_alias-for-std-function-storage.patch \
+           file://CVE-2016-4491.patch \
+           file://CVE-2016-4491-2.patch \
 "
 
 SRC_URI[md5sum] = "9768625159663b300ae4de2f4745fcc4"
