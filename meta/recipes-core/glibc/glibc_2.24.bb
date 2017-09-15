@@ -54,6 +54,8 @@ SRC_URI = "${GLIBC_GIT_URI};branch=${SRCBRANCH};name=glibc \
            file://0001-glibc-reset-dl-load-write-lock-after-forking.patch \
            file://0001-Bug-4578-add-ld.so-lock-while-fork.patch \
            file://glibc-CVE-2017-12132.patch \
+           file://0029-X86-64-Add-_dl_runtime_resolve_avx-512-_-opt-slow-BZ.patch \
+           file://0030-x86-64-Improve-branch-predication-in-_dl_runtime_res.patch \
 "
 
 SRC_URI += "\
