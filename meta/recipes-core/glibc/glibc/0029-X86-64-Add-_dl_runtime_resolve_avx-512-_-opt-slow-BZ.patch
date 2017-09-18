@@ -98,9 +98,9 @@ index e6ea2df..de93501 100644
 +	(_dl_runtime_profile): Define only if _dl_runtime_profile is
 +	defined.
 +
- 2016-10-26  Carlos O'Donell  <carlos@redhat.com>
+ 2017-04-13  Florian Weimer  <fweimer@redhat.com>
  
- 	* include/atomic.h
+ 	[BZ #21361]
 diff --git a/sysdeps/x86/cpu-features.c b/sysdeps/x86/cpu-features.c
 index 9ce4b49..11b9af2 100644
 --- a/sysdeps/x86/cpu-features.c
