@@ -36,6 +36,7 @@ SRC_URI = "ftp://ftp.gnu.org/gnu/grub/grub-${PV}.tar.gz \
            file://0001-grub-core-kern-efi-mm.c-grub_efi_finish_boot_service.patch \
            file://0002-grub-core-kern-efi-mm.c-grub_efi_get_memory_map-Neve.patch \
            file://0001-configure.ac-support-disabling-largefile.patch \
+           file://0001-configure.ac-Don-t-use-extended-registers-on-x86_64.patch \
             "
 
 DEPENDS = "flex-native bison-native autogen-native"
