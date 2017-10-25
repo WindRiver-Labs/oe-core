@@ -29,6 +29,14 @@ SRC_URI = "http://w1.fi/releases/wpa_supplicant-${PV}.tar.gz  \
            file://0001-Reject-psk-parameter-set-with-invalid-passphrase-cha.patch \
            file://0002-Reject-SET_CRED-commands-with-newline-characters-in-.patch \
            file://0003-Reject-SET-commands-with-newline-characters-in-the-s.patch \
+           file://0001-hostapd-Avoid-key-reinstallation-in-FT-handshake.patch \
+           file://0002-Prevent-reinstallation-of-an-already-in-use-group-ke.patch \
+           file://0003-Extend-protection-of-GTK-IGTK-reinstallation-of-WNM-.patch \
+           file://0004-Prevent-installation-of-an-all-zero-TK.patch \
+           file://0005-Fix-PTK-rekeying-to-generate-a-new-ANonce.patch \
+           file://0006-TDLS-Reject-TPK-TK-reconfiguration.patch \
+           file://0008-FT-Do-not-allow-multiple-Reassociation-Response-fram.patch \
+           file://0009-TDLS-Ignore-incoming-TDLS-Setup-Response-retries.patch \
           "
 SRC_URI[md5sum] = "96ff75c3a514f1f324560a2376f13110"
 SRC_URI[sha256sum] = "cce55bae483b364eae55c35ba567c279be442ed8bab5b80a3c7fb0d057b9b316"
