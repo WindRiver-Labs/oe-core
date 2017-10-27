@@ -102,6 +102,24 @@ SRC_URI = "\
      file://CVE-2017-12967.patch \
      file://0001-Fix-seg-fault-reading-a-corrupt-ELF-binary.patch \
      file://CVE-2017-13710.patch \
+     file://CVE-2017-14129.patch \
+     file://CVE-2017-14130.patch \
+     file://CVE-2017-14529.patch \
+     file://CVE-2017-14930.patch \
+     file://CVE-2017-14932.patch \
+     file://CVE-2017-14934.patch \
+     file://CVE-2017-14938.patch \
+     file://CVE-2017-14128.patch \
+     file://CVE-2017-14939.patch \
+     file://CVE-2017-14940.patch \
+     file://CVE-2017-15020.patch \
+     file://CVE-2017-15021.patch \
+     file://CVE-2017-15022.patch \
+     file://CVE-2017-15024.patch \
+     file://CVE-2017-15025.patch \
+     file://CVE-2017-15225.patch \
+     file://CVE-2017-15938.patch \
+     file://CVE-2017-15939.patch \
 "
 S  = "${WORKDIR}/git"
 
