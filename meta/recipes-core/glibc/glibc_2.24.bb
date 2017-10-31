@@ -56,6 +56,11 @@ SRC_URI = "${GLIBC_GIT_URI};branch=${SRCBRANCH};name=glibc \
            file://glibc-CVE-2017-12132.patch \
            file://0029-X86-64-Add-_dl_runtime_resolve_avx-512-_-opt-slow-BZ.patch \
            file://0030-x86-64-Improve-branch-predication-in-_dl_runtime_res.patch \
+           file://CVE-2017-12133.patch \
+           file://CVE-2017-15670.patch \
+           file://CVE-2017-15671.patch \
+           file://CVE-2017-15671-2.patch \
+           file://CVE-2017-15804.patch \
 "
 
 SRC_URI += "\
