@@ -62,6 +62,7 @@ SRC_URI = "${GLIBC_GIT_URI};branch=${SRCBRANCH};name=glibc \
            file://CVE-2017-15671-2.patch \
            file://CVE-2017-15804.patch \
            file://TCWRLGCC-282.patch \
+           file://malloc-add-missing-arena-lock-in-malloc_info.patch \
 "
 
 SRC_URI += "\
