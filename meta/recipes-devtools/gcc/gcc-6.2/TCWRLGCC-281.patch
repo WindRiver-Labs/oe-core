@@ -1,0 +1,48 @@
+From 15ad6a4c1dd5a3fe2333b49b57a069f270e23212 Mon Sep 17 00:00:00 2001
+From: Damodar Sonone <Damodar.Sonone@kpit.com>
+Date: Thu, 30 Nov 2017 23:10:04 -0800
+Subject: [PATCH] TCWRLGCC-281: ICE with _Generic selection on _Atomic int for
+ MIPS
+
+---
+ gcc/ChangeLog          | 6 ++++++
+ gcc/config/mips/mips.c | 6 +++---
+ 2 files changed, 9 insertions(+), 3 deletions(-)
+
+diff --git a/gcc/ChangeLog b/gcc/ChangeLog
+index ea5048d..92f3c0a 100644
+--- a/gcc/ChangeLog
++++ b/gcc/ChangeLog
+@@ -218,6 +218,12 @@
+         * ipa-polymorphic-call.c (get_dynamic_type): Bail out gracefully
+         if instance is a MEM_REF.
+ 
++2016-08-09  Matthew Fortune  <matthew.fortune@imgtec.com>
++
++	PR c/65345
++	* config/mips/mips.c (mips_atomic_assign_expand_fenv):
++	Use create_tmp_var_raw instead of create_tmp_var.
++
+ 2016-08-09  Richard Biener  <rguenther@suse.de>
+ 
+ 	Backport from mainline
+diff --git a/gcc/config/mips/mips.c b/gcc/config/mips/mips.c
+index 5af3d1e..2cac107 100644
+--- a/gcc/config/mips/mips.c
++++ b/gcc/config/mips/mips.c
+@@ -19858,9 +19858,9 @@ mips_atomic_assign_expand_fenv (tree *hold, tree *clear, tree *update)
+ {
+   if (!TARGET_HARD_FLOAT_ABI)
+     return;
+-  tree exceptions_var = create_tmp_var (MIPS_ATYPE_USI);
+-  tree fcsr_orig_var = create_tmp_var (MIPS_ATYPE_USI);
+-  tree fcsr_mod_var = create_tmp_var (MIPS_ATYPE_USI);
++  tree exceptions_var = create_tmp_var_raw (MIPS_ATYPE_USI);
++  tree fcsr_orig_var = create_tmp_var_raw (MIPS_ATYPE_USI);
++  tree fcsr_mod_var = create_tmp_var_raw (MIPS_ATYPE_USI);
+   tree get_fcsr = mips_builtin_decls[MIPS_GET_FCSR];
+   tree set_fcsr = mips_builtin_decls[MIPS_SET_FCSR];
+   tree get_fcsr_hold_call = build_call_expr (get_fcsr, 0);
+-- 
+1.8.5.6
+
