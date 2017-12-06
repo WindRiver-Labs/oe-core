@@ -1,0 +1,65 @@
+From 5235cd686141bb5adb57dbbf302a168e9693672b Mon Sep 17 00:00:00 2001
+From: "Maciej W. Rozycki" <macro@imgtec.com>
+Date: Thu, 23 Feb 2017 18:16:55 +0000
+Subject: [PATCH] readelf: Make version section index sum unsigned
+
+Make `isum' unsigned like data it is calculated from.
+
+	binutils/
+	* readelf.c (process_version_sections) <SHT_GNU_verdef>: Make
+	`isum' unsigned.
+	<SHT_GNU_verneed>: Likewise.
+
+Upstream-Status: Backport
+https://sourceware.org/git/gitweb.cgi?p=binutils-gdb.git;h=5235cd686141bb5adb57dbbf302a168e9693672b
+
+Signed-off-by: Yue Tao <yue.tao@windriver.com>
+---
+ binutils/ChangeLog |    6 ++++++
+ binutils/readelf.c |    4 ++--
+ 2 files changed, 8 insertions(+), 2 deletions(-)
+
+diff --git a/binutils/ChangeLog b/binutils/ChangeLog
+index a528db4..1ab1c2c 100644
+--- a/binutils/ChangeLog
++++ b/binutils/ChangeLog
+@@ -128,6 +128,12 @@
+ 	is not NUL terminated, return an error message.
+ 	(fetch_indexed_string): Likewise.
+ 
++2017-02-24  Maciej W. Rozycki  <macro@imgtec.com>
++
++	* readelf.c (process_version_sections) <SHT_GNU_verdef>: Make
++	`isum' unsigned.
++	<SHT_GNU_verneed>: Likewise.
++
+ 2017-02-14  Nick Clifton  <nickc@redhat.com>
+ 
+ 	PR binutils/21157
+diff --git a/binutils/readelf.c b/binutils/readelf.c
+index cb0da10..6edb364 100644
+--- a/binutils/readelf.c
++++ b/binutils/readelf.c
+@@ -10026,8 +10026,8 @@ process_version_sections (FILE * file)
+ 		Elf_Internal_Verdef ent;
+ 		Elf_External_Verdaux * eaux;
+ 		Elf_Internal_Verdaux aux;
++		unsigned int isum;
+ 		int j;
+-		int isum;
+ 
+ 		/* Check for very large indices.  */
+ 		if (idx > (size_t) (endbuf - (char *) edefs))
+@@ -10143,8 +10143,8 @@ process_version_sections (FILE * file)
+ 	      {
+ 		Elf_External_Verneed * entry;
+ 		Elf_Internal_Verneed ent;
++		unsigned int isum;
+ 		int j;
+-		int isum;
+ 		char * vstart;
+ 
+ 		if (idx > (size_t) (endbuf - (char *) eneed))
+-- 
+1.7.9.5
+

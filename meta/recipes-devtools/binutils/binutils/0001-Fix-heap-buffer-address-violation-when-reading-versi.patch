@@ -1,0 +1,50 @@
+From 4e3afec278d1fb55b983751d02119f65566bd094 Mon Sep 17 00:00:00 2001
+From: Nick Clifton <nickc@redhat.com>
+Date: Fri, 28 Apr 2017 11:21:53 +0100
+Subject: [PATCH] Fix heap-buffer address violation when reading version data
+ from a corrupt binary.
+
+	PR binutils/21437
+	* readelf.c (process_version_sections): Check for underflow when
+	computing the start address of the auxillary version data.
+---
+ binutils/ChangeLog |    6 ++++++
+ binutils/readelf.c |    5 +++--
+ 2 files changed, 9 insertions(+), 2 deletions(-)
+
+diff --git a/binutils/ChangeLog b/binutils/ChangeLog
+index 951673b..8bb1fc5 100644
+--- a/binutils/ChangeLog
++++ b/binutils/ChangeLog
+@@ -121,6 +121,12 @@
+ 
+ 2017-04-28  Nick Clifton  <nickc@redhat.com>
+ 
++	PR binutils/21437
++	* readelf.c (process_version_sections): Check for underflow when
++	computing the start address of the auxillary version data.
++
++2017-04-28  Nick Clifton  <nickc@redhat.com>
++
+ 	PR binutils/21438
+ 	* dwarf.c (process_extended_line_op): Do not assume that the
+ 	string extracted from the section is NUL terminated.
+diff --git a/binutils/readelf.c b/binutils/readelf.c
+index b57e1e0..72f9dda 100644
+--- a/binutils/readelf.c
++++ b/binutils/readelf.c
+@@ -10178,8 +10178,9 @@ process_version_sections (FILE * file)
+ 		printf (_("  Index: %d  Cnt: %d  "),
+ 			ent.vd_ndx, ent.vd_cnt);
+ 
+-		/* Check for overflow.  */
+-		if (ent.vd_aux + sizeof (* eaux) > (size_t) (endbuf - vstart))
++		/* Check for overflow and underflow.  */
++		if (ent.vd_aux + sizeof (* eaux) > (size_t) (endbuf - vstart)
++		    || (vstart + ent.vd_aux < vstart))
+ 		  break;
+ 
+ 		vstart += ent.vd_aux;
+-- 
+1.7.9.5
+

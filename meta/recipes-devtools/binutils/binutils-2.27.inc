@@ -120,6 +120,21 @@ SRC_URI = "\
      file://CVE-2017-15225.patch \
      file://CVE-2017-15938.patch \
      file://CVE-2017-15939.patch \
+     file://0001-Improve-objdump-s-behaviour-when-it-encounters-a-cor.patch \
+     file://CVE-2017-16831.patch \
+     file://0001-Fix-seg-fault-in-objdump-when-run-on-a-fuzzed-PE-bin.patch \
+     file://CVE-2017-16832.patch \
+     file://CVE-2017-16832-2.patch \
+     file://CVE-2017-16826.patch \
+     file://CVE-2017-16827.patch \
+     file://0001-Fix-address-violation-when-reading-corrupt-DWARF-dat.patch \
+     file://0001-PR22239-invalid-memory-read-in-display_debug_frames.patch \
+     file://CVE-2017-16828.patch \
+     file://CVE-2017-15996.patch \
+     file://0001-readelf-Make-version-section-index-sum-unsigned.patch \
+     file://0001-Fix-check-for-buffer-overflow-when-processing-versio.patch \
+     file://0001-Fix-heap-buffer-address-violation-when-reading-versi.patch \
+     file://CVE-2017-14333.patch \
 "
 S  = "${WORKDIR}/git"
 

@@ -1,0 +1,57 @@
+From 98f02962fefbacf1b805e93fb7bddeb58ec6ff70 Mon Sep 17 00:00:00 2001
+From: Nick Clifton <nickc@redhat.com>
+Date: Mon, 9 Jan 2017 09:27:46 +0000
+Subject: [PATCH] Improve objdump's behaviour when it encounters a corrupt
+ binary with an excessively large symbol table.
+
+	PR binutils/21013
+	* coffgen.c (_bfd_coff_get_external_symbols): Generate an error
+	message if there are too many symbols to load.
+
+Upstream-Status: Backport
+https://sourceware.org/git/gitweb.cgi?p=binutils-gdb.git;h=98f02962fefbacf1b805e93fb7bddeb58ec6ff70
+
+Signed-off-by: Yue Tao <yue.tao@windriver.com>
+---
+ bfd/ChangeLog |    6 ++++++
+ bfd/coffgen.c |    7 ++++++-
+ 2 files changed, 12 insertions(+), 1 deletion(-)
+
+diff --git a/bfd/ChangeLog b/bfd/ChangeLog
+index f238d86..933feba 100644
+--- a/bfd/ChangeLog
++++ b/bfd/ChangeLog
+@@ -347,6 +347,12 @@
+ 	(bfd_elf_final_link): Only initialize the extended symbol index
+ 	section if there are extended symbol tables to list.
+ 
++2017-01-09  Nick Clifton  <nickc@redhat.com>
++
++	PR binutils/21013
++	* coffgen.c (_bfd_coff_get_external_symbols): Generate an error
++	message if there are too many symbols to load.
++
+ 2016-12-05  Nick Clifton  <nickc@redhat.com>
+ 
+ 	PR binutils/20922
+diff --git a/bfd/coffgen.c b/bfd/coffgen.c
+index d2cc591..5a61f6d 100644
+--- a/bfd/coffgen.c
++++ b/bfd/coffgen.c
+@@ -1640,7 +1640,12 @@ _bfd_coff_get_external_symbols (bfd *abf
+ 
+   syms = bfd_malloc (size);
+   if (syms == NULL)
+-    return FALSE;
++    {
++      /* PR 21013: Provide an error message when the alloc fails.  */
++      _bfd_error_handler (_("%B: Not enough memory to allocate space for %lu symbols"),
++			  abfd, size);
++      return FALSE;
++    }
+ 
+   if (bfd_seek (abfd, obj_sym_filepos (abfd), SEEK_SET) != 0
+       || bfd_bread (syms, size, abfd) != size)
+-- 
+1.7.9.5
+

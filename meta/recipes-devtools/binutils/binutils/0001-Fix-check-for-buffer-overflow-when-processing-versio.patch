@@ -1,0 +1,47 @@
+From 4aeb00ad3cc6a29b32f0a4e42c2f64d55e25b76d Mon Sep 17 00:00:00 2001
+From: Nick Clifton <nickc@redhat.com>
+Date: Mon, 13 Feb 2017 14:35:24 +0000
+Subject: [PATCH] Fix check for buffer overflow when processing version
+ information.
+
+	PR binutils/21148
+	* readelf.c (process_version_sections): Include size of auxillary
+	version information when checking for buffer overflow.
+---
+ binutils/ChangeLog |    6 ++++++
+ binutils/readelf.c |    2 +-
+ 2 files changed, 7 insertions(+), 1 deletion(-)
+
+diff --git a/binutils/ChangeLog b/binutils/ChangeLog
+index f099467..ebaedcc 100644
+--- a/binutils/ChangeLog
++++ b/binutils/ChangeLog
+@@ -143,6 +143,12 @@
+ 
+ 2017-02-13  Nick Clifton  <nickc@redhat.com>
+ 
++	PR binutils/21148
++	* readelf.c (process_version_sections): Include size of auxillary
++	version information when checking for buffer overflow.
++
++2017-02-13  Nick Clifton  <nickc@redhat.com>
++
+ 	PR binutils/21135
+ 	* readelf.c (dump_section_as_bytes): Handle the case where
+ 	uncompress_section_contents returns false.
+diff --git a/binutils/readelf.c b/binutils/readelf.c
+index 6fd7ff7..a61befe 100644
+--- a/binutils/readelf.c
++++ b/binutils/readelf.c
+@@ -10019,7 +10019,7 @@ process_version_sections (FILE * file)
+ 			ent.vd_ndx, ent.vd_cnt);
+ 
+ 		/* Check for overflow.  */
+-		if (ent.vd_aux > (size_t) (endbuf - vstart))
++		if (ent.vd_aux + sizeof (* eaux) > (size_t) (endbuf - vstart))
+ 		  break;
+ 
+ 		vstart += ent.vd_aux;
+-- 
+1.7.9.5
+
