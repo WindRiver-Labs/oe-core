@@ -4,7 +4,7 @@ SECTION = "libs"
 
 DEPENDS += "gmp"
 
-SRC_URI = "http://www.lysator.liu.se/~nisse/archive/${BP}.tar.gz \
+SRC_URI = "https://ftp.gnu.org/gnu/nettle/${BP}.tar.gz \
            file://Add-target-to-only-build-tests-not-run-them.patch \
            file://run-ptest \
            "
