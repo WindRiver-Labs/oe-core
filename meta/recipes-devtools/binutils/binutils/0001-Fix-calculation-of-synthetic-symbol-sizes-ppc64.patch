@@ -1,0 +1,83 @@
+From cec4b2e3fee8ae2c41089fc7454da56f676f653c Mon Sep 17 00:00:00 2001
+From: Luis Machado <lgustavo@codesourcery.com>
+Date: Thu, 1 Dec 2016 08:42:11 -0600
+Subject: [PATCH] Fix calculation of synthetic symbol sizes (ppc64)
+
+The attached patch fixes a problem where nm displays bogus information for
+synthetic symbol sizes when --size-sort is used.
+
+This happens because the synthetic symbols (dot symbols for ppc64) are
+generated based on their non-dot symbols. The generation process doesn't copy
+over the ELF-specific bits of the regular non-dot symbols.
+
+When --size-sort is used, the code attempts to access the symbol size from
+the ELF-specific bits and ends up reading gargabe, causing the size to be
+displayed incorrectly.
+
+With the patch, i can see dot and non-dot symbols having the same size with
+--size-sort.
+
+This doesn't fix the fact that we don't display size information for synthetic
+symbols without --size-sort, which i may address in the future.
+
+binutils/ChangeLog:
+
+2016-12-01  Luis Machado  <lgustavo@codesourcery.com>
+
+	* nm.c (sort_symbols_by_size): Don't read symbol size if symbol
+	is synthetic.
+
+Upstream-Status: Backport
+https://sourceware.org/git/gitweb.cgi?p=binutils-gdb.git;h=cec4b2e3fee8ae2c41089fc7454da56f676f653c
+
+Signed-off-by: Yue Tao <yue.tao@windriver.com>
+---
+ binutils/ChangeLog |    5 +++++
+ binutils/nm.c      |    7 +++++--
+ 2 files changed, 10 insertions(+), 2 deletions(-)
+
+diff --git a/binutils/ChangeLog b/binutils/ChangeLog
+index 35cd691..cf54b0f 100644
+--- a/binutils/ChangeLog
++++ b/binutils/ChangeLog
+@@ -207,6 +207,11 @@
+ 	Check for buffer overflow before writing relocated values.
+ 	(apply_relocations): Pass end to target_specific_reloc_handling.
+ 
++2016-12-01  Luis Machado  <lgustavo@codesourcery.com>
++
++	* nm.c (sort_symbols_by_size): Don't read symbol size if symbol
++	is synthetic.
++
+ 2016-08-03  Tristan Gingold  <gingold@adacore.com>
+ 
+ 	* configure: Regenerate.
+diff --git a/binutils/nm.c b/binutils/nm.c
+index d537441..7b4bcdf 100644
+--- a/binutils/nm.c
++++ b/binutils/nm.c
+@@ -762,6 +762,7 @@ sort_symbols_by_size (bfd *abfd, bfd_boolean is_dynamic, void *minisyms,
+       asection *sec;
+       bfd_vma sz;
+       asymbol *temp;
++      int synthetic = (sym->flags & BSF_SYNTHETIC);
+ 
+       if (from + size < fromend)
+ 	{
+@@ -777,9 +778,11 @@ sort_symbols_by_size (bfd *abfd, bfd_boolean is_dynamic, void *minisyms,
+ 
+       sec = bfd_get_section (sym);
+ 
+-      if (bfd_get_flavour (abfd) == bfd_target_elf_flavour)
++      /* Synthetic symbols don't have a full type set of data available, thus
++	 we can't rely on that information for the symbol size.  */
++      if (!synthetic && bfd_get_flavour (abfd) == bfd_target_elf_flavour)
+ 	sz = ((elf_symbol_type *) sym)->internal_elf_sym.st_size;
+-      else if (bfd_is_com_section (sec))
++      else if (!synthetic && bfd_is_com_section (sec))
+ 	sz = sym->value;
+       else
+ 	{
+-- 
+1.7.9.5
+

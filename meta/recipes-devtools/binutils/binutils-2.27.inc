@@ -135,6 +135,15 @@ SRC_URI = "\
      file://0001-Fix-check-for-buffer-overflow-when-processing-versio.patch \
      file://0001-Fix-heap-buffer-address-violation-when-reading-versi.patch \
      file://CVE-2017-14333.patch \
+     file://CVE-2017-17124.patch \
+     file://CVE-2017-17123.patch \
+     file://CVE-2017-17122.patch \
+     file://CVE-2017-17080.patch \
+     file://0001-Fix-calculation-of-synthetic-symbol-sizes-ppc64.patch \
+     file://0001-nm-handling-of-synthetic-symbols.patch \
+     file://CVE-2017-17125.patch \
+     file://CVE-2017-17125-2.patch \
+     file://CVE-2017-17126.patch \
 "
 S  = "${WORKDIR}/git"
 
