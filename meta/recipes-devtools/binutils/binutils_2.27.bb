@@ -42,4 +42,11 @@ do_install_class-native () {
 	rmdir ${D}/${libdir}64 || :
 }
 
+do_install_append () {
+	for f in ${D}${infodir}/*.info ; do
+		file="${f##*/}"
+		file="${file%.*}.texinfo."
+		sed -i -e "s|${S}[^ ]*texinfo.|${file}|" $f || :
+        done
+}
 BBCLASSEXTEND = "native nativesdk"
