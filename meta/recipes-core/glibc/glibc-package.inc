@@ -134,6 +134,9 @@ do_install_append () {
 		echo "d root root 0755 /var/run/nscd none" \
 			> ${D}${sysconfdir}/default/volatiles/98_nscd
 	fi
+	for f in ${D}${infodir}/*.info* ; do
+		sed -i -e "s|${B}/manual/libc.info,|libc.info,|" $f
+	done
 }
 
 do_install_append_aarch64 () {
