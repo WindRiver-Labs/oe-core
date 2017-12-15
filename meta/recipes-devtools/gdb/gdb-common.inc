@@ -57,6 +57,11 @@ do_install_append() {
 	rm -rf ${D}${libdir}
 	rm -rf ${D}${includedir}
 	rm -rf ${D}${datadir}/locale
+	for f in ${D}${infodir}/*.info ; do
+		file="${f##*/}"
+		file="${file%.*}.texinfo."
+		sed -i -e "s|${S}[^ ]*texinfo.|${file}|" $f || :
+        done
 }
 
 RRECOMMENDS_gdb_append_linux = " glibc-thread-db "
