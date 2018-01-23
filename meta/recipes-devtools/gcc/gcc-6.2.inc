@@ -85,6 +85,7 @@ SRC_URI = "\
 BACKPORTS = "\
            file://ubsan-fix-check-empty-string.patch \
            file://TCWRLGCC-281.patch \
+           file://TCWRLGCC-298.patch \
 "
 
 SRC_URI[md5sum] = "9768625159663b300ae4de2f4745fcc4"
