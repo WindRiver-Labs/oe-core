@@ -637,3 +637,5 @@ python populate_packages_prepend () {
     iwlwifi_pkgs = filter(lambda x: x.find('-iwlwifi-') != -1, firmware_pkgs)
     d.appendVar('RDEPENDS_linux-firmware-iwlwifi', ' ' + ' '.join(iwlwifi_pkgs))
 }
+
+INSANE_SKIP_${PN} = "arch"
