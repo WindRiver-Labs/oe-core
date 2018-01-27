@@ -47,6 +47,8 @@ do_install_append () {
 		file="${f##*/}"
 		file="${file%.*}.texinfo."
 		sed -i -e "s|${S}[^ ]*texinfo.|${file}|" $f || :
+		file="${file%.*}.texi."
+		sed -i -e "s|${S}[^ ]*texi.|${file}|" $f || :
         done
 }
 BBCLASSEXTEND = "native nativesdk"
