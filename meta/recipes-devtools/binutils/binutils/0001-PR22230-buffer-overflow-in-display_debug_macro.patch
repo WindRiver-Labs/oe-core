@@ -1,0 +1,64 @@
+From 4f1881b94473f1034f950feb863b464435a8fb5f Mon Sep 17 00:00:00 2001
+From: Alan Modra <amodra@gmail.com>
+Date: Sun, 1 Oct 2017 12:07:07 +1030
+Subject: [PATCH] PR22230, buffer overflow in display_debug_macro
+
+	PR 22230
+	* objdump.c (load_specific_debug_section): Allocate an extra byte
+	for a terminating NUL.
+
+(cherry picked from commit 4f1881b94473f1034f950feb863b464435a8fb5f)
+
+Upstream-Status: Backport(master)
+---
+ binutils/ChangeLog |    6 ++++++
+ binutils/objdump.c |    9 +++++----
+ 2 files changed, 11 insertions(+), 4 deletions(-)
+
+diff --git a/binutils/ChangeLog b/binutils/ChangeLog
+index d9f0899..d45eeaf 100644
+--- a/binutils/ChangeLog
++++ b/binutils/ChangeLog
+@@ -66,6 +66,12 @@
+ 	to the difference of the pointers instead.  Remove now redundant
+ 	"negative" length test.
+ 
++2017-10-01  Alan Modra  <amodra@gmail.com>
++
++	PR 22230
++	* objdump.c (load_specific_debug_section): Allocate an extra byte
++	for a terminating NUL.
++
+ 2017-09-15  Nick Clifton  <nickc@redhat.com>
+ 
+ 	2.29.1 Release
+diff --git a/binutils/objdump.c b/binutils/objdump.c
+index 3b2c7a3..83b8b2a 100644
+--- a/binutils/objdump.c
++++ b/binutils/objdump.c
+@@ -2475,17 +2475,18 @@ load_specific_debug_section (enum dwarf_section_display_enum debug,
+   section->num_relocs = 0;
+   section->address = bfd_get_section_vma (abfd, sec);
+   section->size = bfd_get_section_size (sec);
+-  section->start = NULL;
++  section->start = malloc (section->size + 1);
+   section->user_data = sec;
+-  ret = bfd_get_full_section_contents (abfd, sec, &section->start);
+-
+-  if (! ret)
++  if (section->start == NULL
++      || !bfd_get_full_section_contents (abfd, sec, &section->start))
+     {
+       free_debug_section (debug);
+       printf (_("\nCan't get contents for section '%s'.\n"),
+ 	      section->name);
+       return 0;
+     }
++  /* Ensure any string section has a terminating NUL.  */
++  section->start[section->size] = 0;
+ 
+   if (is_relocatable && debug_displays [debug].relocate)
+     {
+-- 
+1.7.9.5
+
