@@ -35,6 +35,45 @@ SRC_URI = "\
      file://0013-fix-the-incorrect-assembling-for-ppc-wait-mnemonic.patch \
      file://0014-Detect-64-bit-MIPS-targets.patch \
      file://0015-sync-with-OE-libtool-changes.patch \
+     file://CVE-2017-14729.patch \
+     file://CVE-2017-14745.patch \
+     file://CVE-2017-14974.patch \
+     file://CVE-2017-15996.patch \
+     file://CVE-2017-16826.patch \
+     file://CVE-2017-16829.patch \
+     file://CVE-2017-16831.patch \
+     file://CVE-2017-16832.patch \
+     file://CVE-2017-16827.patch \
+     file://CVE-2017-16830.patch \
+     file://0001-PR22239-invalid-memory-read-in-display_debug_frames.patch \
+     file://CVE-2017-16828.patch \
+     file://CVE-2017-17125.patch \
+     file://CVE-2017-17123.patch \
+     file://CVE-2017-17121.patch \
+     file://CVE-2017-17124.patch \
+     file://CVE-2017-17122.patch \
+     file://CVE-2017-17126.patch \
+     file://CVE-2017-17080.patch \
+     file://CVE-2018-6323.patch \
+     file://CVE-2017-17125-2.patch \
+     file://CVE-2018-8945.patch \
+     file://CVE-2018-7643.patch \
+     file://CVE-2018-7642.patch \
+     file://CVE-2018-7569.patch \
+     file://CVE-2018-7208.patch \
+     file://CVE-2018-10535.patch \
+     file://CVE-2018-10372.patch \
+     file://CVE-2018-10373.patch \
+     file://0001-PR22829-objcopy-strip-removes-PT_GNU_RELRO-from-lld-.patch \
+     file://CVE-2018-7570.patch \
+     file://CVE-2017-15020.patch \
+     file://CVE-2018-7568.patch \
+     file://0001-PR22230-buffer-overflow-in-display_debug_macro.patch \
+     file://0001-PR22232-NULL-pointer-dereference-in-load_specific_de.patch \
+     file://CVE-2018-6543.patch \
+     file://CVE-2017-15021.patch \
+     file://CVE-2018-6759.patch \
+     file://CVE-2018-10534.patch \
 "
 S  = "${WORKDIR}/git"
 
