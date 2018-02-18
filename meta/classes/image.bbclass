@@ -154,13 +154,17 @@ IMAGE_TYPE_uboot = "${@build_uboot(d)}"
 inherit ${IMAGE_TYPE_uboot}
 
 python () {
+    def extraimage_getdepends(task):
+        deps = ""
+        for dep in (d.getVar('EXTRA_IMAGEDEPENDS', True) or "").split():
+            deps += " %s:%s" % (dep, task)
+        return deps
+
+    d.appendVarFlag('do_image', 'depends', extraimage_getdepends('do_populate_lic'))
+    d.appendVarFlag('do_image_complete', 'depends', extraimage_getdepends('do_populate_sysroot'))
+
     deps = " " + imagetypes_getdepends(d)
     d.appendVarFlag('do_rootfs', 'depends', deps)
-
-    deps = ""
-    for dep in (d.getVar('EXTRA_IMAGEDEPENDS', True) or "").split():
-        deps += " %s:do_populate_sysroot" % dep
-    d.appendVarFlag('do_build', 'depends', deps)
 
     #process IMAGE_FEATURES, we must do this before runtime_mapping_rename
     #Check for replaces image features
