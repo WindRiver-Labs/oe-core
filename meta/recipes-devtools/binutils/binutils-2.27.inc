@@ -144,6 +144,13 @@ SRC_URI = "\
      file://CVE-2017-17125.patch \
      file://CVE-2017-17125-2.patch \
      file://CVE-2017-17126.patch \
+     file://CVE-2017-17121.patch \
+     file://CVE-2018-6323.patch \
+     file://CVE-2018-6759.patch \
+     file://CVE-2018-7208.patch \
+     file://0001-PR22230-buffer-overflow-in-display_debug_macro.patch \
+     file://0001-PR22232-NULL-pointer-dereference-in-load_specific_de.patch \
+     file://CVE-2018-6543.patch \
 "
 S  = "${WORKDIR}/git"
 
