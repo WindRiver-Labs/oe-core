@@ -14,7 +14,7 @@ DEPENDS_class-nativesdk = "ca-certificates-native openssl-native"
 
 SRCREV = "f54715702c5c0581c9461f78fd84e2c8d2ec243c"
 
-SRC_URI = "git://anonscm.debian.org/collab-maint/ca-certificates.git \
+SRC_URI = "git://salsa.debian.org/debian/ca-certificates.git;protocol=https \
            file://0002-update-ca-certificates-use-SYSROOT.patch \
            file://0001-update-ca-certificates-don-t-use-Debianisms-in-run-p.patch \
            file://update-ca-certificates-support-Toybox.patch \
