@@ -151,6 +151,12 @@ SRC_URI = "\
      file://0001-PR22230-buffer-overflow-in-display_debug_macro.patch \
      file://0001-PR22232-NULL-pointer-dereference-in-load_specific_de.patch \
      file://CVE-2018-6543.patch \
+     file://CVE-2018-7568.patch \
+     file://CVE-2018-7569.patch \
+     file://0001-PR22829-objcopy-strip-removes-PT_GNU_RELRO-from-lld-.patch \
+     file://CVE-2018-7570.patch \
+     file://CVE-2018-7642.patch \
+     file://CVE-2018-7643.patch \
 "
 S  = "${WORKDIR}/git"
 
