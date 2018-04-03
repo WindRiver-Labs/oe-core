@@ -1,0 +1,34 @@
+From 99e69d8b930fae4c35e6bd634d97b07cc5c128a8 Mon Sep 17 00:00:00 2001
+From: Eduardo Habkost <ehabkost@redhat.com>
+Date: Tue, 9 Jan 2018 13:45:15 -0200
+Subject: [PATCH 3/8] i386: Add spec-ctrl CPUID bit
+
+Add the feature name and a CPUID_7_0_EDX_SPEC_CTRL macro.
+
+Signed-off-by: Eduardo Habkost <ehabkost@redhat.com>
+Message-Id: <20180109154519.25634-4-ehabkost@redhat.com>
+Signed-off-by: Eduardo Habkost <ehabkost@redhat.com>
+
+Upstream-status: Backport [commit:a2381f0934432ef2cd47a335348ba8839632164c]
+
+Signed-off-by: Liu Haitao <haitao.liu@windriver.com>
+---
+ target-i386/cpu.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/target-i386/cpu.c b/target-i386/cpu.c
+index 76045965..7c93142b 100644
+--- a/target-i386/cpu.c
++++ b/target-i386/cpu.c
+@@ -322,7 +322,7 @@ static const char *cpuid_7_0_edx_feature_name[] = {
+ 	NULL, NULL, NULL, NULL,
+ 	NULL, NULL, NULL, NULL,
+ 	NULL, NULL, NULL, NULL,
+-	NULL, NULL, NULL, NULL,
++    NULL, NULL, "spec-ctrl", NULL,
+ 	NULL, NULL, NULL, NULL,
+ };
+ static const char *cpuid_apm_edx_feature_name[] = {
+-- 
+2.11.0
+

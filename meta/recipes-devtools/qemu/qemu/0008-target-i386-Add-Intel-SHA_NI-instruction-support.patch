@@ -1,0 +1,48 @@
+From ba578033b22608a2e573ae638553260bb1371e6b Mon Sep 17 00:00:00 2001
+From: Yi Sun <yi.y.sun@linux.intel.com>
+Date: Wed, 14 Dec 2016 10:50:03 +0800
+Subject: [PATCH 8/8] target-i386: Add Intel SHA_NI instruction support.
+
+Add SHA_NI feature bit. Its spec can be found at:
+https://software.intel.com/sites/default/files/managed/39/c5/325462-sdm-vol-1-2abcd-3abcd.pdf
+
+Signed-off-by: Yi Sun <yi.y.sun@linux.intel.com>
+Message-Id: <1481683803-10051-1-git-send-email-yi.y.sun@linux.intel.com>
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+
+Upstream-status:[commit:638cbd452d3a92a2ab18caee73078483d90f64eb]
+
+Signed-off-by: Liu Haitao <haitao.liu@windriver.com>
+---
+ target-i386/cpu.c | 2 +-
+ target-i386/cpu.h | 1 +
+ 2 files changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/target-i386/cpu.c b/target-i386/cpu.c
+index e05c196e..5c759b6b 100644
+--- a/target-i386/cpu.c
++++ b/target-i386/cpu.c
+@@ -305,7 +305,7 @@ static const char *cpuid_7_0_ebx_feature_name[] = {
+     "avx512f", "avx512dq", "rdseed", "adx",
+     "smap", "avx512ifma", "pcommit", "clflushopt",
+     "clwb", NULL, "avx512pf", "avx512er",
+-    "avx512cd", NULL, "avx512bw", "avx512vl",
++    "avx512cd", "sha-ni", "avx512bw", "avx512vl",
+ };
+ 
+ static const char *cpuid_7_0_ecx_feature_name[] = {
+diff --git a/target-i386/cpu.h b/target-i386/cpu.h
+index fbf81339..7dae9cf8 100644
+--- a/target-i386/cpu.h
++++ b/target-i386/cpu.h
+@@ -620,6 +620,7 @@ typedef uint32_t FeatureWordArray[FEATURE_WORDS];
+ #define CPUID_7_0_EBX_AVX512PF (1U << 26) /* AVX-512 Prefetch */
+ #define CPUID_7_0_EBX_AVX512ER (1U << 27) /* AVX-512 Exponential and Reciprocal */
+ #define CPUID_7_0_EBX_AVX512CD (1U << 28) /* AVX-512 Conflict Detection */
++#define CPUID_7_0_EBX_SHA_NI   (1U << 29) /* SHA1/SHA256 Instruction Extensions */
+ #define CPUID_7_0_EBX_AVX512BW (1U << 30) /* AVX-512 Byte and Word Instructions */
+ #define CPUID_7_0_EBX_AVX512VL (1U << 31) /* AVX-512 Vector Length Extensions */
+ 
+-- 
+2.11.0
+

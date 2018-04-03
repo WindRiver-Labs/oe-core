@@ -53,6 +53,14 @@ SRC_URI += "file://configure-fix-Darwin-target-detection.patch \
             file://qemu-CVE-2016-8909.patch \
             file://qemu-CVE-2016-8910.patch \
             file://qemu-CVE-2016-9381.patch \
+            file://0001-i386-Add-support-for-SPEC_CTRL-MSR.patch \
+            file://0002-x86-add-AVX512_4VNNIW-and-AVX512_4FMAPS-features.patch \
+            file://0003-i386-Add-spec-ctrl-CPUID-bit.patch \
+            file://0004-i386-Add-FEAT_8000_0008_EBX-CPUID-feature-word.patch \
+            file://0005-i386-Add-new-IBRS-versions-of-Intel-CPU-models.patch \
+            file://0006-target-i386-Add-more-Intel-AVX-512-instructions-supp.patch \
+            file://0007-i386-Add-EPYC-IBPB-CPU-model.patch \
+            file://0008-target-i386-Add-Intel-SHA_NI-instruction-support.patch \
 "
 
 SRC_URI_prepend = "http://wiki.qemu-project.org/download/${BP}.tar.bz2"
