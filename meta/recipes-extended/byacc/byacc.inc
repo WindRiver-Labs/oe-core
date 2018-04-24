@@ -5,7 +5,7 @@ programming language."
 SECTION = "devel"
 LICENSE = "PD"
 
-SRC_URI = "http://download.openpkg.org/components/cache/byacc/byacc-${PV}.tgz \
+SRC_URI = "ftp://ftp.invisible-island.net/byacc/byacc-${PV}.tgz \
            file://byacc-open.patch"
 
 EXTRA_OECONF += "--program-transform-name='s,^,b,'"
