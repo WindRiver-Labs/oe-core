@@ -11,7 +11,7 @@ S = "${WORKDIR}/libpng-${PV}"
 
 LIBV = "12"
 
-SRC_URI = "${SOURCEFORGE_MIRROR}/project/libpng/libpng${LIBV}/${PV}/libpng-${PV}.tar.xz"
+SRC_URI = "http://sourceforge.net/projects/libpng/files/libpng${LIBV}/older-releases/${PV}/libpng-${PV}.tar.xz"
 
 MIRRORS += "${SOURCEFORGE_MIRROR}/project/libpng/libpng${LIBV}/${PV}/ ${SOURCEFORGE_MIRROR}/project/libpng/libpng${LIBV}/older-releases/${PV}"
 
