@@ -227,6 +227,8 @@ if [ ! -x $target_sdk_dir -o ! -w $target_sdk_dir -o ! -r $target_sdk_dir ]; the
 		exit 1
 	fi
 
+	echo "Sorry, you do not have permission to install the SDK to \"$target_sdk_dir\"." && exit 1
+
 	SUDO_EXEC=$(which "sudo")
 	if [ -z $SUDO_EXEC ]; then
 		echo "No command 'sudo' found, please install sudo first. Abort!"
