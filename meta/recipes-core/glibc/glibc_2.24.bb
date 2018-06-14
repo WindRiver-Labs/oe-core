@@ -72,6 +72,9 @@ SRC_URI = "${GLIBC_GIT_URI};branch=${SRCBRANCH};name=glibc \
            file://CVE-2018-11236.patch \
            file://CVE-2018-11237.patch \
            file://CVE-2018-11237-2.patch \
+           file://0031-Add-VZEROUPPER-to-memset-vec-unaligned-erms.S-BZ-210.patch \
+           file://0032-x86-Set-Prefer_No_VZEROUPPER-if-AVX512ER-is-availabl.patch \
+           file://0033-x86-Use-AVX2-memcpy-memset-on-Skylake-server-BZ-2139.patch \
 "
 
 SRC_URI += "\
