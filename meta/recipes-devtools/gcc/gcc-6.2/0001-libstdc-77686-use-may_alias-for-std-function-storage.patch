@@ -1,0 +1,43 @@
+From b2b4df30ba1a6567515c6009aa929e1b6a910960 Mon Sep 17 00:00:00 2001
+From: redi <redi@138bc75d-0d04-0410-961f-82ee72b054a4>
+Date: Wed, 28 Sep 2016 10:57:46 +0000
+Subject: [PATCH] libstdc++/77686 use may_alias for std::function storage
+
+	PR libstdc++/77686
+	* include/std/functional (_Any_data): Add may_alias attribute.
+
+git-svn-id: svn+ssh://gcc.gnu.org/svn/gcc/trunk@240567 138bc75d-0d04-0410-961f-82ee72b054a4
+---
+ libstdc++-v3/ChangeLog              |    5 +++++
+ libstdc++-v3/include/std/functional |    2 +-
+ 2 files changed, 6 insertions(+), 1 deletion(-)
+
+diff --git a/libstdc++-v3/ChangeLog b/libstdc++-v3/ChangeLog
+index 69ec081..8c11aad 100644
+--- a/libstdc++-v3/ChangeLog
++++ b/libstdc++-v3/ChangeLog
+@@ -1,3 +1,8 @@
++2016-09-28  Jonathan Wakely  <jwakely@redhat.com>
++
++	PR libstdc++/77686
++	* include/std/functional (_Any_data): Add may_alias attribute.
++
+ 2016-08-22  Release Manager
+ 
+ 	* GCC 6.2.0 released.
+diff --git a/libstdc++-v3/include/std/functional b/libstdc++-v3/include/std/functional
+index 8b2389c..74e65c7 100644
+--- a/libstdc++-v3/include/std/functional
++++ b/libstdc++-v3/include/std/functional
+@@ -1401,7 +1401,7 @@ _GLIBCXX_MEM_FN_TRAITS(&&, false_type, true_type)
+     void (_Undefined_class::*_M_member_pointer)();
+   };
+ 
+-  union _Any_data
++  union [[gnu::may_alias]] _Any_data
+   {
+     void*       _M_access()       { return &_M_pod_data[0]; }
+     const void* _M_access() const { return &_M_pod_data[0]; }
+-- 
+1.7.9.5
+
