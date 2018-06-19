@@ -42,9 +42,9 @@ index 2f949fdedfa0..db82053e1ffe 100644
 +	* sysdeps/x86_64/multiarch/memset-vec-unaligned-erms.S
 +	(L(stosb)): Add VZEROUPPER before ret.
 +
- 2018-01-18  Arjun Shankar  <arjun@redhat.com>
+ 2018-05-23  H.J. Lu  <hongjiu.lu@intel.com>
  
- 	[BZ #22343]
+ 	[BZ #23196]
 diff --git a/sysdeps/x86_64/multiarch/memset-vec-unaligned-erms.S b/sysdeps/x86_64/multiarch/memset-vec-unaligned-erms.S
 index 28e71fd57681..acf448c9a66d 100644
 --- a/sysdeps/x86_64/multiarch/memset-vec-unaligned-erms.S
