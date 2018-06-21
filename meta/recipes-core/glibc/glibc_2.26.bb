@@ -44,6 +44,10 @@ SRC_URI = "${GLIBC_GIT_URI};branch=${SRCBRANCH};name=glibc \
            file://0028-Bug-4578-add-ld.so-lock-while-fork.patch \
            file://0029-bits-siginfo-consts.h-enum-definition-for-TRAP_HWBKP.patch \
            file://0030-malloc-add-missing-arena-lock-in-malloc-info.patch \
+           file://CVE-2017-18269.patch \
+           file://CVE-2018-11236.patch \
+           file://CVE-2018-11237.patch \
+           file://CVE-2018-11237-2.patch \
 "
 
 NATIVESDKFIXES ?= ""
