@@ -13,7 +13,7 @@ DEPENDS_class-native = ""
 inherit autotools gettext texinfo
 
 SRC_URI = "${GNU_MIRROR}/coreutils/${BP}.tar.xz;name=tarball \
-           http://distfiles.gentoo.org/distfiles/${BP}-man.tar.xz;name=manpages \
+           http://dev.gentoo.org/~vapier/dist/${BP}-man.tar.xz;name=manpages \
            file://man-decouple-manpages-from-build.patch \
            file://remove-usr-local-lib-from-m4.patch \
            file://fix-selinux-flask.patch \
