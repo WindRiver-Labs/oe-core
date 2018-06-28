@@ -13,19 +13,18 @@ Index: git/malloc/Makefile
 ===================================================================
 --- git.orig/malloc/Makefile	2017-09-04 17:34:06.758018978 +0800
 +++ git/malloc/Makefile	2017-11-20 14:57:43.440337572 +0800
-@@ -34,6 +34,7 @@
- 	 tst-interpose-nothread \
+@@ -33,6 +33,7 @@
  	 tst-interpose-thread \
  	 tst-alloc_buffer \
+ 	 tst-malloc-tcache-leak \
 +	 tst-malloc_info \
+ 	 tst-malloc-too-large \
  
  tests-static := \
- 	 tst-interpose-static-nothread \
-@@ -242,3 +243,5 @@
- $(objpfx)tst-dynarray-fail-mem.out: $(objpfx)tst-dynarray-fail.out
- 	$(common-objpfx)malloc/mtrace $(objpfx)tst-dynarray-fail.mtrace > $@; \
+@@ -246,3 +247,4 @@
  	$(evaluate-test)
-+
+ 
+ $(objpfx)tst-malloc-tcache-leak: $(shared-thread-library)
 +$(objpfx)tst-malloc_info: $(shared-thread-library)
 Index: git/malloc/malloc.c
 ===================================================================
