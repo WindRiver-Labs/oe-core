@@ -1,0 +1,53 @@
+From a2651d453a9713692e068150c280b08d7ee75788 Mon Sep 17 00:00:00 2001
+From: hjl <hjl@138bc75d-0d04-0410-961f-82ee72b054a4>
+Date: Mon, 16 Apr 2018 18:44:43 +0000
+Subject: [PATCH 3/3] i386: Use const reference of struct ix86_frame to avoid
+ copy
+
+We can use const reference of struct ix86_frame to avoid making a local
+copy of ix86_frame.  ix86_expand_epilogue makes a local copy of struct
+ix86_frame and uses the reg_save_offset field as a local variable.  This
+patch uses a separate local variable for reg_save_offset.
+
+Tested on x86-64 with ada.
+
+	Backport from mainline
+	PR target/83905
+	* config/i386/i386.c (ix86_expand_prologue): Use cost reference
+	of struct ix86_frame.
+	(ix86_expand_epilogue): Likewise.  Add a local variable for
+	the reg_save_offset field in struct ix86_frame.
+
+
+git-svn-id: svn+ssh://gcc.gnu.org/svn/gcc/branches/gcc-6-branch@259411 138bc75d-0d04-0410-961f-82ee72b054a4
+Upstream-Status: Backport
+Backport this patch for matching the patch set of Spectre CVE(CVE-2017-5715).
+
+Signed-off-by: Zhixiong Chi <zhixiong.chi@windriver.com>
+---
+ gcc/ChangeLog | 9 +++++++++
+ 1 file changed, 9 insertions(+)
+
+diff --git a/gcc/ChangeLog b/gcc/ChangeLog
+index 36da2d8..c34eb96 100644
+--- a/gcc/ChangeLog
++++ b/gcc/ChangeLog
+@@ -1,6 +1,15 @@
+ 2018-04-16  H.J. Lu  <hongjiu.lu@intel.com>
+ 
+ 	Backport from mainline
++	PR target/83905
++	* config/i386/i386.c (ix86_expand_prologue): Use cost reference
++	of struct ix86_frame.
++	(ix86_expand_epilogue): Likewise.  Add a local variable for
++	the reg_save_offset field in struct ix86_frame.
++
++2018-04-16  H.J. Lu  <hongjiu.lu@intel.com>
++
++	Backport from mainline
+ 	2017-11-06  H.J. Lu  <hongjiu.lu@intel.com>
+ 
+ 	* config/i386/i386.c (ix86_can_use_return_insn_p): Use reference
+-- 
+1.9.1
+

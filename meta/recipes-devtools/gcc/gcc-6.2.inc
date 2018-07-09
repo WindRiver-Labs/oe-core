@@ -89,6 +89,19 @@ BACKPORTS = "\
            file://0001-libstdc-77686-use-may_alias-for-std-function-storage.patch \
            file://CVE-2016-4491.patch \
            file://CVE-2016-4491-2.patch \
+           file://0001-i386-Move-struct-ix86_frame-to-machine_function.patch \
+           file://0002-i386-Use-reference-of-struct-ix86_frame-to-avoid-cop.patch \
+           file://0003-i386-Use-const-reference-of-struct-ix86_frame-to-avo.patch \
+           file://0001-x86-Add-mindirect-branch.patch \
+           file://0002-x86-Add-mfunction-return.patch \
+           file://0003-x86-Add-mindirect-branch-register.patch \
+           file://0004-x86-Add-V-register-operand-modifier.patch \
+           file://0005-x86-Disallow-mindirect-branch-mfunction-return-with-.patch \
+           file://0001-Use-INVALID_REGNUM-in-indirect-thunk-processing.patch \
+           file://0002-i386-Pass-INVALID_REGNUM-as-invalid-register-number.patch \
+           file://0003-i386-Update-mfunction-return-for-return-with-pop.patch \
+           file://0004-i386-Add-TARGET_INDIRECT_BRANCH_REGISTER.patch \
+           file://0005-i386-Don-t-generate-alias-for-function-return-thunk.patch \
 "
 
 SRC_URI[md5sum] = "9768625159663b300ae4de2f4745fcc4"
