@@ -18,6 +18,7 @@ SRC_URI = "http://dev.gentoo.org/~blueness/${BPN}/${BP}.tar.gz \
            file://permissions.rules \
            file://run.rules \
            file://udev.rules \
+           file://0001-eudev-create-static-nodes-from-modules.patch \
 "
 
 SRC_URI[md5sum] = "6ca08c0e14380f87df8e8aceac123671"
