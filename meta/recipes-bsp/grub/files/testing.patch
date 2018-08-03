@@ -1,0 +1,12 @@
+--- a/configure.ac
++++ b/configure.ac
+@@ -698,7 +698,8 @@ else
+   found=no
+   for arg in "" "-no-integrated-as"; do
+     cmdline="$TARGET_CC -c -o /dev/null $TARGET_CCASFLAGS $arg $TARGET_CPPFLAGS $srcdir/asm-tests/$test_program.S"
+-    echo "Running $cmdline" >&AS_MESSAGE_LOG_FD
++    echo "\nRunning $cmdline"
++    $cmdline
+     if $cmdline >&AS_MESSAGE_LOG_FD 2>&AS_MESSAGE_LOG_FD; then
+       grub_cv_cc_target_asm_compile="$arg"
+       found=yes
