@@ -134,6 +134,10 @@ class Sdk(object, metaclass=ABCMeta):
         if self.d.getVar("TCLIBC", True) != "glibc":
             return
 
+        sdkmachine = self.d.getVar("SDKMACHINE", True)
+        if sdkmachine.endswith("mingw32"):
+            return
+
         linguas = self.d.getVar("SDKIMAGE_LINGUAS", True)
         if linguas:
             import fnmatch
