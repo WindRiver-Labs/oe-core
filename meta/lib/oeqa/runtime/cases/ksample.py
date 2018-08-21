@@ -166,9 +166,9 @@ class KSampleTest(KSample):
     def test_hw_breakpoint_example(self):
         # check arch
         status, output = self.target.run("uname -m")
-        result = ("x86" in output) or ("aarch64" in output)
+        result = "x86" in output
         if not result:
-            self.skipTest("the arch doesn't support hw breakpoint" % output)
+            self.skipTest("the arch %s doesn't support hw breakpoint" % output)
         # check config
         self.check_config("CONFIG_KALLSYMS_ALL")
         # make sure if module exists
@@ -178,7 +178,7 @@ class KSampleTest(KSample):
         # lsmod
         self.cmd_and_check("lsmod | grep data_breakpoint | cut -d\' \' -f1", "data_breakpoint")
         # check result
-        self.cmd_and_check("cat /var/log/messages | grep sample_hbp_handler", "sample_hbp_handler")
+        self.cmd_and_check("dmesg | grep sample_hbp_handler", "sample_hbp_handler")
         # rmmod
         self.cmd_and_check("rmmod data_breakpoint")
 
