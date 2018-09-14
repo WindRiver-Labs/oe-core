@@ -34,7 +34,9 @@ do_install() {
     install -m 0755 ${WORKDIR}/exec ${D}/init.d/89-exec
 
     # mdev
-    install -m 0755 ${WORKDIR}/mdev ${D}/init.d/01-mdev
+    if [ "${VIRTUAL-RUNTIME_base-utils}" == "busybox" ]; then
+        install -m 0755 ${WORKDIR}/mdev ${D}/init.d/01-mdev
+    fi
 
     # udev
     install -m 0755 ${WORKDIR}/udev ${D}/init.d/01-udev
@@ -53,7 +55,7 @@ do_install() {
 
 PACKAGES = "${PN}-base \
             initramfs-module-exec \
-            initramfs-module-mdev \
+            ${@'initramfs-module-mdev' if d.getVar('VIRTUAL-RUNTIME_base-utils') == 'busybox' else ''} \
             initramfs-module-udev \
             initramfs-module-e2fs \
             initramfs-module-nfsrootfs \
