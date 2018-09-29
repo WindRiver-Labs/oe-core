@@ -27,3 +27,9 @@ LICENSE_${PN} = "(GPLv2+ | LGPLv3)"
 LICENSE_${PN}-bin = "GPLv3+"
 
 BBCLASSEXTEND = "native nativesdk"
+
+PACKAGE_PREPROCESS_FUNCS += "libidn2_package_preprocess"
+libidn2_package_preprocess () {
+    sed -e 's@${RECIPE_SYSROOT}@@g' \
+       -i ${PKGD}${libdir}/pkgconfig/libidn2.pc
+}
