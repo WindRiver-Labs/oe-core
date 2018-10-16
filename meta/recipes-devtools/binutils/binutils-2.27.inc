@@ -157,6 +157,9 @@ SRC_URI = "\
      file://CVE-2018-7570.patch \
      file://CVE-2018-7642.patch \
      file://CVE-2018-7643.patch \
+     file://0001-PR22047-Heap-out-of-bounds-read-in-parse_comp_unit.patch \
+     file://CVE-2018-17358.patch \
+     file://CVE-2018-17360.patch \
 "
 S  = "${WORKDIR}/git"
 
