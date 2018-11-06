@@ -102,6 +102,7 @@ BACKPORTS = "\
            file://0003-i386-Update-mfunction-return-for-return-with-pop.patch \
            file://0004-i386-Add-TARGET_INDIRECT_BRANCH_REGISTER.patch \
            file://0005-i386-Don-t-generate-alias-for-function-return-thunk.patch \
+           file://CVE-2018-18483.patch \
 "
 
 SRC_URI[md5sum] = "9768625159663b300ae4de2f4745fcc4"
