@@ -1,4 +1,7 @@
 CCACHE = "${@bb.utils.which(d.getVar('PATH'), 'ccache') and 'ccache '}"
+
+export CCACHE_CONFIGPATH ?= "${COREBASE}/meta/conf/ccache.conf"
+
 export CCACHE_DIR ?= "${TMPDIR}/ccache/${MULTIMACH_TARGET_SYS}/${PN}"
 
 # We need to stop ccache considering the current directory or the
