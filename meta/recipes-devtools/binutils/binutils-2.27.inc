@@ -165,6 +165,7 @@ SRC_URI = "\
      file://CVE-2018-18605.patch \
      file://CVE-2018-18606.patch \
      file://CVE-2018-18607.patch \
+     file://0001-Synchronize-libiberty-with-gcc-and-add-no-recruse-li.patch \
 "
 S  = "${WORKDIR}/git"
 
