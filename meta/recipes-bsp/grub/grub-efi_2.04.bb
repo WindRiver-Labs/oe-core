@@ -11,6 +11,8 @@ SRC_URI += " \
            file://cfg \
           "
 
+SRC_URI_append_class-native = " file://workaround-for-as-from-binutils-2.31.patch"
+
 S = "${WORKDIR}/grub-${PV}"
 
 # Determine the target arch for the grub modules
