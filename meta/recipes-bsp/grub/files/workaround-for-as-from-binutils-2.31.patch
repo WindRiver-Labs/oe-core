@@ -1,0 +1,43 @@
+When /dev and $srcdir are not in a same file system, it may trigger a flaw of
+binutils 2.31 and cause grub-efi-native configure error:
+
+| checking for options to compile assembly...
+| Assembler messages:
+| Fatal error: The input and output files must be distinct
+
+Replace /dev/null with a temporary file during assemble check to avoid such
+failure.
+
+This is a workaround for binutils 2.31. When it is fixed on Fedora 29, this
+patch could be removed.
+
+Ref:
+https://bugzilla.redhat.com/show_bug.cgi?id=1660279
+
+Upstream-Status: Inappropriate [native]
+
+Signed-off-by: Kai Kang <kai.kang@windriver.com>
+
+diff --git a/configure.ac b/configure.ac
+index 44a67a7..6eb28fe 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -696,8 +696,9 @@ if test x"$test_program" = x ; then
+   grub_cv_cc_target_asm_compile=
+ else
+   found=no
++  tmpfile="$(mktemp $srcdir/asm-tests/XXXXXX)"
+   for arg in "" "-no-integrated-as"; do
+-    cmdline="$TARGET_CC -c -o /dev/null $TARGET_CCASFLAGS $arg $TARGET_CPPFLAGS $srcdir/asm-tests/$test_program.S"
++    cmdline="$TARGET_CC -c -o $tmpfile $TARGET_CCASFLAGS $arg $TARGET_CPPFLAGS $srcdir/asm-tests/$test_program.S"
+     echo "Running $cmdline" >&AS_MESSAGE_LOG_FD
+     if $cmdline >&AS_MESSAGE_LOG_FD 2>&AS_MESSAGE_LOG_FD; then
+       grub_cv_cc_target_asm_compile="$arg"
+@@ -705,6 +706,7 @@ else
+       break
+     fi
+   done
++  rm -f $tmpfile
+   if test x"$found" = xno ; then
+     AC_MSG_ERROR([could not compile assembly])
+   fi
