@@ -76,6 +76,7 @@ SRC_URI = "${GLIBC_GIT_URI};branch=${SRCBRANCH};name=glibc \
            file://0032-x86-Set-Prefer_No_VZEROUPPER-if-AVX512ER-is-availabl.patch \
            file://0033-x86-Use-AVX2-memcpy-memset-on-Skylake-server-BZ-2139.patch \
            file://0001-Always-do-locking-when-iterating-over-list-of-stream.patch \
+           file://0001-CVE-2018-19591-if_nametoindex-Fix-descriptor-for-ove.patch \
 "
 
 SRC_URI += "\
