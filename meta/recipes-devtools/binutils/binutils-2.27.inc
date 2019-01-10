@@ -176,6 +176,7 @@ SRC_URI = "\
      file://CVE-2018-10373.patch \
      file://CVE-2018-10534.patch \
      file://CVE-2018-20671.patch \
+     file://0018-Add-support-for-disabling-automatic-generation-of.patch \
 "
 S  = "${WORKDIR}/git"
 
