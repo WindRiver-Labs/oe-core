@@ -1,0 +1,76 @@
+From 32b3335175eb6f4b95ab8e024eb3384a2459d5f4 Mon Sep 17 00:00:00 2001
+From: Jiping Ma <jiping.ma2@windriver.com>
+Date: Mon, 11 Feb 2019 07:24:03 +0000
+Subject: [PATCH] rtld: strcspn will cause "valgrind uname" to segmentation
+ fault.
+
+strcspn function will cause valgrind crashed on ppc64.
+valgrind --tool=memcheck --show-reachable=yes --leak-check=full --quiet uname
+==19458== Jump to the invalid address stated on the next line
+==19458== at 0x0: ???
+==19458== by 0x80AC3C7107: dl_main (rtld.c:1619)
+==19458== by 0x80AC3DF58B: _dl_sysdep_start (dl-sysdep.c:249)
+==19458== by 0x80AC3C3FE7: _dl_start_final (rtld.c:401)
+==19458== by 0x80AC3C4A2F: _dl_start (rtld.c:509)
+==19458== by 0x80AC3C372F: _start (in /lib64/ld-2.24.so)
+==19458== Address 0x0 is not stack'd, malloc'd or (recently) free'd
+==19458==
+==19458==
+==19458== Process terminating with default action of signal 11 (SIGSEGV): dumping core
+==19458== Bad permissions for mapped region at address 0x0
+==19458== at 0x0: ???
+==19458== by 0x80AC3C7107: dl_main (rtld.c:1619)
+==19458== by 0x80AC3DF58B: _dl_sysdep_start (dl-sysdep.c:249)
+==19458== by 0x80AC3C3FE7: _dl_start_final (rtld.c:401)
+==19458== by 0x80AC3C4A2F: _dl_start (rtld.c:509)
+==19458== by 0x80AC3C372F: _start (in /lib64/ld-2.24.so)
+Segmentation fault (core dumped)
+
+Upstream-Status: Inappropriate
+Signed-off-by: Jiping Ma <jiping.ma2@windriver.com>
+---
+ elf/rtld.c | 26 +++++---------------------
+ 1 file changed, 5 insertions(+), 21 deletions(-)
+
+diff --git a/elf/rtld.c b/elf/rtld.c
+index a5ebb605d9..b4faf466c5 100644
+--- a/elf/rtld.c
++++ b/elf/rtld.c
+@@ -834,29 +834,13 @@ unsigned int
+ handle_ld_preload (const char *preloadlist, struct link_map *main_map)
+ {
+   unsigned int npreloads = 0;
+-  const char *p = preloadlist;
+-  char fname[PATH_MAX];
+-
+-  while (*p != '\0')
+-    {
+-      /* Split preload list at space/colon.  */
+-      size_t len = strcspn (p, " :");
+-      if (len > 0 && len < PATH_MAX)
+-	{
+-	  memcpy (fname, p, len);
+-	  fname[len] = '\0';
+-	}
+-      else
+-	fname[0] = '\0';
++  char *list = strdupa (preloadlist);
++  char *p;
+ 
+-      /* Skip over the substring and the following delimiter.  */
+-      p += len;
+-      if (*p == ' ' || *p == ':')
+-	++p;
++  while ((p = (strsep) (&list, " :")) != NULL)
++      if (dso_name_valid_for_suid (p))
++         npreloads += do_preload (p, main_map, "LD_PRELOAD");
+ 
+-      if (dso_name_valid_for_suid (fname))
+-	npreloads += do_preload (fname, main_map, "LD_PRELOAD");
+-    }
+   return npreloads;
+ }
+ 
+-- 
+2.11.0
+

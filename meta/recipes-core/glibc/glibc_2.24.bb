@@ -77,6 +77,7 @@ SRC_URI = "${GLIBC_GIT_URI};branch=${SRCBRANCH};name=glibc \
            file://0033-x86-Use-AVX2-memcpy-memset-on-Skylake-server-BZ-2139.patch \
            file://0001-Always-do-locking-when-iterating-over-list-of-stream.patch \
            file://0001-CVE-2018-19591-if_nametoindex-Fix-descriptor-for-ove.patch \
+           file://0001-rtld-strcspn-will-cause-valgrind-uname-to-segmentati.patch \
 "
 
 SRC_URI += "\
