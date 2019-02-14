@@ -44,6 +44,15 @@ early_setup() {
     udevadm trigger --action=add
 }
 
+# Active LV manually to make it can be mounted automatically.
+lvm_setup() {
+    # wait 1 second to ensure /dev/md* available
+    sleep 1
+    lvm pvscan --cache --activate ay
+    udevadm trigger --action=add
+
+}
+
 read_args() {
     [ -z "$CMDLINE" ] && CMDLINE=`cat /proc/cmdline`
     for arg in $CMDLINE; do
@@ -116,6 +125,10 @@ early_setup
 [ -z "$CONSOLE" ] && CONSOLE="/dev/console"
 
 read_args
+
+if ! lvscan |grep -i -w "inactive" &>/dev/null;then
+    lvm_setup
+fi
 
 echo "Waiting for removable media..."
 C=0
