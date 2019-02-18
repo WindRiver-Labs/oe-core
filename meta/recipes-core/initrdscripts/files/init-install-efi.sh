@@ -31,9 +31,10 @@ echo "Searching for hard drives ..."
 
 # Some eMMC devices have special sub devices such as mmcblk0boot0 etc
 # we're currently only interested in the root device so pick them wisely
-devices=`ls /sys/block/ | grep -v mmcblk` || true
+devices=`ls /sys/block/ | grep -v "mmcblk\|md"` || true
 mmc_devices=`ls /sys/block/ | grep "mmcblk[0-9]\{1,\}$"` || true
-devices="$devices $mmc_devices"
+md_devices=`ls /sys/block/ |grep md` || true
+devices="$devices $mmc_devices $md_devices"
 
 for device in $devices; do
     case $device in
@@ -151,6 +152,14 @@ if [ ! "${device#/dev/mmcblk}" = "${device}" ]; then
     rootwait="rootwait"
 fi
 
+# MD raid device use partition prefix charater 'p'
+# and it need a larger capacity to store initrd,
+# considering some debug purpose, enlarge it to 1G.
+if [ ! "${device#/dev/md}" = "${device}" ]; then
+    part_prefix="p"
+    boot_size=1024
+fi
+
 # USB devices also require rootwait
 if [ -n `readlink /dev/disk/by-id/usb* | grep $TARGET_DEVICE_NAME` ]; then
     rootwait="rootwait"
@@ -196,6 +205,28 @@ mkdir /tgt_root
 mkdir /src_root
 mkdir -p /boot
 
+create_lvm() {
+    vgcreate wrl $rootfs
+    lvcreate -L 10G -n root wrl
+    rootfs="/dev/wrl/root"
+    mkfs.ext3 $rootfs
+}
+
+if [ ! "${device#/dev/md}" = "${device}" ]; then
+    while true; do
+        echo "Do you want to install rootfs to LVM? Press i to ignore, y to create LVM"
+        read answer2
+        if [ "$answer2" = "i" ]; then
+            echo "continue..."
+	    break
+        elif [ "$answer2" = "y" ]; then
+            echo "Create LVM $rootfs ..."
+            create_lvm
+	    break
+        fi
+    done
+fi
+
 # Handling of the target root partition
 mount $rootfs /tgt_root
 mount -o rw,loop,noatime,nodiratime /run/media/$1/$2 /src_root
@@ -224,6 +255,16 @@ mkdir -p $EFIDIR
 cp /run/media/$1/EFI/BOOT/*.efi $EFIDIR
 
 if [ -f /run/media/$1/EFI/BOOT/grub.cfg ]; then
+
+  if [ ! "${device#/dev/md}" = "${device}" ]; then
+    root_uuid=$(blkid -o value -s UUID ${rootfs})
+    GRUBCFG="$EFIDIR/grub.cfg"
+    cp /run/media/$1/EFI/BOOT/grub.cfg $GRUBCFG
+    cp /run/media/$1/initrd /boot
+    cp /run/media/$1/startup.nsh /boot
+    sed -i "/menuentry 'install/,/^}/d" $GRUBCFG
+    sed -i "s@root=/dev/ram0 *@root=UUID=$root_uuid @" $GRUBCFG
+  else
     root_part_uuid=$(blkid -o value -s PARTUUID ${rootfs})
     GRUBCFG="$EFIDIR/grub.cfg"
     cp /run/media/$1/EFI/BOOT/grub.cfg $GRUBCFG
@@ -238,6 +279,7 @@ if [ -f /run/media/$1/EFI/BOOT/grub.cfg ]; then
     sed -i "s/ root=[^ ]*/ /g" $GRUBCFG
     # Add the root= and other standard boot options
     sed -i "s@linux /vmlinuz *@linux /vmlinuz root=PARTUUID=$root_part_uuid rw $rootwait quiet @" $GRUBCFG
+  fi
 fi
 
 if [ -d /run/media/$1/loader ]; then
