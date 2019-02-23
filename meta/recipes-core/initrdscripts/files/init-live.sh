@@ -59,7 +59,11 @@ read_args() {
         optarg=`expr "x$arg" : 'x[^=]*=\(.*\)'`
         case $arg in
             root=*)
-                ROOT_DEVICE=$optarg ;;
+                if [ ! "${optarg#UUID}" = "${optarg}" ]; then
+                    ROOT_DEVICE=$(blkid -U ${optarg:5})
+		 else
+                    ROOT_DEVICE=$optarg
+                fi ;;
             rootimage=*)
                 ROOT_IMAGE=$optarg ;;
             rootfstype=*)
@@ -120,34 +124,82 @@ fatal() {
     exec sh
 }
 
+boot_disk_root() {
+    mkdir $ROOT_MOUNT
+    if [ "$ROOT_DEVICE" == "/dev/ram0" ]; then
+        mount -n --move /run/media/$ROOTFS_DEVICE $ROOT_MOUNT
+    else
+        umount $ROOT_DEVICE 2>/dev/null
+        mount  $ROOT_DEVICE $ROOT_MOUNT
+    fi
+
+    if touch $ROOT_MOUNT/bin 2>/dev/null; then
+	# The root image is read-write, directly boot it up.
+	boot_live_root
+    fi
+
+}
+
+found_disk_rootfs() {
+    # if rootfs is specified like root=/dev/mapper/wrl-root
+    # we use the specified rootfs, if not we search all mounted disk
+    if [ "$ROOT_DEVICE" == "/dev/ram0" ]; then
+       for j in `ls /run/media 2>/dev/null`; do
+	  if [ -d /run/media/$j/bin ]; then
+             ROOTFS_DEVICE=$j
+             found="disk"
+             break
+          fi
+       done
+    else
+       found="disk"
+    fi
+
+    for k in `ls /run/media 2>/dev/null`; do
+	  if [ -f /run/media/$k/initrd ]; then
+             ROOT_DISK="$k"
+             break
+          fi
+    done
+}
+
 early_setup
 
 [ -z "$CONSOLE" ] && CONSOLE="/dev/console"
-
-read_args
 
 if ! lvscan |grep -i -w "inactive" &>/dev/null;then
     lvm_setup
 fi
 
+read_args
+
 echo "Waiting for removable media..."
 C=0
 while true
 do
-  for i in `ls /run/media 2>/dev/null`; do
-      if [ -f /run/media/$i/$ROOT_IMAGE ] ; then
-		found="yes"
+  if [ "$ROOT_DEVICE" == "/dev/ram0" ]; then
+       # find rootfs.img
+       for i in `ls /run/media 2>/dev/null`; do
+           if [ -f /run/media/$i/$ROOT_IMAGE ] ; then
+		found="img"
 		ROOT_DISK="$i"
 		break
-	  elif [ -f /run/media/$i/isolinux/$ROOT_IMAGE ]; then
-		found="yes"
+	   elif [ -f /run/media/$i/isolinux/$ROOT_IMAGE ]; then
+		found="img"
 		ISOLINUX="isolinux"
 		ROOT_DISK="$i"
 		break	
-      fi
-  done
-  if [ "$found" = "yes" ]; then
+           fi
+      done
+  fi
+
+  if [ "$found" = "img" ]; then
       break;
+  else
+      found_disk_rootfs
+      if [ "$found" = "disk" ]; then
+          break;
+      fi
   fi
   # don't wait for more than $shelltimeout seconds, if it's set
   if [ -n "$shelltimeout" ]; then
@@ -241,5 +293,8 @@ if [ "$label" != "boot" -a -f $label.sh ] ; then
 	fatal "Target $label failed"
 fi
 
-mount_and_boot
-
+if [ "$found" = "img" ]; then
+    mount_and_boot
+elif [ "$found" = "disk" ]; then
+    boot_disk_root
+fi
