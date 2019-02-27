@@ -11,6 +11,8 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=0636e73ff0215e8d672dc4c32c317bb3 \
 
 DEPENDS = " systemd sg3-utils"
 
+PARALLEL_MAKE = ""
+
 SRC_URI = "git://github.com/intel/ledmon;branch=master"
 SRCREV = "8a5d9526e5666e75625427b85a2586436651e89c"
 
