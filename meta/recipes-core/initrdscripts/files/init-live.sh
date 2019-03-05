@@ -177,21 +177,18 @@ echo "Waiting for removable media..."
 C=0
 while true
 do
-  if [ "$ROOT_DEVICE" == "/dev/ram0" ]; then
-       # find rootfs.img
-       for i in `ls /run/media 2>/dev/null`; do
-           if [ -f /run/media/$i/$ROOT_IMAGE ] ; then
+  for i in `ls /run/media 2>/dev/null`; do
+      if [ -f /run/media/$i/$ROOT_IMAGE ] ; then
 		found="img"
 		ROOT_DISK="$i"
 		break
-	   elif [ -f /run/media/$i/isolinux/$ROOT_IMAGE ]; then
+      elif [ -f /run/media/$i/isolinux/$ROOT_IMAGE ]; then
 		found="img"
 		ISOLINUX="isolinux"
 		ROOT_DISK="$i"
 		break	
-           fi
-      done
-  fi
+      fi
+  done
 
   if [ "$found" = "img" ]; then
       break;
