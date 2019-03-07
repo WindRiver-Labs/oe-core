@@ -1,0 +1,174 @@
+From fc4a25e8148f6aa1afd510a7d4dc57a4c597fb96 Mon Sep 17 00:00:00 2001
+From: "H.J. Lu" <hjl.tools@gmail.com>
+Date: Fri, 1 Feb 2019 12:24:08 -0800
+Subject: [PATCH] x86-64 strnlen/wcsnlen: Properly handle the length parameter
+ [BZ #24097]
+
+On x32, the size_t parameter may be passed in the lower 32 bits of a
+64-bit register with the non-zero upper 32 bits.  The string/memory
+functions written in assembly can only use the lower 32 bits of a
+64-bit register as length or must clear the upper 32 bits before using
+the full 64-bit register for length.
+
+This pach fixes strnlen/wcsnlen for x32.  Tested on x86-64 and x32.  On
+x86-64, libc.so is the same with and withou the fix.
+
+	[BZ #24097]
+	CVE-2019-6488
+	* sysdeps/x86_64/strlen.S: Use RSI_LP for length.
+	* sysdeps/x86_64/x32/Makefile (tests): Add tst-size_t-strnlen.
+	* sysdeps/x86_64/x32/tst-size_t-strnlen.c: New file.
+
+(cherry picked from commit 5165de69c0908e28a380cbd4bb054e55ea4abc95)
+
+CVE: CVE-2019-6488
+Upstream-Status: Backport
+Signed-off-by: Zhixiong Chi <zhixiong.chi@windriver.com>
+---
+ ChangeLog                               |  8 ++++
+ sysdeps/x86_64/strlen.S                 | 10 ++---
+ sysdeps/x86_64/x32/Makefile             |  2 +-
+ sysdeps/x86_64/x32/tst-size_t-strnlen.c | 72 +++++++++++++++++++++++++++++++++
+ 4 files changed, 86 insertions(+), 6 deletions(-)
+ create mode 100644 sysdeps/x86_64/x32/tst-size_t-strnlen.c
+
+diff --git a/ChangeLog b/ChangeLog
+index f4e1037..0391699 100644
+--- a/ChangeLog
++++ b/ChangeLog
+@@ -2,6 +2,14 @@
+ 
+ 	[BZ #24097]
+ 	CVE-2019-6488
++	* sysdeps/x86_64/strlen.S: Use RSI_LP for length.
++	* sysdeps/x86_64/x32/Makefile (tests): Add tst-size_t-strnlen.
++	* sysdeps/x86_64/x32/tst-size_t-strnlen.c: New file.
++
++2019-02-01  H.J. Lu  <hongjiu.lu@intel.com>
++
++	[BZ #24097]
++	CVE-2019-6488
+ 	* sysdeps/x86_64/multiarch/strcpy-sse2-unaligned.S: Use RDX_LP
+ 	for length.
+ 	* sysdeps/x86_64/multiarch/strcpy-ssse3.S: Likewise.
+diff --git a/sysdeps/x86_64/strlen.S b/sysdeps/x86_64/strlen.S
+index 12f63ad..a67ae23 100644
+--- a/sysdeps/x86_64/strlen.S
++++ b/sysdeps/x86_64/strlen.S
+@@ -49,7 +49,7 @@ ENTRY(strlen)
+ 
+ #ifdef AS_STRNLEN
+ /* Do not read anything when n==0.  */
+-	test	%rsi, %rsi
++	test	%RSI_LP, %RSI_LP
+ 	jne	L(n_nonzero)
+ 	xor	%rax, %rax
+ 	ret
+@@ -57,10 +57,10 @@ L(n_nonzero):
+ 
+ /* Initialize long lived registers.  */
+ 
+-	add	%rdi, %rsi
+-	mov	%rsi, %r10
+-	and	$-64, %r10
+-	mov	%rsi, %r11
++	add	%RDI_LP, %RSI_LP
++	mov	%RSI_LP, %R10_LP
++	and	$-64, %R10_LP
++	mov	%RSI_LP, %R11_LP
+ #endif
+ 
+ 	pxor	%xmm0, %xmm0
+diff --git a/sysdeps/x86_64/x32/Makefile b/sysdeps/x86_64/x32/Makefile
+index ae0606c..35d41d9 100644
+--- a/sysdeps/x86_64/x32/Makefile
++++ b/sysdeps/x86_64/x32/Makefile
+@@ -8,7 +8,7 @@ endif
+ ifeq ($(subdir),string)
+ tests += tst-size_t-memchr tst-size_t-memcmp tst-size_t-memcpy \
+ 	 tst-size_t-memrchr tst-size_t-memset tst-size_t-strncasecmp \
+-	 tst-size_t-strncmp tst-size_t-strncpy
++	 tst-size_t-strncmp tst-size_t-strncpy tst-size_t-strnlen
+ endif
+ 
+ ifeq ($(subdir),wcsmbs)
+diff --git a/sysdeps/x86_64/x32/tst-size_t-strnlen.c b/sysdeps/x86_64/x32/tst-size_t-strnlen.c
+new file mode 100644
+index 0000000..1f2f0b9
+--- /dev/null
++++ b/sysdeps/x86_64/x32/tst-size_t-strnlen.c
+@@ -0,0 +1,72 @@
++/* Test strnlen with size_t in the lower 32 bits of 64-bit register.
++   Copyright (C) 2019 Free Software Foundation, Inc.
++   This file is part of the GNU C Library.
++
++   The GNU C Library is free software; you can redistribute it and/or
++   modify it under the terms of the GNU Lesser General Public
++   License as published by the Free Software Foundation; either
++   version 2.1 of the License, or (at your option) any later version.
++
++   The GNU C Library is distributed in the hope that it will be useful,
++   but WITHOUT ANY WARRANTY; without even the implied warranty of
++   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
++   Lesser General Public License for more details.
++
++   You should have received a copy of the GNU Lesser General Public
++   License along with the GNU C Library; if not, see
++   <http://www.gnu.org/licenses/>.  */
++
++#ifdef WIDE
++# define TEST_NAME "wcsnlen"
++#else
++# define TEST_NAME "strnlen"
++#endif /* WIDE */
++
++#include "test-size_t.h"
++
++#ifdef WIDE
++# include <wchar.h>
++# define STRNLEN wcsnlen
++# define CHAR wchar_t
++#else
++# define STRNLEN strnlen
++# define CHAR char
++#endif /* WIDE */
++
++IMPL (STRNLEN, 1)
++
++typedef size_t (*proto_t) (const CHAR *, size_t);
++
++static size_t
++__attribute__ ((noinline, noclone))
++do_strnlen (parameter_t a, parameter_t b)
++{
++  return CALL (&a, a.p, b.len);
++}
++
++static int
++test_main (void)
++{
++  test_init ();
++
++  size_t size = page_size / sizeof (CHAR);
++  parameter_t src = { { 0 }, buf2 };
++  parameter_t c = { { size }, (void *) (uintptr_t) 'a' };
++
++  int ret = 0;
++  FOR_EACH_IMPL (impl, 0)
++    {
++      src.fn = impl->fn;
++      size_t res = do_strnlen (src, c);
++      if (res != size)
++	{
++	  error (0, 0, "Wrong result in function %s: 0x%x != 0x%x",
++		 impl->name, res, size);
++	  ret = 1;
++	}
++    }
++
++  return ret ? EXIT_FAILURE : EXIT_SUCCESS;
++}
++
++#include <test-skeleton.c>
+-- 
+2.9.3

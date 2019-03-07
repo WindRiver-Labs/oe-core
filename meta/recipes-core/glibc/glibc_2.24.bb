@@ -78,6 +78,19 @@ SRC_URI = "${GLIBC_GIT_URI};branch=${SRCBRANCH};name=glibc \
            file://0001-Always-do-locking-when-iterating-over-list-of-stream.patch \
            file://0001-CVE-2018-19591-if_nametoindex-Fix-descriptor-for-ove.patch \
            file://0001-rtld-strcspn-will-cause-valgrind-uname-to-segmentati.patch \
+           file://0001-x86-64-memchr-wmemchr-Properly-handle-the-length-par.patch \
+           file://0002-x86-64-memcmp-wmemcmp-Properly-handle-the-length-par.patch \
+           file://0003-x86-64-memcpy-Properly-handle-the-length-parameter-B.patch \
+           file://0004-x86-64-memrchr-Properly-handle-the-length-parameter-.patch \
+           file://0005-x86-64-memset-wmemset-Properly-handle-the-length-par.patch \
+           file://0006-x86-64-strncmp-family-Properly-handle-the-length-par.patch \
+           file://0007-x86-64-strncpy-Properly-handle-the-length-parameter-.patch \
+           file://0008-x86-64-strnlen-wcsnlen-Properly-handle-the-length-pa.patch \
+           file://0001-x86-64-memcmp-Use-unsigned-Jcc-instructions-on-size-.patch \
+           file://0001-resolv-Reformat-inet_addr-inet_aton-to-GNU-style.patch \
+           file://0001-resolv-Do-not-send-queries-for-non-host-names-in-nss.patch \
+           file://0001-CVE-2016-10739-getaddrinfo-Fully-parse-IPv4-address-.patch \
+           file://0001-Restore-GLIBC_PRIVATE-ABI-after-CVE-2016-10739-fix-B.patch \
 "
 
 SRC_URI += "\
