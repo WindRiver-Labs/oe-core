@@ -1,7 +1,8 @@
 inherit kernel-arch
 
-# This is instead of DEPENDS = "virtual/kernel"
-do_configure[depends] += "virtual/kernel:do_compile_kernelmodules"
+# We do the dependency this way because the output is not preserved
+# in sstate, so we must force do_compile to run (once).
+do_configure[depends] += "make-mod-scripts:do_compile"
 
 export OS = "${TARGET_OS}"
 export CROSS_COMPILE = "${TARGET_PREFIX}"
