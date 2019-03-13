@@ -104,6 +104,7 @@ BACKPORTS = "\
            file://0005-i386-Don-t-generate-alias-for-function-return-thunk.patch \
            file://CVE-2018-18483.patch \
            file://0001-Add-a-recursion-limit-to-libiberty-s-demangling-code.patch \
+           file://CVE-2016-4492-CVE-2016-4493.patch \
 "
 
 SRC_URI[md5sum] = "9768625159663b300ae4de2f4745fcc4"
