@@ -19,6 +19,8 @@ inherit autotools-brokensep gettext systemd
 
 PACKAGECONFIG ??= ""
 PACKAGECONFIG[lm-sensors] = "--enable-sensors,--disable-sensors,lmsensors,lmsensors-libsensors"
+PACKAGECONFIG[cron] = "--enable-install-cron --enable-copy-only,--disable-install-cron --disable-copy-only"
+PACKAGECONFIG[systemd] = "--with-systemdsystemunitdir=${systemd_system_unitdir}"
 
 EXTRA_OECONF += "--disable-stripping"
 
@@ -59,7 +61,6 @@ pkg_postinst_${PN} () {
         fi
 }
 
-
-FILES_${PN} += "${libdir}/sa"
+FILES_${PN} += "${libdir}/sa ${systemd_system_unitdir}"
 
 TARGET_CC_ARCH += "${LDFLAGS}"
