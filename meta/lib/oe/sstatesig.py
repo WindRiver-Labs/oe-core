@@ -32,7 +32,8 @@ def sstate_rundepfilter(siggen, fn, recipename, task, dep, depname, dataCaches):
     # from a mcdepends). The exception is the special
     # do_kernel_configme->do_unpack_and_patch dependency from archiver.bbclass.
     if recipename == depname and depmc == mc:
-        if task == "do_kernel_configme" and deptaskname == "do_unpack_and_patch":
+        if task == "do_kernel_configme" and (dep.endswith(".do_unpack_and_patch") or \
+                                             dep.endswith(".do_ar_patched")):
             return False
         return True
 
