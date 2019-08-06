@@ -12,7 +12,7 @@ SRC_URI = "https://kernel.ubuntu.com/~cking/tarballs/${BPN}/${BP}.tar.xz \
 SRC_URI[md5sum] = "46aa41d37690324ceab4febfcc549018"
 SRC_URI[sha256sum] = "d09dd2a1aea549e478995bf9be90b38906a4cdf33ea7b245ef9d46aa5213c074"
 
-DEPENDS = "coreutils-native"
+DEPENDS = "coreutils-native bash"
 
 PROVIDES = "stress"
 RPROVIDES_${PN} = "stress"
