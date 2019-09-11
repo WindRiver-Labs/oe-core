@@ -23,7 +23,6 @@ SDKIMAGE_FEATURES ??= "dev-pkgs dbg-pkgs src-pkgs ${@bb.utils.contains('DISTRO_F
 SDKIMAGE_INSTALL_COMPLEMENTARY = '${@complementary_globs("SDKIMAGE_FEATURES", d)}'
 SDKIMAGE_INSTALL_COMPLEMENTARY[vardeps] += "SDKIMAGE_FEATURES"
 
-PACKAGE_ARCHS_append_task-populate-sdk = " sdk-provides-dummy-target"
 SDK_PACKAGE_ARCHS += "sdk-provides-dummy-${SDKPKGSUFFIX}"
 
 # List of locales to install, or "all" for all of them, or unset for none.
@@ -134,6 +133,7 @@ def populate_sdk_common(d):
     inst_pkgs = (d.getVar("PACKAGE_INSTALL") or "").split()
     inst_attempt_pkgs = (d.getVar("PACKAGE_INSTALL_ATTEMPTONLY") or "").split()
 
+    d.appendVar('ALL_MULTILIB_PACKAGE_ARCHS', ' sdk-provides-dummy-target')
     d.setVar('PACKAGE_INSTALL_ORIG', ' '.join(inst_pkgs))
     d.setVar('PACKAGE_INSTALL_ATTEMPTONLY', ' '.join(inst_attempt_pkgs))
 
