@@ -37,9 +37,15 @@ efi_populate_common() {
 
         install -d ${DEST}${EFIDIR}
 
-        install -m 0644 ${DEPLOY_DIR_IMAGE}/$2-${EFI_BOOT_IMAGE} ${DEST}${EFIDIR}/${EFI_BOOT_IMAGE}
         EFIPATH=$(echo "${EFIDIR}" | sed 's/\//\\/g')
-        printf 'fs0:%s\%s\n' "$EFIPATH" "${EFI_BOOT_IMAGE}" >${DEST}/startup.nsh
+
+        if [ "$2" = "grub-efi" ]; then
+            install -m 0644 ${DEPLOY_DIR_IMAGE}/$2-${GRUB_EFI_BOOT_IMAGE} ${DEST}${EFIDIR}/${GRUB_EFI_BOOT_IMAGE}
+            printf 'fs0:%s\%s\n' "$EFIPATH" "${GRUB_EFI_BOOT_IMAGE}" >${DEST}/startup.nsh
+        else
+            install -m 0644 ${DEPLOY_DIR_IMAGE}/$2-${EFI_BOOT_IMAGE} ${DEST}${EFIDIR}/${EFI_BOOT_IMAGE}
+            printf 'fs0:%s\%s\n' "$EFIPATH" "${EFI_BOOT_IMAGE}" >${DEST}/startup.nsh
+        fi
 }
 
 efi_iso_populate() {
@@ -51,7 +57,12 @@ efi_iso_populate() {
         cp $iso_dir/${KERNEL_IMAGETYPE} ${EFIIMGDIR}
 
         EFIPATH=$(echo "${EFIDIR}" | sed 's/\//\\/g')
-        printf 'fs0:%s\%s\n' "$EFIPATH" "${EFI_BOOT_IMAGE}" >${EFIIMGDIR}/startup.nsh
+
+        if [ "${EFI_PROVIDER}" = "grub-efi" ]; then
+            printf 'fs0:%s\%s\n' "$EFIPATH" "${GRUB_EFI_BOOT_IMAGE}" >${EFIIMGDIR}/startup.nsh
+        else
+            printf 'fs0:%s\%s\n' "$EFIPATH" "${EFI_BOOT_IMAGE}" >${EFIIMGDIR}/startup.nsh
+        fi
 
         if [ -f "$iso_dir/initrd" ] ; then
                 cp $iso_dir/initrd ${EFIIMGDIR}
