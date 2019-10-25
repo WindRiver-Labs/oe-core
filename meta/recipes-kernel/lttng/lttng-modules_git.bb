@@ -6,6 +6,6 @@ SRC_URI = "git://git.lttng.org/lttng-modules;branch=stable-2.10 \
            file://Makefile-Do-not-fail-if-CONFIG_TRACEPOINTS-is-not-en.patch \
            file://BUILD_RUNTIME_BUG_ON-vs-gcc7.patch \
            "
-SRCREV = "624aca5d7507fbd11ea4a1a474c3aa1031bd9a31"
-PV = "2.10.10+git${SRCPV}"
+SRCREV = "c246530e459299d8664f15aedfdea2b078e295d3"
+PV = "2.10.12+git${SRCPV}"
 S = "${WORKDIR}/git"
