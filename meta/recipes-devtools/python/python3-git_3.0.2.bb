@@ -27,6 +27,7 @@ RDEPENDS_${PN} += " \
                    ${PYTHON_PN}-stringold \
                    ${PYTHON_PN}-unittest \
                    ${PYTHON_PN}-unixadmin \
+                   ${PYTHON_PN}-nose \
                    git \
 "
 
