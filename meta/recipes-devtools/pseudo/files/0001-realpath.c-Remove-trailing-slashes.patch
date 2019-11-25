@@ -1,0 +1,56 @@
+From 86c9a5610e3333ad6aaadb1ac1e8b5a2c948d119 Mon Sep 17 00:00:00 2001
+From: Robert Yang <liezhi.yang@windriver.com>
+Date: Mon, 25 Nov 2019 18:46:45 +0800
+Subject: [PATCH] realpath.c: Remove trailing slashes
+
+Linux system's realpath() remove trailing slashes, but pseudo's doesn't, need
+make them identical.
+
+E.g., the following code (rel.c) prints '/tmp' with system's realpath, but
+pseudo's realpath prints '/tmp/':
+
+    #include <stdio.h>
+    #include <limits.h>
+    #include <stdlib.h>
+
+    int main() {
+        char out[PATH_MAX];
+        printf("%s\n", realpath("/tmp/", out));
+        return 0;
+    }
+
+$ bitbake base-passwd -cdevshell # For pseudo env
+$ gcc rel.c
+$ ./a.out
+/tmp/ (but should be /tmp)
+
+This patch fixes the problem.
+
+Upstream-Status: Submitted
+
+Signed-off-by: Robert Yang <liezhi.yang@windriver.com>
+---
+ ports/unix/guts/realpath.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
+
+diff --git a/ports/unix/guts/realpath.c b/ports/unix/guts/realpath.c
+index 085d2cb..4642e66 100644
+--- a/ports/unix/guts/realpath.c
++++ b/ports/unix/guts/realpath.c
+@@ -25,6 +25,13 @@
+ 		rc = strdup(rname);
+ 	}
+ 
++	if (rc) {
++		char *ep = rc;
++		ep += strlen (rc) - 1;
++		while (ep > rc && ep[0] == '/')
++			*(ep--) = '\0';
++	}
++
+ /*	return rc;
+  * }
+  */
+-- 
+2.7.4
+
