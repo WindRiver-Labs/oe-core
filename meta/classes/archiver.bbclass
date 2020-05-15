@@ -137,6 +137,10 @@ python () {
                 d.appendVarFlag('do_package_write_rpm', 'depends', ' %s:do_ar_patched' % pn)
             elif ar_src == "configured":
                 d.appendVarFlag('do_package_write_rpm', 'depends', ' %s:do_ar_configured' % pn)
+
+    # For populate_sdk
+    if bb.data.inherits_class('image', d):
+        d.appendVarFlag('do_populate_sdk', 'recrdeptask', ' do_deploy_archives')
 }
 
 # Take all the sources for a recipe and puts them in WORKDIR/archiver-work/.
