@@ -8,6 +8,11 @@ udev_shutdown_hook_handler() {
 	if [ "$status" = "pre" ] && [ "$module" = "finish" ]; then
 		udevadm settle
 		killall `basename $_UDEV_DAEMON` 2>/dev/null
+
+		# Umount other media which is mounted by udev
+		for dir in `awk '/\/dev.* \/run\/media/{print $2}' /proc/mounts`; do
+			umount $dir
+		done
 	fi
 }
 
