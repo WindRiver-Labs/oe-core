@@ -1,0 +1,45 @@
+From 379eeebcd0d96d72cf8fea16d47846556502d6c5 Mon Sep 17 00:00:00 2001
+From: Xulin Sun <xulin.sun@windriver.com>
+Date: Tue, 9 Jun 2020 10:57:38 +0800
+Subject: [PATCH] arm64: continue loading even if kaslr-seed is not wiped to
+ zero
+
+The commit c3f043241a866a (arm64: Add support to supply 'kaslr-seed' to secondary kernel)
+add kaslr-seed support. And consider the primary kernel reads the 'kaslr-seed' and
+wipes it to 0. But in the situation, 'CONFIG_RANDOMIZE_BASE' was not set to y in the
+primary kernel and ATF firmware has set the 'kaslr-seed' dtb property with non-zero, Thus
+will return error.
+
+So in the above case, continue loading the segments with no kaslr
+supported situation.
+
+Signed-off-by: Xulin Sun <xulin.sun@windriver.com>
+---
+ kexec/arch/arm64/kexec-arm64.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/kexec/arch/arm64/kexec-arm64.c b/kexec/arch/arm64/kexec-arm64.c
+index 2992bce..540f4d7 100644
+--- a/kexec/arch/arm64/kexec-arm64.c
++++ b/kexec/arch/arm64/kexec-arm64.c
+@@ -506,8 +506,7 @@ static int setup_2nd_dtb(struct dtb *dtb, char *command_line, int on_crash)
+ 		if (kaslr_seed != 0) {
+ 			dbgprintf("%s: kaslr-seed is not wiped to 0.\n",
+ 					__func__);
+-			result = -EINVAL;
+-			goto on_error;
++			goto unable_kaslr;
+ 		}
+ 
+ 		/*
+@@ -550,6 +549,7 @@ static int setup_2nd_dtb(struct dtb *dtb, char *command_line, int on_crash)
+ 		}
+ 	}
+ 
++unable_kaslr:
+ 	if (on_crash) {
+ 		/* add linux,elfcorehdr */
+ 		nodeoffset = fdt_path_offset(new_buf, "/chosen");
+-- 
+2.17.1
+
