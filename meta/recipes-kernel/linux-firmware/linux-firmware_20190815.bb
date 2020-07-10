@@ -298,9 +298,10 @@ PACKAGES =+ "${PN}-ralink-license ${PN}-ralink \
              ${PN}-iwlwifi-9000 \
              ${PN}-iwlwifi-Qu-c0-hr \
              ${PN}-iwlwifi-misc \
-             ${PN}-ibt-license ${PN}-ibt ${PN}-ibt-misc \
+             ${PN}-ibt-license ${PN}-ibt \
              ${PN}-ibt-11-5 ${PN}-ibt-12-16 ${PN}-ibt-hw-37-7 ${PN}-ibt-hw-37-8 \
              ${PN}-ibt-17 \
+             ${PN}-ibt-misc \
              ${PN}-i915-license ${PN}-i915 \
              ${PN}-adsp-sst-license ${PN}-adsp-sst \
              ${PN}-bnx2-mips \
