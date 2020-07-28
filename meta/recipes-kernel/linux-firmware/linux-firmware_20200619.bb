@@ -949,3 +949,5 @@ python populate_packages_prepend () {
 # Firmware files are generally not ran on the CPU, so they can be
 # allarch despite being architecture specific
 INSANE_SKIP = "arch"
+
+DEFAULT_PREFERENCE = "-1"
