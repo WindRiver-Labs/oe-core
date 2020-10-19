@@ -80,6 +80,7 @@ for more information as common configuration options are commented.
 
 EOM
     cp -f $OECORELOCALCONF "$BUILDDIR/conf/local.conf"
+    sed -i "s|##OEROOT##|$OEROOT|g" "$BUILDDIR/conf/local.conf"
     SHOWYPDOC=yes
 fi
 
