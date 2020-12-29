@@ -125,6 +125,7 @@ PACKAGECONFIG[ipv6] = "-Dipv6=true,-Dipv6=false,"
 PACKAGECONFIG[manpages] = "-Dman=true,-Dman=false,"
 
 export TARGET_PFPU = "${TARGET_FPU}"
+export CC_append_armv5 = " -mfloat-abi=softfp"
 
 set_cfg_value () {
 	sed -i -e "s/\(; *\)\?$2 =.*/$2 = $3/" "$1"
