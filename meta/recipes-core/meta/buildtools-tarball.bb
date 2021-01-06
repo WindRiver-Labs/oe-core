@@ -29,6 +29,7 @@ TOOLCHAIN_HOST_TASK ?= "\
     nativesdk-rpcsvc-proto \
     nativesdk-patch \
     nativesdk-mtools \
+    nativesdk-ccache \
     "
 
 MULTIMACH_TARGET_SYS = "${SDK_ARCH}-nativesdk${SDK_VENDOR}-${SDK_OS}"
