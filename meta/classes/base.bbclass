@@ -208,6 +208,8 @@ BUILDCFG_FUNCS[type] = "list"
 def buildcfg_vars(d):
     statusvars = oe.data.typed_value('BUILDCFG_VARS', d)
     for var in statusvars:
+        if var == 'NATIVELSBSTRING':
+            var = 'ORIGNATIVELSBSTRING'
         value = d.getVar(var)
         if value is not None:
             yield '%-20s = "%s"' % (var, value)
