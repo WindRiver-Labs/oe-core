@@ -5,8 +5,8 @@ POSTINST_INTERCEPTS_PATHS ?= "${@':'.join('%s/postinst-intercepts' % p for p in 
 python find_intercepts() {
     intercepts = {}
     search_paths = []
-    paths = d.getVar('POSTINST_INTERCEPTS_PATHS').split(':')
-    overrides = (':' + d.getVar('FILESOVERRIDES')).split(':') + ['']
+    paths = e.data.getVar('POSTINST_INTERCEPTS_PATHS').split(':')
+    overrides = (':' + e.data.getVar('FILESOVERRIDES')).split(':') + ['']
     search_paths = [os.path.join(p, op) for p in paths for op in overrides]
     searched = oe.path.which_wild('*', ':'.join(search_paths), candidates=True)
     files, chksums = [], []
