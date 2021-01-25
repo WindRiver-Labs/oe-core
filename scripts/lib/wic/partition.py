@@ -238,7 +238,7 @@ class Partition():
             # from bitbake variable
             rsize_bb = get_bitbake_var('ROOTFS_SIZE')
             rdir = get_bitbake_var('IMAGE_ROOTFS')
-            if rsize_bb and rdir == rootfs_dir:
+            if rsize_bb and (rdir == rootfs_dir or rdir + '_wic' == rootfs_dir):
                 # Bitbake variable ROOTFS_SIZE is calculated in
                 # Image._get_rootfs_size method from meta/lib/oe/image.py
                 # using IMAGE_ROOTFS_SIZE, IMAGE_ROOTFS_ALIGNMENT,
