@@ -1,4 +1,4 @@
-From b73934dbf06801780a6415bc142c01c6bf924f31 Mon Sep 17 00:00:00 2001
+From 54f034fce7559d7f331c54160530369debf1548b Mon Sep 17 00:00:00 2001
 From: Changqing Li <changqing.li@windriver.com>
 Date: Tue, 18 Feb 2020 14:15:43 +0800
 Subject: [PATCH] Restore TCP wrappers support
@@ -30,16 +30,16 @@ Upstream-Status: Inappropriate [oe-specific]
 
 Signed-off-by: Changqing Li <changqing.li@windriver.com>
 ---
- configure.ac | 56 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ configure.ac | 56 ++++++++++++++++++++++++++++++++++++++++++++++++++++
  sshd.8       |  7 +++++++
- sshd.c       | 26 ++++++++++++++++++++++++++
+ sshd.c       | 26 ++++++++++++++++++++++++
  3 files changed, 89 insertions(+)
 
 diff --git a/configure.ac b/configure.ac
-index b689db4..eca480a 100644
+index 1c2757c..309b508 100644
 --- a/configure.ac
 +++ b/configure.ac
-@@ -1532,6 +1532,61 @@ else
+@@ -1566,6 +1566,61 @@ else
  	AC_MSG_RESULT([no])
  fi
  
@@ -101,7 +101,7 @@ index b689db4..eca480a 100644
  # Check whether user wants to use ldns
  LDNS_MSG="no"
  AC_ARG_WITH(ldns,
-@@ -5389,6 +5444,7 @@ echo "                       PAM support: $PAM_MSG"
+@@ -5500,6 +5555,7 @@ echo "                       PAM support: $PAM_MSG"
  echo "                   OSF SIA support: $SIA_MSG"
  echo "                 KerberosV support: $KRB5_MSG"
  echo "                   SELinux support: $SELINUX_MSG"
@@ -110,10 +110,10 @@ index b689db4..eca480a 100644
  echo "                   libedit support: $LIBEDIT_MSG"
  echo "                   libldns support: $LDNS_MSG"
 diff --git a/sshd.8 b/sshd.8
-index c5f8987..5d9a56e 100644
+index b2fad56..dbac146 100644
 --- a/sshd.8
 +++ b/sshd.8
-@@ -880,6 +880,12 @@ controlled via the
+@@ -887,6 +887,12 @@ controlled via the
  .Cm PermitUserEnvironment
  option.
  .Pp
@@ -126,7 +126,7 @@ index c5f8987..5d9a56e 100644
  .It Pa ~/.ssh/known_hosts
  Contains a list of host keys for all hosts the user has logged into
  that are not already in the systemwide list of known host keys.
-@@ -972,6 +978,7 @@ This file should be writable only by root, and should be world-readable.
+@@ -979,6 +985,7 @@ This file should be writable only by root, and should be world-readable.
  .Pp
  .It Pa /var/empty
  .Xr chroot 2
@@ -135,12 +135,12 @@ index c5f8987..5d9a56e 100644
  .Nm
  during privilege separation in the pre-authentication phase.
 diff --git a/sshd.c b/sshd.c
-index 60b2aaf..5b9a0b5 100644
+index 6277e6d..eff4778 100644
 --- a/sshd.c
 +++ b/sshd.c
-@@ -124,6 +124,13 @@
- #include "ssherr.h"
+@@ -125,6 +125,13 @@
  #include "sk-api.h"
+ #include "srclimit.h"
  
 +#ifdef LIBWRAP
 +#include <tcpd.h>
@@ -152,7 +152,7 @@ index 60b2aaf..5b9a0b5 100644
  /* Re-exec fds */
  #define REEXEC_DEVCRYPTO_RESERVED_FD	(STDERR_FILENO + 1)
  #define REEXEC_STARTUP_PIPE_FD		(STDERR_FILENO + 2)
-@@ -2138,6 +2145,25 @@ main(int ac, char **av)
+@@ -2155,6 +2162,25 @@ main(int ac, char **av)
  	audit_connection_from(remote_ip, remote_port);
  #endif
  
@@ -179,5 +179,5 @@ index 60b2aaf..5b9a0b5 100644
  
  	/* Log the connection. */
 -- 
-2.7.4
+2.17.1
 
