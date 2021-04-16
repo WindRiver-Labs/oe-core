@@ -14,6 +14,7 @@ SRC_URI = "git://salsa.debian.org/debian/ifupdown.git;protocol=https \
            file://0001-Makefile-do-not-use-dpkg-for-determining-OS-type.patch \
            file://run-ptest \
            ${@bb.utils.contains('DISTRO_FEATURES', 'ptest', 'file://tweak-ptest-script.patch', '', d)} \
+           file://0001-ifupdown-skip-wrong-test-case.patch \
            "
 SRCREV = "c73226073e2b13970ca613b20a13b9c0253bf9da"
 
