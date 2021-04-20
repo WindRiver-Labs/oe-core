@@ -1,6 +1,6 @@
-From 96538336c21b6646c3a520126219ef023149fd0d Mon Sep 17 00:00:00 2001
+From 98243deface88614e3f332c4a85d04a9abce55ff Mon Sep 17 00:00:00 2001
 From: Zqiang <qiang.zhang@windriver.com>
-Date: Fri, 16 Apr 2021 15:36:47 +0800
+Date: Mon, 19 Apr 2021 14:15:45 +0800
 Subject: [PATCH] ifupdown: skip wrong test case
 
 The test parameters of testcase(12-15) file is not right,
@@ -15,11 +15,11 @@ Signed-off-by: Zqiang <qiang.zhang@windriver.com>
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/tests/testbuild-linux b/tests/testbuild-linux
-index d5c1814..d9b1698 100755
+index 1181ea0..5f148eb 100755
 --- a/tests/testbuild-linux
 +++ b/tests/testbuild-linux
-@@ -4,7 +4,7 @@ curdir=$(dirname `readlink -f $0`)
- dir=$curdir/linux
+@@ -3,7 +3,7 @@
+ dir=tests/linux
  
  result=true
 -for test in 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18; do
