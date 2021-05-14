@@ -32,6 +32,7 @@ SRC_URI = "http://www.python.org/ftp/python/${PV}/Python-${PV}.tar.xz \
            file://0001-Lib-sysconfig.py-use-libdir-values-from-configuratio.patch \
            file://0001-Skip-failing-tests-due-to-load-variability-on-YP-AB.patch \
            file://0001-fix-CVE-2021-3426.patch \
+           file://0001-bpo-36384-Leading-zeros-in-IPv4-addresses-are-no-lon.patch \
            "
 
 SRC_URI_append_class-native = " \
