@@ -22,6 +22,7 @@ SRC_URI = "git://git.denx.de/u-boot.git \
            file://CVE-2021-27097-4.patch \
            file://CVE-2021-27138-1.patch \
            file://CVE-2021-27138-2.patch \
+           file://0001-include-config_distro_bootcmd.h-Check-go-before-boot.patch \
           "
 
 S = "${WORKDIR}/git"

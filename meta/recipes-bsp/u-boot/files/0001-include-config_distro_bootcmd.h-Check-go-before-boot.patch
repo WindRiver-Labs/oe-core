@@ -1,0 +1,32 @@
+From 18fcfe332b993c7033d2f6c21e60b05a528c7dce Mon Sep 17 00:00:00 2001
+From: Robert Yang <liezhi.yang@windriver.com>
+Date: Thu, 20 May 2021 11:33:49 +0000
+Subject: [PATCH] include/config_distro_bootcmd.h: Check go before boot next
+ target
+
+The go is set by ostree's boot.scr, this can make "U-Boot console" menu stop
+immediately and go into the u-boot shell, otherwise, it will try other boot
+targets and cause wild errors when select "U-Boot console".
+
+Upstream-Status: Inappropriate [ ostree's boot.scr specific ]
+
+Signed-off-by: Robert Yang <liezhi.yang@windriver.com>
+---
+ include/config_distro_bootcmd.h | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/include/config_distro_bootcmd.h b/include/config_distro_bootcmd.h
+index c9862260a38..c01527f7466 100644
+--- a/include/config_distro_bootcmd.h
++++ b/include/config_distro_bootcmd.h
+@@ -489,6 +489,7 @@
+ 		BOOTENV_SET_VIRTIO_NEED_INIT                              \
+ 		"for target in ${boot_targets}; do "                      \
+ 			"run bootcmd_${target}; "                         \
++			"if test \"${go}\" = 0; then exit; fi; "          \
+ 		"done\0"
+ 
+ #ifndef CONFIG_BOOTCOMMAND
+-- 
+2.31.1
+
