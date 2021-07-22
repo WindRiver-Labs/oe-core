@@ -110,7 +110,9 @@ do_install () {
 		echo "d root root 1777 /var/volatile/tmp none" >> ${D}${sysconfdir}/default/volatiles/00_core
 		echo "l root root 0755 /var/log /var/volatile/log" >> ${D}${sysconfdir}/default/volatiles/00_core
 		echo "l root root 0755 /var/tmp /var/volatile/tmp" >> ${D}${sysconfdir}/default/volatiles/00_core
+		echo "f root root 0664 /var/log/wtmp none" >> ${D}${sysconfdir}/default/volatiles/00_core
 	else
+		echo "f root root 0664 /var/log/wtmp none" >> ${D}${sysconfdir}/default/volatiles/00_core
 		sed -i -e 's;TMPROOT="${ROOT_DIR}/var/volatile/tmp";TMPROOT="${ROOT_DIR}/var/tmp";g' \
                     ${D}${sysconfdir}/init.d/populate-volatile.sh
 	fi
