@@ -1,0 +1,30 @@
+From 1e296395ab0ef3aa04ebe35729c4f4818e8bb8f9 Mon Sep 17 00:00:00 2001
+From: Christos Zoulas <christos@zoulas.com>
+Date: Thu, 25 Jun 2020 16:52:48 +0000
+Subject: [PATCH] Include # (alternate format) to the list of uninteresting
+ formats Reported by Werner Fink
+
+Upstream-Status: Backport
+[https://github.com/file/file/commit/85b7ab83257b3191a1a7ca044589a092bcef2bb3]
+
+Signed-off-by: Yi Zhao <yi.zhao@windriver.com>
+---
+ src/funcs.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/funcs.c b/src/funcs.c
+index 09b965e9..b66510c6 100644
+--- a/src/funcs.c
++++ b/src/funcs.c
+@@ -93,7 +93,7 @@ file_checkfmt(char *msg, size_t mlen, const char *fmt)
+ 		if (*++p == '%')
+ 			continue;
+ 		// Skip uninteresting.
+-		while (strchr("0.'+- ", *p) != NULL)
++		while (strchr("#0.'+- ", *p) != NULL)
+ 			p++;
+ 		if (*p == '*') {
+ 			if (msg)
+-- 
+2.17.1
+
