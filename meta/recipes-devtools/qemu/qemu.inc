@@ -75,6 +75,7 @@ SRC_URI = "https://download.qemu.org/${BPN}-${PV}.tar.xz \
            file://CVE-2021-3930.patch \
            file://CVE-2021-20196_1.patch \
            file://CVE-2021-20196_2.patch \
+           file://0001-Fix-DHCP-broken-in-libslirp-v4.6.0.patch \
            "
 UPSTREAM_CHECK_REGEX = "qemu-(?P<pver>\d+(\.\d+)+)\.tar"
 

@@ -1,0 +1,35 @@
+From c9f314f6e315a5518432761fea864196a290f799 Mon Sep 17 00:00:00 2001
+From: Akihiro Suda <akihiro.suda.cz@hco.ntt.co.jp>
+Date: Thu, 17 Jun 2021 18:01:32 +0900
+Subject: [PATCH] Fix "DHCP broken in libslirp v4.6.0"
+
+Fix issue 48
+Reference to upstream patch:
+https://gitlab.freedesktop.org/slirp/libslirp/-/commit/c9f314f6e315a5518432761fea864196a290f799
+
+Upstream-Status: Submitted
+
+Signed-off-by: Akihiro Suda <akihiro.suda.cz@hco.ntt.co.jp>
+Signed-off-by: Zqiang <qiang.zhang@windriver.com>
+---
+ src/bootp.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/src/bootp.c b/src/bootp.c
+index cafa1eb..0a35873 100644
+--- a/slirp/src/bootp.c
++++ b/slirp/src/bootp.c
+@@ -359,7 +359,9 @@ static void bootp_reply(Slirp *slirp,
+ 
+     daddr.sin_addr.s_addr = 0xffffffffu;
+ 
+-    m->m_len = sizeof(struct bootp_t) - sizeof(struct ip) - sizeof(struct udphdr);
++    assert ((q - rbp->bp_vend + 1) <= DHCP_OPT_LEN);
++
++    m->m_len = sizeof(struct bootp_t) + (q - rbp->bp_vend + 1) - sizeof(struct ip) - sizeof(struct udphdr);
+     udp_output(NULL, m, &saddr, &daddr, IPTOS_LOWDELAY);
+ }
+ 
+-- 
+2.17.1
+
