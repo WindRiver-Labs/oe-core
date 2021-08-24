@@ -13,6 +13,7 @@ DEPENDS_class-native = "bzip2-replacement-native"
 
 SRC_URI = "git://github.com/file/file.git \
            file://0001-src-compress.c-correct-header-define-for-xz-lzma.patch \
+           file://0001-Fix-close_on_exec-multithreaded-decompression-issue.patch \
            file://0001-Include-alternate-format-to-the-list-of-uninterestin.patch \
           "
 
