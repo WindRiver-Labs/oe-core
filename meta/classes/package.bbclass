@@ -1225,14 +1225,6 @@ python split_and_strip_files () {
                 # Modified the file so clear the cache
                 cpath.updatecache(file)
 
-    def strip_pkgd_prefix(f):
-        nonlocal dvar
-
-        if f.startswith(dvar):
-            return f[len(dvar):]
-
-        return f
-
     #
     # First lets process debug splitting
     #
@@ -1245,8 +1237,6 @@ python split_and_strip_files () {
             else:
                 for file in staticlibs:
                     results.append( (file,source_info(file, d)) )
-
-        d.setVar("PKGDEBUGSOURCES", {strip_pkgd_prefix(f): sorted(s) for f, s in results})
 
         sources = set()
         for r in results:
@@ -1560,7 +1550,6 @@ PKGDATA_VARS = "PN PE PV PR PKGE PKGV PKGR LICENSE DESCRIPTION SUMMARY RDEPENDS 
 python emit_pkgdata() {
     from glob import glob
     import json
-    import bb.compress.zstd
 
     def process_postinst_on_target(pkg, mlprefix):
         pkgval = d.getVar('PKG_%s' % pkg)
@@ -1633,8 +1622,6 @@ fi
     with open(data_file, 'w') as fd:
         fd.write("PACKAGES: %s\n" % packages)
 
-    pkgdebugsource = d.getVar("PKGDEBUGSOURCES") or []
-
     pn = d.getVar('PN')
     global_variants = (d.getVar('MULTILIB_GLOBAL_VARIANTS') or "").split()
     variants = (d.getVar('MULTILIB_VARIANTS') or "").split()
@@ -1654,32 +1641,17 @@ fi
             pkgval = pkg
             d.setVar('PKG_%s' % pkg, pkg)
 
-        extended_data = {
-            "files_info": {}
-        }
-
         pkgdestpkg = os.path.join(pkgdest, pkg)
         files = {}
-        files_extra = {}
         total_size = 0
         seen = set()
         for f in pkgfiles[pkg]:
-            fpath = os.sep + os.path.relpath(f, pkgdestpkg)
-
+            relpth = os.path.relpath(f, pkgdestpkg)
             fstat = os.lstat(f)
-            files[fpath] = fstat.st_size
-
-            extended_data["files_info"].setdefault(fpath, {})
-            extended_data["files_info"][fpath]['size'] = fstat.st_size
-
+            files[os.sep + relpth] = fstat.st_size
             if fstat.st_ino not in seen:
                 seen.add(fstat.st_ino)
                 total_size += fstat.st_size
-
-            if fpath in pkgdebugsource:
-                extended_data["files_info"][fpath]['debugsrc'] = pkgdebugsource[fpath]
-                del pkgdebugsource[fpath]
-
         d.setVar('FILES_INFO', json.dumps(files, sort_keys=True))
 
         process_postinst_on_target(pkg, d.getVar("MLPREFIX"))
@@ -1699,11 +1671,6 @@ fi
                 write_if_exists(sf, pkg, 'FILERDEPENDS_' + dfile)
 
             sf.write('%s_%s: %d\n' % ('PKGSIZE', pkg, total_size))
-
-        subdata_extended_file = pkgdatadir + "/extended/%s.json.zstd" % pkg
-        num_threads = int(d.getVar("BB_NUMBER_THREADS"))
-        with bb.compress.zstd.open(subdata_extended_file, "wt", encoding="utf-8", num_threads=num_threads) as f:
-            json.dump(extended_data, f, sort_keys=True, separators=(",", ":"))
 
         # Symlinks needed for rprovides lookup
         rprov = d.getVar('RPROVIDES_%s' % pkg) or d.getVar('RPROVIDES')
@@ -1735,8 +1702,7 @@ fi
         write_extra_runtime_pkgs(global_variants, packages, pkgdatadir)
 
 }
-emit_pkgdata[dirs] = "${PKGDESTWORK}/runtime ${PKGDESTWORK}/runtime-reverse ${PKGDESTWORK}/runtime-rprovides ${PKGDESTWORK}/extended"
-emit_pkgdata[vardepsexclude] = "BB_NUMBER_THREADS"
+emit_pkgdata[dirs] = "${PKGDESTWORK}/runtime ${PKGDESTWORK}/runtime-reverse ${PKGDESTWORK}/runtime-rprovides"
 
 ldconfig_postinst_fragment() {
 if [ x"$D" = "x" ]; then
