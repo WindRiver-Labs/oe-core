@@ -24,6 +24,7 @@ SRC_URI = "https://curl.haxx.se/download/curl-${PV}.tar.bz2 \
            file://CVE-2021-22945.patch \
            file://CVE-2021-22946.patch \
            file://CVE-2021-22947.patch \
+           file://0001-metalink-remove.patch \
 "
 
 SRC_URI[sha256sum] = "50552d4501c178e4cc68baaecc487f466a3d6d19bbf4e50a01869effb316d026"
@@ -73,7 +74,6 @@ EXTRA_OECONF = " \
     --disable-ntlm-wb \
     --enable-crypto-auth \
     --with-ca-bundle=${sysconfdir}/ssl/certs/ca-certificates.crt \
-    --without-libmetalink \
     --without-libpsl \
     --enable-debug \
     --enable-optimize \
