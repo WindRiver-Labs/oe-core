@@ -37,5 +37,6 @@ SRC_URI = "${KERNELORG_MIRROR}/linux/utils/util-linux/v${MAJOR_VERSION}/util-lin
            file://avoid_parallel_tests.patch \
            file://Automake-use-EXTRA_LTLIBRARIES-instead-of-noinst_LTL.patch \
            file://CVE-2021-37600.patch \
+           file://0001-tabfiles-tags-add-use-system-commands-option.patch \
            "
 SRC_URI[sha256sum] = "f7516ba9d8689343594356f0e5e1a5f0da34adfbc89023437735872bb5024c5f"
