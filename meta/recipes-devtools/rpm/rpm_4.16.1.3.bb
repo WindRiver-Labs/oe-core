@@ -41,6 +41,7 @@ SRC_URI = "git://github.com/rpm-software-management/rpm;branch=rpm-4.16.x;protoc
            file://0001-lib-transaction.c-fix-file-conflicts-for-MIPS64-N32.patch \
            file://0001-tools-Add-error.h-for-non-glibc-case.patch \
            file://0001-build-pack.c-do-not-insert-payloadflags-into-.rpm-me.patch \
+           file://0001-Fix-regression-reading-rpm-v3-and-other-rare-package.patch \
            "
 
 PE = "1"
