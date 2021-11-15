@@ -44,6 +44,7 @@ SRC_URI = "git://github.com/rpm-software-management/rpm;branch=rpm-4.16.x;protoc
            file://0001-CVE-2021-3521.patch \
            file://0002-CVE-2021-3521.patch \
            file://0003-CVE-2021-3521.patch \
+           file://0001-Fix-regression-reading-rpm-v3-and-other-rare-package.patch \
            "
 
 PE = "1"
