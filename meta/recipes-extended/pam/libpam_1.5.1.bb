@@ -23,6 +23,7 @@ SRC_URI = "https://github.com/linux-pam/linux-pam/releases/download/v${PV}/Linux
            file://libpam-xtests.patch \
            file://0001-modules-pam_namespace-Makefile.am-correctly-install-.patch \
            file://0001-Makefile.am-support-usrmage.patch \
+           file://0001-run-xtests.sh-check-whether-files-exist.patch \
            file://run-ptest \
            file://pam-volatiles.conf \
            "
