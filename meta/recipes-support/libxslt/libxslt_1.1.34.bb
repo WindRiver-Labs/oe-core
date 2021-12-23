@@ -13,7 +13,7 @@ LIC_FILES_CHKSUM = "file://Copyright;md5=0cd9a07afbeb24026c9b03aecfeba458"
 SECTION = "libs"
 DEPENDS = "libxml2"
 
-SRC_URI = "ftp://xmlsoft.org/XSLT/libxslt-${PV}.tar.gz \
+SRC_URI = "http://xmlsoft.org/sources/libxslt-${PV}.tar.gz \
           "
 
 SRC_URI[md5sum] = "db8765c8d076f1b6caafd9f2542a304a"
