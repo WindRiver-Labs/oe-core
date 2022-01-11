@@ -51,6 +51,9 @@ SRC_URI = "git://github.com/linux-test-project/ltp.git \
            file://0001-cve-2017-17052-Avoid-unsafe-exits-in-threads.patch \
            file://0001-overcommit_memory-update-for-mm-fix-false-positive-O.patch \
            file://0001-mkswap01.sh-Add-udevadm-trigger-before-swap-verifica.patch \
+           file://0001-lib-tst_device-Export-more-functions.patch \
+           file://0002-Fix-releasing-loop-devices-in-shell-API.patch \
+           file://0003-runltp-let-each-test-acquire-release-device.patch \
            "
 
 S = "${WORKDIR}/git"
