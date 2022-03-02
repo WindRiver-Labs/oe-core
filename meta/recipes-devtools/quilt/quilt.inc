@@ -26,7 +26,7 @@ PATCHTOOL_class-native = "patch"
 
 CLEANBROKEN = "1"
 
-EXTRA_OECONF = "--with-perl='${USRBINPATH}/env perl' --with-patch=patch"
+EXTRA_OECONF = "--with-perl='${USRBINPATH}/env perl' --with-patch=patch --without-sendmail"
 EXTRA_OECONF_append_class-native = " --disable-nls"
 EXTRA_AUTORECONF += "--exclude=aclocal"
 
