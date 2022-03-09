@@ -6,6 +6,8 @@ SRC_URI = "${KERNELORG_MIRROR}/linux/network/${BPN}/${BP}.tar.xz \
            file://connman \
            file://no-version-scripts.patch \
            file://CVE-2021-33833.patch \
+           file://CVE-2022-23097.patch \
+           file://CVE-2022-23098.patch \
            "
 
 SRC_URI_append_libc-musl = " file://0002-resolve-musl-does-not-implement-res_ninit.patch"
