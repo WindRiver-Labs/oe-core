@@ -50,6 +50,7 @@ SRC_URI = "https://busybox.net/downloads/busybox-${PV}.tar.bz2;name=tarball \
            file://0001-mktemp-add-tmpdir-option.patch \
            file://0001-awk-fix-CVEs.patch \
            file://0002-man-fix-segfault-in-man-1.patch \
+           file://0001-depmod-Ignore-.debug-directories.patch \
            "
 SRC_URI_append_libc-musl = " file://musl.cfg "
 
