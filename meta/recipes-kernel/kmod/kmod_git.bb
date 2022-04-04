@@ -31,6 +31,8 @@ do_install_append () {
 
         # install depmod.d file for search/ dir
         install -Dm644 "${WORKDIR}/depmod-search.conf" "${D}${nonarch_base_libdir}/depmod.d/search.conf"
+        # Add .debug to the exclude path for depmod
+        echo "exclude .debug" > ${D}${nonarch_base_libdir}/depmod.d/exclude.conf
 }
 
 do_compile_prepend() {
