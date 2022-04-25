@@ -1,0 +1,40 @@
+From ed30068de0349af0296f16523a623574ed3f803b Mon Sep 17 00:00:00 2001
+From: Hongxu Jia <hongxu.jia@windriver.com>
+Date: Mon, 25 Apr 2022 15:55:14 +0800
+Subject: [PATCH] `named/lwresd -V' and start log hide build options
+
+The build options expose build path directories, so hide them.
+[snip]
+$ named -V
+|built by make with *** (options are hidden)
+[snip]
+
+Upstream-Status: Inappropriate [oe-core specific]
+
+Signed-off-by: Hongxu Jia <hongxu.jia@windriver.com>
+
+Refreshed for 9.16.0
+Signed-off-by: Armin Kuster <akuster@mvista.com>
+
+Rebased to 9.16.28
+Signed-off-by: Mingli Yu <mingli.yu@windriver.com>
+---
+ bin/named/include/named/globals.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/bin/named/include/named/globals.h b/bin/named/include/named/globals.h
+index 82b632e..b33a27b 100644
+--- a/bin/named/include/named/globals.h
++++ b/bin/named/include/named/globals.h
+@@ -71,7 +71,7 @@ EXTERN const char *named_g_version	  INIT(VERSION);
+ EXTERN const char *named_g_product	  INIT(PRODUCT);
+ EXTERN const char *named_g_description	  INIT(DESCRIPTION);
+ EXTERN const char *named_g_srcid	  INIT(SRCID);
+-EXTERN const char *named_g_configargs	  INIT(CONFIGARGS);
++EXTERN const char *named_g_configargs	  INIT("*** (options are hidden)");
+ EXTERN const char *named_g_builder	  INIT(BUILDER);
+ EXTERN in_port_t named_g_port		  INIT(0);
+ EXTERN isc_dscp_t named_g_dscp		  INIT(-1);
+-- 
+2.25.1
+
