@@ -10,12 +10,12 @@ PACKAGES += "${@bb.utils.contains('PACKAGECONFIG', 'pylibmount', '${PN}-pylibmou
 python util_linux_binpackages () {
     def pkg_hook(f, pkg, file_regex, output_pattern, modulename):
         pn = d.getVar('PN')
-        d.appendVar('RRECOMMENDS_%s' % pn, ' %s' % pkg)
+        d.appendVar('RRECOMMENDS:%s' % pn, ' %s' % pkg)
 
-        if d.getVar('ALTERNATIVE_' + pkg):
+        if d.getVar('ALTERNATIVE:' + pkg):
             return
         if d.getVarFlag('ALTERNATIVE_LINK_NAME', modulename):
-            d.setVar('ALTERNATIVE_' + pkg, modulename)
+            d.setVar('ALTERNATIVE:' + pkg, modulename)
 
     bindirs = sorted(list(set(d.expand("${base_sbindir} ${base_bindir} ${sbindir} ${bindir}").split())))
     for dir in bindirs:
@@ -37,13 +37,14 @@ python util_linux_binpackages () {
                     continue
 
                 pkg = os.path.basename(os.readlink(file))
-                extras[pkg] = extras.get(pkg, '') + ' ' + file.replace(dvar, '', 1)
+                extras.setdefault(pkg, [])
+                extras[pkg].append(file.replace(dvar, '', 1))
 
     pn = d.getVar('PN')
     for pkg, links in extras.items():
-        of = d.getVar('FILES_' + pn + '-' + pkg)
-        links = of + links
-        d.setVar('FILES_' + pn + '-' + pkg, links)
+        of = d.getVar('FILES:' + pn + '-' + pkg)
+        links = of + " " + " ".join(sorted(links))
+        d.setVar('FILES:' + pn + '-' + pkg, links)
 }
 
 # we must execute before update-alternatives PACKAGE_PREPROCESS_FUNCS
@@ -63,7 +64,7 @@ PACKAGES_DYNAMIC = "^${PN}-.*"
 
 CACHED_CONFIGUREVARS += "scanf_cv_alloc_modifier=ms"
 UTIL_LINUX_LIBDIR = "${libdir}"
-UTIL_LINUX_LIBDIR_class-target = "${base_libdir}"
+UTIL_LINUX_LIBDIR:class-target = "${base_libdir}"
 EXTRA_OECONF = "\
     --enable-libuuid --enable-libblkid \
     \
@@ -71,7 +72,7 @@ EXTRA_OECONF = "\
     --enable-mount --enable-partx --enable-raw --enable-rfkill \
     --enable-unshare --enable-write \
     \
-    --disable-bfs --disable-chfn-chsh --disable-login \
+    --disable-bfs --disable-login \
     --disable-makeinstall-chown --disable-minix --disable-newgrp \
     --disable-use-tty-group --disable-vipw --disable-raw \
     \
@@ -81,17 +82,17 @@ EXTRA_OECONF = "\
     --libdir='${UTIL_LINUX_LIBDIR}' \
 "
 
-EXTRA_OECONF_append_class-target = " --enable-setpriv"
-EXTRA_OECONF_append_class-native = " --without-cap-ng --disable-setpriv"
-EXTRA_OECONF_append_class-nativesdk = " --without-cap-ng --disable-setpriv"
-EXTRA_OECONF_append = " --disable-hwclock-gplv3"
+EXTRA_OECONF:append:class-target = " --enable-setpriv"
+EXTRA_OECONF:append:class-native = " --without-cap-ng --disable-setpriv"
+EXTRA_OECONF:append:class-nativesdk = " --without-cap-ng --disable-setpriv"
+EXTRA_OECONF:append = " --disable-hwclock-gplv3"
 
 # enable pcre2 for native/nativesdk to match host distros
 # this helps to keep same expectations when using the SDK or
 # build host versions during development
 #
 PACKAGECONFIG ?= "pcre2"
-PACKAGECONFIG_class-target ?= "${@bb.utils.filter('DISTRO_FEATURES', 'pam', d)}"
+PACKAGECONFIG:class-target ?= "${@bb.utils.contains('DISTRO_FEATURES', 'pam', 'chfn-chsh pam', '', d)}"
 # inherit manpages requires this to be present, however util-linux does not have
 # configuration options, and installs manpages always
 PACKAGECONFIG[manpages] = ""
@@ -105,51 +106,51 @@ PACKAGECONFIG[readline] = "--with-readline,--without-readline,readline"
 # PCRE support in hardlink
 PACKAGECONFIG[pcre2] = ",,libpcre2"
 PACKAGECONFIG[cryptsetup] = "--with-cryptsetup,--without-cryptsetup,cryptsetup"
+PACKAGECONFIG[chfn-chsh] = "--enable-chfn-chsh,--disable-chfn-chsh,"
 
 EXTRA_OEMAKE = "ARCH=${TARGET_ARCH} CPU= CPUOPT= 'OPT=${CFLAGS}'"
 
-ALLOW_EMPTY_${PN} = "1"
-FILES_${PN} = ""
-FILES_${PN}-doc += "${datadir}/getopt/getopt-*.*"
-FILES_${PN}-dev += "${PYTHON_SITEPACKAGES_DIR}/libmount/pylibmount.la"
-FILES_${PN}-mount = "${sysconfdir}/default/mountall"
-FILES_${PN}-runuser = "${sysconfdir}/pam.d/runuser*"
-FILES_${PN}-su = "${sysconfdir}/pam.d/su-l"
-FILES_${PN}-uuidd = " \
+ALLOW_EMPTY:${PN} = "1"
+FILES:${PN} = ""
+FILES:${PN}-doc += "${datadir}/getopt/getopt-*.*"
+FILES:${PN}-dev += "${PYTHON_SITEPACKAGES_DIR}/libmount/pylibmount.la"
+FILES:${PN}-mount = "${sysconfdir}/default/mountall"
+FILES:${PN}-runuser = "${sysconfdir}/pam.d/runuser*"
+FILES:${PN}-su = "${sysconfdir}/pam.d/su-l"
+FILES:${PN}-uuidd = " \
     /etc/tmpfiles.d/uuidd.conf \
     /etc/default/volatiles/99_uuidd \
 "
-
-CONFFILES_${PN}-su = "${sysconfdir}/pam.d/su-l"
-FILES_${PN}-pylibmount = "${PYTHON_SITEPACKAGES_DIR}/libmount/pylibmount.so \
+CONFFILES:${PN}-su = "${sysconfdir}/pam.d/su-l"
+FILES:${PN}-pylibmount = "${PYTHON_SITEPACKAGES_DIR}/libmount/pylibmount.so \
                           ${PYTHON_SITEPACKAGES_DIR}/libmount/__init__.* \
                           ${PYTHON_SITEPACKAGES_DIR}/libmount/__pycache__/*"
 
 # Util-linux' blkid replaces the e2fsprogs one
-RCONFLICTS_${PN}-blkid = "${MLPREFIX}e2fsprogs-blkid"
-RREPLACES_${PN}-blkid = "${MLPREFIX}e2fsprogs-blkid"
+RCONFLICTS:${PN}-blkid = "${MLPREFIX}e2fsprogs-blkid"
+RREPLACES:${PN}-blkid = "${MLPREFIX}e2fsprogs-blkid"
 
-RRECOMMENDS_${PN}_class-native = ""
-RRECOMMENDS_${PN}_class-nativesdk = ""
-RDEPENDS_${PN}_class-native = ""
-RDEPENDS_${PN}_class-nativesdk = ""
+RRECOMMENDS:${PN}:class-native = ""
+RRECOMMENDS:${PN}:class-nativesdk = ""
+RDEPENDS:${PN}:class-native = ""
+RDEPENDS:${PN}:class-nativesdk = ""
 
-RDEPENDS_${PN} += " util-linux-libuuid"
-RDEPENDS_${PN}-dev += " util-linux-libuuid-dev"
+RDEPENDS:${PN} += " util-linux-libuuid"
+RDEPENDS:${PN}-dev += " util-linux-libuuid-dev"
 
-RPROVIDES_${PN}-dev = "${PN}-libblkid-dev ${PN}-libmount-dev"
+RPROVIDES:${PN}-dev = "${PN}-libblkid-dev ${PN}-libmount-dev"
 
-RDEPENDS_${PN}-bash-completion += "${PN}-lsblk"
-RDEPENDS_${PN}-ptest += "bash bc btrfs-tools coreutils e2fsprogs grep iproute2 kmod mdadm procps sed socat which xz"
-RRECOMMENDS_${PN}-ptest += "kernel-module-scsi-debug"
-RDEPENDS_${PN}-swaponoff = "${PN}-swapon ${PN}-swapoff"
-ALLOW_EMPTY_${PN}-swaponoff = "1"
+RDEPENDS:${PN}-bash-completion += "${PN}-lsblk"
+RDEPENDS:${PN}-ptest += "bash bc btrfs-tools coreutils e2fsprogs findutils grep iproute2 kmod mdadm procps sed socat which xz"
+RRECOMMENDS:${PN}-ptest += "kernel-module-scsi-debug kernel-module-sd-mod kernel-module-loop kernel-module-algif-hash"
+RDEPENDS:${PN}-swaponoff = "${PN}-swapon ${PN}-swapoff"
+ALLOW_EMPTY:${PN}-swaponoff = "1"
 
 #SYSTEMD_PACKAGES = "${PN}-uuidd ${PN}-fstrim"
-SYSTEMD_SERVICE_${PN}-uuidd = "uuidd.socket uuidd.service"
-SYSTEMD_AUTO_ENABLE_${PN}-uuidd = "disable"
-SYSTEMD_SERVICE_${PN}-fstrim = "fstrim.timer fstrim.service"
-SYSTEMD_AUTO_ENABLE_${PN}-fstrim = "disable"
+SYSTEMD_SERVICE:${PN}-uuidd = "uuidd.socket uuidd.service"
+SYSTEMD_AUTO_ENABLE:${PN}-uuidd = "disable"
+SYSTEMD_SERVICE:${PN}-fstrim = "fstrim.timer fstrim.service"
+SYSTEMD_AUTO_ENABLE:${PN}-fstrim = "disable"
 
 pkg_postinst_${PN}-uuidd() {
 	if [ -z "$D" ] && [ -e ${sysconfdir}/init.d/populate-volatile.sh ] ; then
@@ -194,7 +195,7 @@ do_install () {
 	rm -f ${D}${bindir}/chkdupexe
 }
 
-do_install_append_class-target () {
+do_install:append:class-target () {
 	if [ "${@bb.utils.filter('PACKAGECONFIG', 'pam', d)}" ]; then
 		install -d ${D}${sysconfdir}/pam.d
 		install -m 0644 ${WORKDIR}/runuser.pamd ${D}${sysconfdir}/pam.d/runuser
@@ -217,14 +218,14 @@ do_install_append_class-target () {
 }
 # nologin causes a conflict with shadow-native
 # kill causes a conflict with coreutils-native (if ${bindir}==${base_bindir})
-do_install_append_class-native () {
+do_install:append:class-native () {
 	rm -f ${D}${base_sbindir}/nologin
 	rm -f ${D}${base_bindir}/kill
 }
 
 # dm-verity support introduces a circular build dependency, so util-linux-libuuid is split out for target builds
 # Need to build libuuid for uuidgen, but then delete it and let the other recipe ship it
-do_install_append () {
+do_install:append () {
 	rm -rf ${D}${includedir}/uuid ${D}${libdir}/pkgconfig/uuid.pc ${D}${libdir}/libuuid* ${D}${base_libdir}/libuuid*
 }
 
@@ -233,24 +234,27 @@ ALTERNATIVE_PRIORITY = "80"
 ALTERNATIVE_LINK_NAME[blkid] = "${base_sbindir}/blkid"
 ALTERNATIVE_LINK_NAME[blockdev] = "${base_sbindir}/blockdev"
 ALTERNATIVE_LINK_NAME[cal] = "${bindir}/cal"
+ALTERNATIVE_LINK_NAME[chfn] = "${bindir}/chfn"
+ALTERNATIVE_LINK_NAME[chsh] = "${bindir}/chsh"
 ALTERNATIVE_LINK_NAME[chrt] = "${bindir}/chrt"
 ALTERNATIVE_LINK_NAME[dmesg] = "${base_bindir}/dmesg"
 ALTERNATIVE_LINK_NAME[eject] = "${bindir}/eject"
 ALTERNATIVE_LINK_NAME[fallocate] = "${bindir}/fallocate"
 ALTERNATIVE_LINK_NAME[fdisk] = "${base_sbindir}/fdisk"
+ALTERNATIVE_LINK_NAME[findfs] = "${sbindir}/findfs"
 ALTERNATIVE_LINK_NAME[flock] = "${bindir}/flock"
 ALTERNATIVE_LINK_NAME[fsck] = "${base_sbindir}/fsck"
 ALTERNATIVE_LINK_NAME[fsfreeze] = "${sbindir}/fsfreeze"
 ALTERNATIVE_LINK_NAME[fstrim] = "${base_sbindir}/fstrim"
 ALTERNATIVE_LINK_NAME[getopt] = "${base_bindir}/getopt"
-ALTERNATIVE_${PN}-agetty = "getty"
+ALTERNATIVE:${PN}-agetty = "getty"
 ALTERNATIVE_LINK_NAME[getty] = "${base_sbindir}/getty"
 ALTERNATIVE_TARGET[getty] = "${base_sbindir}/agetty"
 ALTERNATIVE_LINK_NAME[hexdump] = "${bindir}/hexdump"
 ALTERNATIVE_LINK_NAME[hwclock] = "${base_sbindir}/hwclock"
 ALTERNATIVE_LINK_NAME[ionice] = "${bindir}/ionice"
 ALTERNATIVE_LINK_NAME[kill] = "${base_bindir}/kill"
-ALTERNATIVE_${PN}-last = "last lastb"
+ALTERNATIVE:${PN}-last = "last lastb"
 ALTERNATIVE_LINK_NAME[last] = "${bindir}/last"
 ALTERNATIVE_LINK_NAME[lastb] = "${bindir}/lastb"
 ALTERNATIVE_LINK_NAME[logger] = "${bindir}/logger"
@@ -284,11 +288,11 @@ ALTERNATIVE_LINK_NAME[utmpdump] = "${bindir}/utmpdump"
 ALTERNATIVE_LINK_NAME[uuidgen] = "${bindir}/uuidgen"
 ALTERNATIVE_LINK_NAME[wall] = "${bindir}/wall"
 
-ALTERNATIVE_${PN}-doc = "\
+ALTERNATIVE:${PN}-doc = "\
 blkid.8 eject.1 findfs.8 fsck.8 kill.1 last.1 lastb.1 libblkid.3 logger.1 mesg.1 \
 mountpoint.1 nologin.8 rfkill.8 sulogin.8 utmpdump.1 uuid.3 wall.1\
 "
-ALTERNATIVE_${PN}-doc += "${@bb.utils.contains('PACKAGECONFIG', 'pam', 'su.1', '', d)}"
+ALTERNATIVE:${PN}-doc += "${@bb.utils.contains('PACKAGECONFIG', 'pam', 'su.1', '', d)}"
 
 ALTERNATIVE_LINK_NAME[blkid.8] = "${mandir}/man8/blkid.8"
 ALTERNATIVE_LINK_NAME[eject.1] = "${mandir}/man1/eject.1"
@@ -310,7 +314,6 @@ ALTERNATIVE_LINK_NAME[utmpdump.1] = "${mandir}/man1/utmpdump.1"
 ALTERNATIVE_LINK_NAME[uuid.3] = "${mandir}/man3/uuid.3"
 ALTERNATIVE_LINK_NAME[wall.1] = "${mandir}/man1/wall.1"
 
-
 BBCLASSEXTEND = "native nativesdk"
 
 PTEST_BINDIR = "1"
@@ -329,25 +332,10 @@ do_install_ptest() {
     cp -pR ${S}/tests/ts ${D}${PTEST_PATH}/tests/
     cp ${WORKDIR}/build/config.h ${D}${PTEST_PATH}
 
-    # The original paths of executables to be tested point to a local folder containing
-    # the executables. We want to test the installed executables, not the local copies.
-    # So strip the paths, the executables will be located via "which"
-    sed  -i \
-         -e '/^TS_CMD/ s|$top_builddir/||g' \
-         -e '/^TS_HELPER/ s|$top_builddir|${PTEST_PATH}|g' \
-         ${D}${PTEST_PATH}/tests/commands.sh
+    sed -i 's|@base_sbindir@|${base_sbindir}|g' ${D}${PTEST_PATH}/run-ptest
 
-    # Change 'if [ ! -x "$1" ]' to 'if [ ! -x "`which $1 2>/dev/null`"]'
-    sed -i -e \
-        '/^\tif[[:space:]]\[[[:space:]]![[:space:]]-x[[:space:]]"$1"/s|$1|`which $1 2>/dev/null`|g' \
-         ${D}${PTEST_PATH}/tests/functions.sh
-
-    # Running "kill" without the the complete path would use the shell's built-in kill
-    sed -i -e \
-         '/^TS_CMD_KILL/ s|kill|${PTEST_PATH}/bin/kill|g' \
-         ${D}${PTEST_PATH}/tests/commands.sh
-
-
-    sed -i 's|@base_sbindir@|${base_sbindir}|g'       ${D}${PTEST_PATH}/run-ptest
-
+    # chfn needs PAM
+    if ! ${@bb.utils.contains('PACKAGECONFIG', 'pam', 'true', 'false', d)}; then
+        rm -rf ${D}${PTEST_PATH}/tests/ts/chfn
+    fi
 }
