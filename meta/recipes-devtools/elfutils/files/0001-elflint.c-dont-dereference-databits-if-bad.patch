@@ -1,0 +1,39 @@
+From 29d3ee3289556f588aa805d21fec71daf11b3be8 Mon Sep 17 00:00:00 2001
+From: Changqing Li <changqing.li@windriver.com>
+Date: Mon, 30 May 2022 06:20:44 +0000
+Subject: [PATCH] elflint.c: Don't dereference databits if bad
+
+elflint.c: Don't dereference databits if bad
+
+elflint.c: In function 'check_sections':
+elflint.c:4105:48: error: null pointer dereference [-Werror=null-dereference]
+4105 |                                  idx < databits->d_size && ! bad;
+     |                                        ~~~~~~~~^~~~~~~~
+
+Fix this by testing for ! bad first.
+
+Reported-by: Jan-Benedict Glaw <jbglaw@lug-owl.de>
+Signed-off-by: Mark Wielaard <mark@klomp.org>
+
+Upstream-Status: Backport [https://sourceware.org/git/?p=elfutils.git;a=commit;h=3d9f12883d0c131bd4ab6045e1f60d3fe6d150ea]
+Signed-off-by: Changqing Li <changqing.li@windriver.com>
+---
+ src/elflint.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/elflint.c b/src/elflint.c
+index 6a94683..0ca657c 100644
+--- a/src/elflint.c
++++ b/src/elflint.c
+@@ -4100,7 +4100,7 @@ section [%2zu] '%s' has type NOBITS but is read from the file in segment of prog
+ 			    bad = (databits == NULL
+ 				   || databits->d_size != shdr->sh_size);
+ 			    for (size_t idx = 0;
+-				 idx < databits->d_size && ! bad;
++				 ! bad && idx < databits->d_size;
+ 				 idx++)
+ 			      bad = ((char *) databits->d_buf)[idx] != 0;
+ 
+-- 
+2.31.1
+
