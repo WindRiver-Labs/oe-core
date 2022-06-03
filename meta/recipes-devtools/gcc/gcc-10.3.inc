@@ -75,6 +75,7 @@ SRC_URI = "\
            file://0003-CVE-2021-42574.patch \
            file://0004-CVE-2021-42574.patch \
            file://0005-CVE-2021-42574.patch \
+           file://0038-Fix-install-path-of-linux64.h.patch \
 "
 SRC_URI[sha256sum] = "64f404c1a650f27fc33da242e1f2df54952e3963a49e06e73f6940f3223ac344"
 
