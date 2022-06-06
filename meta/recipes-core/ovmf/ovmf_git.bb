@@ -12,12 +12,18 @@ LIC_FILES_CHKSUM = "file://OvmfPkg/License.txt;md5=06357ddc23f46577c2aeaeaf7b776
 PACKAGECONFIG ??= ""
 PACKAGECONFIG[secureboot] = ",,,"
 
+# GCC12 trips on it
+#see https://src.fedoraproject.org/rpms/edk2/blob/rawhide/f/0032-Basetools-turn-off-gcc12-warning.patch
+BUILD_CFLAGS += "-Wno-error=stringop-overflow"
+
 SRC_URI = "gitsm://github.com/tianocore/edk2.git;branch=master;protocol=https \
            file://0001-ovmf-update-path-to-native-BaseTools.patch \
            file://0002-BaseTools-makefile-adjust-to-build-in-under-bitbake.patch \
            file://0004-ovmf-Update-to-latest.patch \
            file://zero.patch \
            file://0001-Fix-VLA-parameter-warning.patch \
+           file://0001-BaseTools-fix-gcc12-warning.patch \
+           file://0002-BaseTools-fix-gcc12-warning.patch \
            "
 
 PV = "edk2-stable202102"
