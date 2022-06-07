@@ -1,4 +1,4 @@
-require lttng-modules_2.12.8.bb
+require lttng-modules_2.12.9.bb
 
 LIC_FILES_CHKSUM = "file://LICENSE;md5=0464cff101a009c403cd2ed65d01d4c4"
 DEFAULT_PREFERENCE = "-1"
